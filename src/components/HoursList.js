@@ -9,26 +9,42 @@ export default class HoursList extends Component {
       header: props.header,
       add: false,
       days: [],
-      currentMonth: new Date().getMonth(),
+      currentMonth: (new Date().getMonth() + 1),
       currentYear: new Date().getFullYear()
     }
-    console.log(this.state.currentYear);
-    console.log(this.state.currentMonth);
+    //this.refreshData.bind(this);
+    // console.log(this.state.currentYear);
+    // console.log(this.state.currentMonth);
   }
   componentDidMount() {
     this.refreshData.bind(this);
   }
   refreshData() {
-    console.log("inside refreshdata");
-    const days_ref = fire.database().ref(`days/${this.state.currentYear}/${this.state.currentMonth}`);
+    const { currentYear, currentMonth } = this.state;
+    console.log(currentYear);
+    console.log(currentMonth);
+    const days_ref = fire.database().ref(`days/${currentYear}/${currentMonth}`);
     let daysArray = [];
     days_ref.on('value', snap => {
       daysArray = snap.val();
       const arr = Object.keys(daysArray).map(function (key) { return daysArray[key]; });
+      console.log(arr);
       this.setState({ days: arr });
     }); // sort the data by date
   }
   addDay(day) {
+
+    const EnterAsHours = ((this.refs.enterhour.value * 60) + this.refs.enterminute.value) / 60;
+    const ExitAsHours = ((this.refs.exithour.value * 60) - this.refs.exitminute.value) / 60;
+    const numberOfHours = ExitAsHours - EnterAsHours;
+    // const numberOfHours100 = (numberOfHours > 9.25 ? 8.5 : numberOfHours);
+    // const numberOfHours125 = (numberOfHours > 11.25 ? 2 : numberOfHours - 8.5);
+    // const numberOfHours150 = numberOfHours - numberOfHours125;
+
+    const numberOfHours100 = (numberOfHours > 8 ? 7.25 : numberOfHours);
+    const numberOfHours125 = (numberOfHours > 10 ? 9.25 : numberOfHours - 8.5);
+    const numberOfHours150 = numberOfHours - numberOfHours125;
+
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
       day: day.day,
       month: day.month,
@@ -36,7 +52,11 @@ export default class HoursList extends Component {
       enterhour: this.refs.enterhour.value,
       enterminute: this.refs.enterminute.value,
       exithour: this.refs.exithour.value,
-      exitminute: this.refs.exitminute.value
+      exitminute: this.refs.exitminute.value,
+      numberOfHours: numberOfHours,
+      numberOfHours100: numberOfHours100,
+      numberOfHours125: numberOfHours125,
+      numberOfHours150: numberOfHours150
     });
     this.setState({ add: false });
   }
@@ -60,29 +80,33 @@ export default class HoursList extends Component {
   handleAddClick = () => {
     this.setState({ add: true })
   }
-  changeMonth(event){
+  changeMonth(event) {
     this.setState({ currentMonth: event.target.value });
-    console.log("outside refreshdata");
+    // console.log(this.state.currentYear);
+    // console.log(this.state.currentMonth);
     this.refreshData();
+
   }
-  changeYear(event){
+  changeYear(event) {
     this.setState({ currentYear: event.target.value });
     this.refreshData();
+    // console.log(this.state.currentYear);
+    // console.log(this.state.currentMonth);
   }
   renderAdd() {
     if(this.state.add) {
       return (
         <li className="col-sm-12 col-md-12 list-group-item">
-          <h3>Day On Month (1-31):</h3>
-          <input className="form-control hour-input" ref="dayOfMonth" defaultValue=''></input>
+          <h3>Day On Month:</h3>
+          <input className="form-control hour-input hours-input" ref="dayOfMonth" defaultValue=''></input><br />
           <h3>Enter Hour:</h3>
-          <input className="form-control hour-input" ref="enterhour" defaultValue=''></input>:
-          <input className="form-control hour-input" ref="enterminute" defaultValue=''></input>
+          <input className="form-control hour-input hours-input" ref="enterhour" defaultValue=''></input>:
+          <input className="form-control hour-input hours-input" ref="enterminute" defaultValue=''></input><br />
           <h3>Exit Hour:</h3>
-          <input className="form-control hour-input" ref="exithour" defaultValue=''></input>:
-          <input className="form-control hour-input" ref="exitminute" defaultValue=''></input>
-          <button onClick={this.addDay.bind(this)} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
-          <button onClick={this.handleCancelAddClick} className="btn btn-primary regular-button"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
+          <input className="form-control hour-input hours-input" ref="exithour" defaultValue=''></input>:
+          <input className="form-control hour-input hours-input" ref="exitminute" defaultValue=''></input><br />
+          <button onClick={this.addDay.bind(this)} className="btn btn-success regular-button hours-input"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+          <button onClick={this.handleCancelAddClick} className="btn btn-primary regular-button hours-input"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
         </li>
       );
     } else {
@@ -96,15 +120,17 @@ export default class HoursList extends Component {
   render() {
     return(
       <div className="container container-fluid">
+      <h1>{this.state.currentYear}</h1>
+      <h1>{this.state.currentMonth}</h1>
         <div className="form-group col-sm-6">
-          <select className="form-control" onChange={this.changeYear.bind(this)}>
+          <select className="form-control" onChange={this.changeYear.bind(this)} value={this.state.currentYear}>
             <option value="2017">2017</option>
             <option value="2018">2018</option>
           </select>
         </div>
 
         <div className="form-group col-sm-6">
-          <select className="form-control" onChange={this.changeMonth.bind(this)}>
+          <select className="form-control" onChange={this.changeMonth.bind(this)} value={this.state.currentMonth}>
             <option value="1">January</option><option value="2">February</option>
             <option value="3">March</option><option value="4">April</option>
             <option value="5">May</option><option value="6">June</option>

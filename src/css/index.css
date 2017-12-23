@@ -3,9 +3,26 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
-.App {
+/* .App {
   text-align: center;
-}
+} */
 .hour-input {
-  width: 50px;
+  width: 45px;
+  height: 30px;
+}
+.regular-button {
+  margin: 5px;
+  width: 100%;
+}
+.hours-input {
+  display: inline;
+}
+.small-input {
+  width: 45px;
+  height: 30px;
+}
+.medium-input{
+  width: 65px;
+  height: 30px;
+  display: inline;
 }
