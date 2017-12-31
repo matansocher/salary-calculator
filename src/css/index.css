@@ -3,9 +3,6 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
-/* .App {
-  text-align: center;
-} */
 .hour-input {
   width: 45px;
   height: 30px;
@@ -25,4 +22,8 @@ body {
   width: 65px;
   height: 30px;
   display: inline;
+}
+.spinner {
+  margin: auto;
+  text-align: center;
 }
