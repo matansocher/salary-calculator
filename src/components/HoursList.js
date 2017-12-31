@@ -13,35 +13,32 @@ class HoursList extends Component {
     super(props);
     this.state = {
       add: false,
-      // days: [],
-      currentMonth: (new Date().getMonth() + 1),
-      currentYear: new Date().getFullYear(),
       loading: false
     }
   }
 
   componentDidMount() {
-    const { currentYear, currentMonth } = this.state;
-    this.props.fetchDays(currentYear, currentMonth);
+    const { year, month } = this.props;
+    this.props.fetchDays(year, month);
     // this.fetchDays();
   }
 
-  fetchDays() {
-    const { currentYear, currentMonth } = this.state;
-    this.setState({ loading: true }, () => {
-      const days_ref = fire.database().ref(`days/${currentYear}/${currentMonth}`);
-      days_ref.on('value', snap => {
-        let daysArray = snap.val();
-        const arr = Object.keys(daysArray).map(function (key) { return daysArray[key]; });
-        console.log(arr);
-        this.setState({ days: arr }, () => {
-          setTimeout(() => {
-            this.setState({ loading: false });
-          }, 1000);
-        });
-      });
-    });
-  }
+  // fetchDays() {
+  //   const { currentYear, currentMonth } = this.state;
+  //   this.setState({ loading: true }, () => {
+  //     const days_ref = fire.database().ref(`days/${currentYear}/${currentMonth}`);
+  //     days_ref.on('value', snap => {
+  //       let daysArray = snap.val();
+  //       const arr = Object.keys(daysArray).map(function (key) { return daysArray[key]; });
+  //       console.log(arr);
+  //       this.setState({ days: arr }, () => {
+  //         setTimeout(() => {
+  //           this.setState({ loading: false });
+  //         }, 1000);
+  //       });
+  //     });
+  //   });
+  // }
 
   addDay() {
     const dayOfMonth = parseFloat(this.refs.dayOfMonth.value);
@@ -83,21 +80,36 @@ class HoursList extends Component {
     }
 
     // if we use redux, first create the day object and theb pass to action creator addDay
-    const { currentYear, currentMonth } = this.state;
+    const { year, month } = this.props;
+
+    const newDay = {
+      day: dayOfMonth,
+      month: month,
+      year: year,
+      enterhour: enterhour,
+      enterminute: enterminute,
+      exithour: exithour,
+      exitminute: exitminute,
+      numberOfHours: numberOfHours,
+      numberOfHours100: numberOfHours100,
+      numberOfHours125: numberOfHours125,
+      numberOfHours150: numberOfHours150
+    }
     this.setState({ loading: true }, () => {
-      fire.database().ref(`days/${currentYear}/${currentMonth}/${dayOfMonth}`).set({
-        day: dayOfMonth,
-        month: currentMonth,
-        year: currentYear,
-        enterhour: enterhour,
-        enterminute: enterminute,
-        exithour: exithour,
-        exitminute: exitminute,
-        numberOfHours: numberOfHours,
-        numberOfHours100: numberOfHours100,
-        numberOfHours125: numberOfHours125,
-        numberOfHours150: numberOfHours150
-      });
+      this.props.setDay(day);
+      // fire.database().ref(`days/${currentYear}/${currentMonth}/${dayOfMonth}`).set({
+      //   day: dayOfMonth,
+      //   month: currentMonth,
+      //   year: currentYear,
+      //   enterhour: enterhour,
+      //   enterminute: enterminute,
+      //   exithour: exithour,
+      //   exitminute: exitminute,
+      //   numberOfHours: numberOfHours,
+      //   numberOfHours100: numberOfHours100,
+      //   numberOfHours125: numberOfHours125,
+      //   numberOfHours150: numberOfHours150
+      // });
       setTimeout(() => {
         this.setState({ loading: false, add: false });
       }, 1000);
@@ -106,7 +118,8 @@ class HoursList extends Component {
 
   editDay(day) {
     this.setState({ loading: true }, () => {
-      fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({day});
+      // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({day});
+      this.props.setDay(day);
     });
     setTimeout(() => {
       this.setState({ loading: false });
@@ -115,23 +128,12 @@ class HoursList extends Component {
 
   deleteDay(day) {
     this.setState({ loading: true }, () => {
-      fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove();
+      // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove();
+      this.props.deleteDay(day);
     });
     setTimeout(() => {
       this.setState({ loading: false });
     }, 1000);
-  }
-
-  changeMonth(value) {
-    this.setState({ currentMonth: value }, () => {
-      this.props.fetchDays(this.state.currentYear, this.state.currentMonth);
-    });
-  }
-
-  changeYear(value) {
-    this.setState({ currentYear: value }, () => {
-      this.props.fetchDays(this.state.currentYear, this.state.currentMonth);
-    });
   }
 
   renderAdd() {
@@ -197,13 +199,15 @@ class HoursList extends Component {
 
 function mapStateToProps(state) {
   return {
-    days: state.days
+    days: state.days,
+    year: state.year,
+    month: state.month
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDays: fetchDays }, dispatch);
+  return bindActionCreators({ fetchDays, setDay , deleteDay }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HoursList);
-// export default connect(mapStateToProps, { fetchDays })(HoursList);
+// export default connect(mapStateToProps, { fetchDays, setDay , deleteDay })(HoursList);
