@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import bindActionCreators from 'redux';
+import { bindActionCreators } from 'redux';
 import { fetchDays, fetchSettings } from '../actions';
 import MDSpinner from 'react-md-spinner';
-import fire from '../config';
 import MainPageObject from './MainPageObject';
 
-export default class MainPage extends Component {
+class MainPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -69,7 +68,7 @@ export default class MainPage extends Component {
 
   getNeto() {
     const bruto = this.state.bruto;
-    const days = this.props;
+    const settingsObject = this.props.settingsObject;
     const pensionReduction = bruto * settingsObject.pension / 100;
 
     const step1 = 5280, step2 = 9010, step3 = 14000, step4 = 20000, step5 = 41830;

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchDays, saveSettings } from '../actions';
+import { fetchSettings, saveSettings } from '../actions';
 
 // import { Button, Card, CardBody, CardImage, CardTitle, CardText } from 'mdbreact';
 
-import fire from '../config';
 import MDSpinner from 'react-md-spinner';
 
-export default class Settings extends Component {
+class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +38,7 @@ export default class Settings extends Component {
     this.setState({ loading: true }, () => {
       this.props.fetchSettings(year, month);
       // maybe need to enter setCurrentState into callback function
-      this.setCurrentState():
+      this.setCurrentState();
     });
     setTimeout(() => {
       this.setState({ loading: false });

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Router, Link } from 'react-router-dom';
 
 export default class MenuBar extends Component {
   render() {
@@ -17,13 +18,13 @@ export default class MenuBar extends Component {
                 <div id="navbar" className="navbar-collapse collapse">
                   <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
-                      <Link to="/"><i class="fa fa-home" aria-hidden="true"></i> Home</Link>
+                      <Link to="/"><i className="fa fa-home" aria-hidden="true"></i> Home</Link>
                     </li>
                     <li className="nav-item">
-                      <Link to="/HoursList"><i class="fa fa-list" aria-hidden="true"></i> Hours List</Link>
+                      <Link to="/HoursList"><i className="fa fa-list" aria-hidden="true"></i> Hours List</Link>
                     </li>
                     <li className="nav-item">
-                      <Link to="/Settings"><i class="fa fa-cog" aria-hidden="true"></i> Settings</Link>
+                      <Link to="/Settings"><i className="fa fa-cog" aria-hidden="true"></i> Settings</Link>
                     </li>
                   </ul>
                 </div>

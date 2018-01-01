@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
-import { fetchDays, addDay, editDay, deleteDay } from '../actions';
+import { fetchDays, setDay, deleteDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
-import fire from '../config';
 import Day from './Day';
 
 class HoursList extends Component {
@@ -26,7 +25,7 @@ class HoursList extends Component {
   }
 
   addDay() {
-    const dayOfMonth = parseInt(this.refs.dayOfMonth.value);
+    const dayOfMonth = parseInt(this.refs.dayOfMonth.value.substring(this.refs.dayOfMonth.value.length - 1), 10)
     const enterhour = parseFloat(this.refs.enterhour.value);
     const enterminute = parseFloat(this.refs.enterminute.value);
     const exithour = parseFloat(this.refs.exithour.value);
@@ -114,10 +113,12 @@ class HoursList extends Component {
     return (
       newDays.map(day => {
         const key = `${day.year}${day.month}${day.day}`;
-        if (day.day !== 0)
+        if (day.day !== 0) {
           return <Day key={key} day={day} hourly={newDays[newDays.length - 1].hourly}
-                  breakAfter={newDays[newDays.length - 1].breakAfter}, breakTime={newDays[newDays.length - 1].breakTime}
+                  breakAfter={newDays[newDays.length - 1].breakAfter} breakTime={newDays[newDays.length - 1].breakTime}
                   editDay={this.editDay.bind(this)} deleteDay={this.deleteDay.bind(this)} />
+        }
+        return day;
       })
     )
   }

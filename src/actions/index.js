@@ -19,8 +19,8 @@ export function fetchDays(year, month) {
 
 export function setDay(day, breakAfter, breakTime, addOrEdit) {
 
-  const { day, month, year, enterhour, enterminute, exithour, exitminute } = day;
-  const breakTime = breakTime/60;
+  const { month, year, enterhour, enterminute, exithour, exitminute } = day;
+  breakTime = breakTime/60;
   const enterAsMinutes = (enterhour * 60) + enterminute;
   const exitAsMinutes = (exithour * 60) - exitminute;
   const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
@@ -48,7 +48,7 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
   }
 
   fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
-    day: day,
+    day: day.day,
     year: year,
     month: month,
     enterhour: enterhour,
@@ -62,7 +62,7 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
   });
   // wait for the request to come back and oly then return the actions
   // redux promise should take care of that
-  if(addOrEdit == 1) { // to add
+  if(addOrEdit === 1) { // to add
     return {
       type: ADD_DAY,
       payload: day
@@ -107,7 +107,7 @@ export function fetchSettings(year, month) {
 
   settings_ref.on('value', snap => {
     settingsObject = snap.val();
-  }
+  });
   // wait for the request(settingsObject) to come back and oly then return the actions
   // redux promise should take care of that
   return {
