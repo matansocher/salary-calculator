@@ -38,6 +38,7 @@ export default class Settings extends Component {
     const { year, month } = this.props.route;
     this.setState({ loading: true }, () => {
       this.props.fetchSettings(year, month);
+      // maybe need to enter setCurrentState into callback function
       this.setCurrentState():
     });
     setTimeout(() => {
@@ -123,8 +124,6 @@ export default class Settings extends Component {
 function mapStateToProps(state) {
   return {
     settingsObject: state.settingsObject
-    // year: state.year,
-    // month: state.month
   };
 }
 

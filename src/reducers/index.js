@@ -6,9 +6,7 @@ import month from './reducer_month';
 
 const rootReducer = combineReducers({
   days: Days,
-  settingsObject: settingsObject,
-  year: year,
-  month: month
+  settingsObject: settingsObject
 });
 
 export default rootReducer;

@@ -23,11 +23,9 @@ class App extends Component {
   }
   changeMonth(value) {
     this.setState({ month: value });
-    // this.props.saveMonth(value);
   }
   changeYear(value) {
     this.setState({ year: value });
-    // this.props.saveYear(value);
   }
   render() {
     return (

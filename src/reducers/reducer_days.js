@@ -1,18 +1,24 @@
-// import _ from 'lodash';
-import { FETCH_DAYS, SET_DAY, DELETE_DAY } from '../actions/types';
+import _ from 'lodash';
+import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY } from '../actions/types';
 
 export default function(state = [], action) {
   switch (action.type) {
     case FETCH_DAYS:
       console.log(action.payload);
-      // return _.mapKeys(action.payload.data, "id");
       return action.payload;
-    case SET_DAY:
-      let newState = state.push(action.payload); // not good yet!!!!!!!!!!!!
+    case ADD_DAY:
+      let newState = state;
+      newState[newState.length] = action.payload;
+      return newState;
+    case EDIT_DAY:
+      let newState = state;
+      const index = _.findIndex(state, (day) => {
+        return day.day == action.payload.day;
+      });
+      newState[index] = action.payload;
       return newState;
     case DELETE_DAY:
-      // return _.omit(state, action.payload);
-      return action.payload;
+      return _.without(state, action.payload);
     default:
       return state;
   }

@@ -33,8 +33,8 @@ class HoursList extends Component {
     const exitminute = parseFloat(this.refs.exitminute.value);
 
     const newDays = this.props.days;
-    const breakAfter = newDays[newDays.length-1].breakAfter; // 8
-    const breakTime = newDays[newDays.length-1].breakTime; // 45
+    const breakAfter = newDays[newDays.length-1].breakAfter;
+    const breakTime = newDays[newDays.length-1].breakTime;
 
     const { year, month } = this.props.route;
 
@@ -47,7 +47,7 @@ class HoursList extends Component {
         enterminute: enterminute,
         exithour: exithour,
         exitminute: exitminute
-      }, breakAfter, breakTime);
+      }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
     });
     setTimeout(() => {
       this.setState({ loading: false, add: false });
@@ -55,8 +55,11 @@ class HoursList extends Component {
   }
 
   editDay(day) {
+    const newDays = this.props.days;
+    const breakAfter = newDays[newDays.length-1].breakAfter;
+    const breakTime = newDays[newDays.length-1].breakTime;
     this.setState({ loading: true }, () => {
-      this.props.setDay(day);
+      this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
     });
     setTimeout(() => {
       this.setState({ loading: false });
@@ -135,8 +138,6 @@ class HoursList extends Component {
 function mapStateToProps(state) {
   return {
     days: state.days
-    // year: state.year,
-    // month: state.month
   };
 }
 

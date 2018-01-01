@@ -1,28 +1,26 @@
-import { FETCH_DAYS, SET_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS, SAVE_YEAR, SAVE_MONTH } from '../actions/types';
+import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS } from '../actions/types';
 import fire from '../config';
 
 export function fetchDays(year, month) {
   let request;
-  console.log(`days/${year}/${month}`);
   fire.database().ref(`days/${year}/${month}`).on('value', snap => {
     const daysObject = snap.val();
-    console.log("** "+daysObject);
     request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
-    console.log("request1 "+request);
+    console.log("inside: "+request);
   });
   // wait for the request(daysObject) to come back and oly then return the actions
   // redux promise should take care of that
-  console.log("request2 "+request);
+  console.log("outside: "+request);
   return {
     type: FETCH_DAYS,
     payload: request
   }
 }
 
-export function setDay(day, breakAfter, breakTime) {
+export function setDay(day, breakAfter, breakTime, addOrEdit) {
 
   const { day, month, year, enterhour, enterminute, exithour, exitminute } = day;
-
+  const breakTime = breakTime/60;
   const enterAsMinutes = (enterhour * 60) + enterminute;
   const exitAsMinutes = (exithour * 60) - exitminute;
   const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
@@ -33,18 +31,18 @@ export function setDay(day, breakAfter, breakTime) {
     numberOfHours100 = numberOfHours;
   }
   if (numberOfHours === breakAfter) { // numberOfHours = 8
-    numberOfHours100 = breakAfter - (breakTime)/60;
+    numberOfHours100 = breakAfter - breakTime;
   }
   if (numberOfHours > breakAfter && numberOfHours < (breakAfter + 2)) { // 8 <= numberOfHours < 10
-    numberOfHours100 = breakAfter - (breakTime)/60;
+    numberOfHours100 = breakAfter - breakTime;
     numberOfHours125 = 2 - (numberOfHours - numberOfHours100);
   }
   if (numberOfHours === (breakAfter + 2)) { // numberOfHours = 10
     numberOfHours100 = breakAfter - breakTime;
-    numberOfHours125 = 2 - (breakTime)/60;
+    numberOfHours125 = 2 - breakTime;
   }
   if (numberOfHours > (breakAfter + 2)) { // numberOfHours >= 10
-    numberOfHours100 = breakAfter - (breakTime)/60;
+    numberOfHours100 = breakAfter - breakTime;
     numberOfHours125 = 2;
     numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
   }
@@ -64,9 +62,16 @@ export function setDay(day, breakAfter, breakTime) {
   });
   // wait for the request to come back and oly then return the actions
   // redux promise should take care of that
-  return {
-    type: SET_DAY,
-    payload: day
+  if(addOrEdit == 1) { // to add
+    return {
+      type: ADD_DAY,
+      payload: day
+    }
+  } else { // to edit
+    return {
+      type: EDIT_DAY,
+      payload: day
+    }
   }
 }
 
@@ -118,21 +123,5 @@ export function saveSettings(settingsObject) {
   return {
     type: SAVE_SETTINGS,
     payload: settingsObject
-  }
-}
-
-export function saveYear(year) {
-
-  return {
-    type: SAVE_YEAR,
-    payload: year
-  }
-}
-
-export function saveMonth(month) {
-
-  return {
-    type: SAVE_MONTH,
-    payload: month
   }
 }
