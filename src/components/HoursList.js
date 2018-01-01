@@ -5,120 +5,57 @@ import { fetchDays, addDay, editDay, deleteDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import fire from '../config';
 import Day from './Day';
-import ComboYear from './ComboYear';
-import ComboMonth from './ComboMonth';
 
 class HoursList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      dayOfMonth: 0,
+      enterhour: 0,
+      enterminute: 0,
+      exithour: 0,
+      exitminute: 0,
       add: false,
       loading: false
     }
   }
 
   componentDidMount() {
-    const { year, month } = this.props;
+    const { year, month } = this.props.route;
     this.props.fetchDays(year, month);
-    // this.fetchDays();
   }
 
-  // fetchDays() {
-  //   const { currentYear, currentMonth } = this.state;
-  //   this.setState({ loading: true }, () => {
-  //     const days_ref = fire.database().ref(`days/${currentYear}/${currentMonth}`);
-  //     days_ref.on('value', snap => {
-  //       let daysArray = snap.val();
-  //       const arr = Object.keys(daysArray).map(function (key) { return daysArray[key]; });
-  //       console.log(arr);
-  //       this.setState({ days: arr }, () => {
-  //         setTimeout(() => {
-  //           this.setState({ loading: false });
-  //         }, 1000);
-  //       });
-  //     });
-  //   });
-  // }
-
   addDay() {
-    const dayOfMonth = parseFloat(this.refs.dayOfMonth.value);
+    const dayOfMonth = parseInt(this.refs.dayOfMonth.value);
     const enterhour = parseFloat(this.refs.enterhour.value);
     const enterminute = parseFloat(this.refs.enterminute.value);
     const exithour = parseFloat(this.refs.exithour.value);
     const exitminute = parseFloat(this.refs.exitminute.value);
 
-    const enterAsHours = (enterhour * 60) + enterminute;
-    const exitAsHours = (exithour * 60) - exitminute;
-    const numberOfHours = (exitAsHours - enterAsHours) / 60;
-
     const newDays = this.props.days;
     const breakAfter = newDays[newDays.length-1].breakAfter; // 8
     const breakTime = newDays[newDays.length-1].breakTime; // 45
 
-    let numberOfHours100 = 0;
-    let numberOfHours125 = 0;
-    let numberOfHours150 = 0;
+    const { year, month } = this.props.route;
 
-    if (numberOfHours < breakAfter) { // numberOfHours < 8
-      numberOfHours100 = numberOfHours;
-    }
-    if (numberOfHours === breakAfter) { // numberOfHours = 8
-      numberOfHours100 = breakAfter - (breakTime)/60;
-    }
-    if (numberOfHours > breakAfter && numberOfHours < (breakAfter + 2)) { // 8 <= numberOfHours < 10
-      numberOfHours100 = breakAfter - (breakTime)/60;
-      numberOfHours125 = 2 - (numberOfHours - numberOfHours100);
-    }
-    if (numberOfHours === (breakAfter + 2)) { // numberOfHours = 10
-      numberOfHours100 = breakAfter - breakTime;
-      numberOfHours125 = 2 - (breakTime)/60;
-    }
-    if (numberOfHours > (breakAfter + 2)) { // numberOfHours >= 10
-      numberOfHours100 = breakAfter - (breakTime)/60;
-      numberOfHours125 = 2;
-      numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
-    }
-
-    // if we use redux, first create the day object and theb pass to action creator addDay
-    const { year, month } = this.props;
-
-    const newDay = {
-      day: dayOfMonth,
-      month: month,
-      year: year,
-      enterhour: enterhour,
-      enterminute: enterminute,
-      exithour: exithour,
-      exitminute: exitminute,
-      numberOfHours: numberOfHours,
-      numberOfHours100: numberOfHours100,
-      numberOfHours125: numberOfHours125,
-      numberOfHours150: numberOfHours150
-    }
     this.setState({ loading: true }, () => {
-      this.props.setDay(day);
-      // fire.database().ref(`days/${currentYear}/${currentMonth}/${dayOfMonth}`).set({
-      //   day: dayOfMonth,
-      //   month: currentMonth,
-      //   year: currentYear,
-      //   enterhour: enterhour,
-      //   enterminute: enterminute,
-      //   exithour: exithour,
-      //   exitminute: exitminute,
-      //   numberOfHours: numberOfHours,
-      //   numberOfHours100: numberOfHours100,
-      //   numberOfHours125: numberOfHours125,
-      //   numberOfHours150: numberOfHours150
-      // });
-      setTimeout(() => {
-        this.setState({ loading: false, add: false });
-      }, 1000);
+      this.props.setDay({
+        day: dayOfMonth,
+        month: month,
+        year: year,
+        enterhour: enterhour,
+        enterminute: enterminute,
+        exithour: exithour,
+        exitminute: exitminute
+      }, breakAfter, breakTime);
     });
+    setTimeout(() => {
+      this.setState({ loading: false, add: false });
+    }, 1000);
   }
 
   editDay(day) {
     this.setState({ loading: true }, () => {
-      // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({day});
       this.props.setDay(day);
     });
     setTimeout(() => {
@@ -128,7 +65,6 @@ class HoursList extends Component {
 
   deleteDay(day) {
     this.setState({ loading: true }, () => {
-      // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove();
       this.props.deleteDay(day);
     });
     setTimeout(() => {
@@ -141,13 +77,13 @@ class HoursList extends Component {
       return (
         <li className="col-sm-12 col-md-12 list-group-item">
           <h3>Day On Month:</h3>
-          <input className="form-control hour-input hours-input" ref="dayOfMonth" defaultValue=''></input><br />
+          <input className="form-control hour-input hours-input" ref="dayOfMonth" value={this.state.dayOfMonth} onChange={this.handleChange.bind(this)}></input><br />
           <h3>Enter Hour:</h3>
-          <input className="form-control hour-input hours-input" ref="enterhour" defaultValue=''></input>:
-          <input className="form-control hour-input hours-input" ref="enterminute" defaultValue=''></input><br />
+          <input className="form-control hour-input hours-input" ref="enterhour" value={this.state.enterhour} onChange={this.handleChange.bind(this)}></input>:
+          <input className="form-control hour-input hours-input" ref="enterminute" value={this.state.enterminute} onChange={this.handleChange.bind(this)}></input><br />
           <h3>Exit Hour:</h3>
-          <input className="form-control hour-input hours-input" ref="exithour" defaultValue=''></input>:
-          <input className="form-control hour-input hours-input" ref="exitminute" defaultValue=''></input><br />
+          <input className="form-control hour-input hours-input" ref="exithour" value={this.state.exithour} onChange={this.handleChange.bind(this)}></input>:
+          <input className="form-control hour-input hours-input" ref="exitminute" value={this.state.exitminute} onChange={this.handleChange.bind(this)}></input><br />
           <button onClick={this.addDay.bind(this)} className="btn btn-success regular-button hours-input"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
           <button onClick={() => this.setState({ add: false })} className="btn btn-primary regular-button hours-input"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
         </li>
@@ -177,6 +113,7 @@ class HoursList extends Component {
         const key = `${day.year}${day.month}${day.day}`;
         if (day.day !== 0)
           return <Day key={key} day={day} hourly={newDays[newDays.length - 1].hourly}
+                  breakAfter={newDays[newDays.length - 1].breakAfter}, breakTime={newDays[newDays.length - 1].breakTime}
                   editDay={this.editDay.bind(this)} deleteDay={this.deleteDay.bind(this)} />
       })
     )
@@ -185,10 +122,8 @@ class HoursList extends Component {
   render() {
     return(
       <div className="container container-fluid">
-        {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
         <h1>Hours List</h1>
-        <ComboYear changeYear={this.changeYear.bind(this)} />
-        <ComboMonth changeMonth={this.changeMonth.bind(this)} />
+        {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
         {this.renderAdd()}
         {this.renderList()}
@@ -199,9 +134,9 @@ class HoursList extends Component {
 
 function mapStateToProps(state) {
   return {
-    days: state.days,
-    year: state.year,
-    month: state.month
+    days: state.days
+    // year: state.year,
+    // month: state.month
   };
 }
 

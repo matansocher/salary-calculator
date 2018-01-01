@@ -14,43 +14,54 @@ import reducers from '../reducers';
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
 class App extends Component {
+  constructor(props) {
+    super(props):
+    this.state = {
+      year: ,
+      month:
+    }
+  }
   changeMonth(value) {
-    this.props.saveMonth(value);
+    this.setState({ month: value });
+    // this.props.saveMonth(value);
   }
   changeYear(value) {
-    this.props.saveYear(value);
+    this.setState({ year: value });
+    // this.props.saveYear(value);
   }
   render() {
     return (
       <Provider store={createStoreWithMiddleware(reducers)}>
-        <MenuBar />
+        <div className="container container-fluid">
+          <MenuBar />
 
-        <ComboYear changeYear={this.changeYear.bind(this)} />
-        <ComboMonth changeMonth={this.changeMonth.bind(this)} />
+          <ComboYear changeYear={this.changeYear.bind(this)} />
+          <ComboMonth changeMonth={this.changeMonth.bind(this)} />
 
-        <Router>
+          <Router>
             <hr/>
             <Switch>
-              <Route exact path="/" component={MainPage}/>
-              <Route path="/HoursList" component={HoursList}/>
-              <Route path="/Settings" component={Settings}/>
+              <Route exact path="/" component={MainPage} year={this.state.year} month={this.state.month} />
+              <Route path="/HoursList" component={HoursList} year={this.state.year} month={this.state.month} />
+              <Route path="/Settings" component={Settings} year={this.state.year} month={this.state.month} />
               <Route path="*" component={NoMatch}/>
             </Switch>
-        </Router>
+          </Router>
+        </div>
       </Provider>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    settingsObject: state.settingsObject
-  };
-}
+// function mapStateToProps(state) {
+//   return {
+//     settingsObject: state.settingsObject
+//   };
+// }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ saveMonth, saveYear }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App);
 // export default connect(mapStateToProps, { saveMonth, saveYear })(App);

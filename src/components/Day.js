@@ -10,24 +10,16 @@ export default class Day extends Component {
       exithour: props.day.exithour,
       exitminute: props.day.exitminute,
       hourly: this.props.hourly,
+      breakAfter: this.props.breakAfter,
+      breakTime: this.props.breakTime,
       editing: false
     };
   }
 
   saveClick() {
     const { day, month, year } = this.state.day;
-    const { enterhour, enterminute, exithour, exitminute } = this.state;
-    const enterAsHours = (enterhour * 60) + enterminute;
-    const exitAsHours = (exithour * 60) - exitminute;
-    const numberOfHours = (exitAsHours - enterAsHours) / 60;
+    const { enterhour, enterminute, exithour, exitminute, breakAfter, breakTime } = this.state;
 
-
-    // copy code from hours list in add function
-
-
-    const numberOfHours100 = (numberOfHours > 8 ? 7.25 : numberOfHours);
-    const numberOfHours125 = (numberOfHours > 10 ? 9.25 : numberOfHours - 8.5);
-    const numberOfHours150 = numberOfHours - numberOfHours125;
     this.props.editDay({
       day: day,
       year: year,
@@ -35,12 +27,8 @@ export default class Day extends Component {
       enterhour: enterhour,
       enterminute: enterminute,
       exithour: exithour,
-      exitminute: exitminute,
-      numberOfHours: numberOfHours,
-      numberOfHours100: numberOfHours100,
-      numberOfHours125: numberOfHours125,
-      numberOfHours150: numberOfHours150
-    });
+      exitminute: exitminute
+    }, breakAfter, breakTime);
     this.setState({ editing: false });
   }
 

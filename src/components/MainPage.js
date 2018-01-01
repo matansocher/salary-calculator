@@ -5,8 +5,6 @@ import { fetchDays, fetchSettings } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import fire from '../config';
 import MainPageObject from './MainPageObject';
-import ComboYear from './ComboYear';
-import ComboMonth from './ComboMonth';
 
 export default class MainPage extends Component {
   constructor(props) {
@@ -15,7 +13,6 @@ export default class MainPage extends Component {
       bruto: 0,
       neto: 0,
       tax: 0,
-      hourly: 0,
       numberOfHours: 0,
       numberOfHours100: 0,
       numberOfHours125: 0,
@@ -24,33 +21,20 @@ export default class MainPage extends Component {
       loading: false
     };
   }
+
   componentDidMount() {
-    // this.fetchDays();
-    const { year, month } = this.props;
-    this.props.fetchDays(year, month);
+    const { year, month } = this.props.route;
+    this.setState({ loading: true }, () => {
+      this.props.fetchDays(year, month);
+      this.props.fetchSettings(year, month);
+      this.mapOnDays();
+    });
   }
-  // fetchDays() {
-  //   const { currentYear, currentMonth } = this.state;
-  //   const days_ref = fire.database().ref(`days/${currentYear}/${currentMonth}`);
-  //   this.setState({ loading: true }, () => {
-  //     days_ref.on('value', snap => {
-  //       let daysArray = snap.val();
-  //       const arr = Object.keys(daysArray).map(function (key) { return daysArray[key]; });
-  //       console.log(arr);
-  //       this.setState({ days: arr }, () => {
-  //         setTimeout(() => {
-  //           this.mapOnDays();
-  //         }, 1000);
-  //       });
-  //     });
-  //   });
-  // }
 
   mapOnDays() {
-    // const newDays = this.props.days;
-    const newDays = this.props.days;
+    const days = this.props.days;
     let numberOfHours = 0, numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0, numberOfHoursNeto = 0;
-    newDays.map(day => {
+    days.map(day => {
       if (day.day !== 0) {
         numberOfHours += parseFloat(day.numberOfHours);
         numberOfHours100 += parseFloat(day.numberOfHours100);
@@ -60,12 +44,11 @@ export default class MainPage extends Component {
       }
       return day;
     })
-    this.setState({numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150, numberOfHoursNeto}, () => {
+    this.setState({ numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150, numberOfHoursNeto }, () => {
       this.getBruto();
-      this.setState({ loading: false });
     })
-
   }
+
   getBruto() {
     const { numberOfHours100, numberOfHours125, numberOfHours150 } = this.state;
     // const days = this.props.days;
@@ -81,8 +64,10 @@ export default class MainPage extends Component {
       this.getNeto();
     });
   }
+
   getNeto() {
-    const { days, bruto } = this.state;
+    const bruto = this.state.bruto;
+    const days = this.props;
     const pensionReduction = bruto * settingsObject.pension / 100;
 
     const step1 = 5280, step2 = 9010, step3 = 14000, step4 = 20000, step5 = 41830;
@@ -103,17 +88,18 @@ export default class MainPage extends Component {
       tax += (bruto-step5)*step6per;
     }
 
-    let neto = bruto - pensionReduction - tax;
-    this.setState({neto, tax});
+    const neto = bruto - pensionReduction - tax;
+    setTimeout(() => {
+      this.setState({ neto, tax, loading: false });
+    }, 1000);
   }
+
   render() {
     return(
       <div className="container container-fluid">
-        {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
         <h1>Main Page</h1>
+        {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
-        <ComboYear changeYear={this.changeYear.bind(this)} />
-        <ComboMonth changeMonth={this.changeMonth.bind(this)} />
         {this.props.days.length === 1 ?
           (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>) :
           (<div>
@@ -137,9 +123,9 @@ export default class MainPage extends Component {
 function mapStateToProps(state) {
   return {
     days: state.days,
-    settingsObject: state.settingsObject,
-    year: state.year,
-    month: state.month
+    settingsObject: state.settingsObject
+    // year: state.year,
+    // month: state.month
   };
 }
 
