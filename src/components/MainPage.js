@@ -22,7 +22,7 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props.route;
+    const { year, month } = this.props;
     this.setState({ loading: true }, () => {
       this.props.fetchDays(year, month);
       // maybe need to enter fetchSettings into callback function

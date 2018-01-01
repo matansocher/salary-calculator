@@ -8,7 +8,7 @@ export function fetchDays(year, month) {
     request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
     console.log("inside: "+request);
   });
-  // wait for the request(daysObject) to come back and oly then return the actions
+  // wait for the request(daysObject) to come back and only then return the actions
   // redux promise should take care of that
   console.log("outside: "+request);
   return {

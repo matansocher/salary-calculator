@@ -64,9 +64,9 @@ export default class App extends Component {
 
             <hr/>
             <Switch>
-              <Route exact path="/" component={MainPage} year={this.state.year} month={this.state.month} />
-              <Route path="/HoursList" component={HoursList} year={this.state.year} month={this.state.month} />
-              <Route path="/Settings" component={Settings} year={this.state.year} month={this.state.month} />
+              <Route path="/" render={()=><MainPage year={this.state.year} month={this.state.month}/>}/>
+              <Route path="/HoursList" render={()=><HoursList year={this.state.year} month={this.state.month}/>}/>
+              <Route path="/Settings" render={()=><Settings year={this.state.year} month={this.state.month}/>}/>
               <Route path="*" component={NoMatch}/>
             </Switch>
           </div>
