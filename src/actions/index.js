@@ -3,19 +3,32 @@ import fire from '../config';
 
 export function fetchDays(year, month) {
   let request;
-  fire.database().ref(`days/${year}/${month}`).on('value', snap => {
-    const daysObject = snap.val();
-    request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
 
-    console.log("inside: "+request);
-
-    return (dispatch) => {
-      request.then(({data}) => {
-        dispatch({ type: FETCH_DAYS, payload: data })
+  return dispatch => {
+    fire.database().ref(`days/${year}/${month}`).on('value', snap => {
+      const daysObject = snap.val();
+      request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
+      dispatch({
+        type: FETCH_DAYS,
+        payload: request
       });
-      // maybe need to handle error state returned
-    };
-  });
+    });
+  };
+
+
+  // fire.database().ref(`days/${year}/${month}`).on('value', snap => {
+  //   const daysObject = snap.val();
+  //   request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
+  //
+  //   console.log("inside: "+request);
+  //
+  //   return (dispatch) => {
+  //     request.then(({data}) => {
+  //       dispatch({ type: FETCH_DAYS, payload: data })
+  //     });
+  //     // maybe need to handle error state returned
+  //   };
+  // });
 
 
   //****************************uninstall redux-promise*******************************
@@ -147,15 +160,29 @@ export function fetchSettings(year, month) {
   });
   let settingsObject;
 
-  settings_ref.on('value', snap => {
-    settingsObject = snap.val();
-    return (dispatch) => {
-      settingsObject.then(({data}) => {
-        dispatch({ type: FETCH_SETTINGS, payload: data })
+
+
+  return dispatch => {
+    settings_ref.on('value', snap => {
+      dispatch({
+        type: FETCH_SETTINGS,
+        payload: snapshot.val()
       });
-      // maybe need to handle error state returned
-    };
-  });
+    });
+  };
+
+
+  // settings_ref.on('value', snap => {
+  //   settingsObject = snap.val();
+  //   return (dispatch) => {
+  //     settingsObject.then(({data}) => {
+  //       dispatch({ type: FETCH_SETTINGS, payload: data })
+  //     });
+  //     // maybe need to handle error state returned
+  //   };
+  // });
+
+
   // wait for the request(settingsObject) to come back and oly then return the actions
   // redux promise should take care of that
   // return {
