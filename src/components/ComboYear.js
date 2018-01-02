@@ -4,8 +4,9 @@ export default class ComboYear extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentYear: new Date().getFullYear()
+      currentYear: props.val
     }
+    this.handleChange = this.handleChange.bind(this);
   }
   handleChange(event) {
     const value = event.target.value;
@@ -16,7 +17,7 @@ export default class ComboYear extends Component {
   render() {
     return (
       <div className="form-group col-sm-6">
-        <select className="form-control" onChange={this.handleChange.bind(this)} value={this.state.currentYear}>
+        <select className="form-control" onChange={this.handleChange} value={this.state.currentYear}>
           <option value="2017">2017</option>
           <option value="2018">2018</option>
           <option value="2019">2019</option>

@@ -9,11 +9,13 @@ export default class Day extends Component {
       enterminute: props.day.enterminute,
       exithour: props.day.exithour,
       exitminute: props.day.exitminute,
-      hourly: this.props.hourly,
-      breakAfter: this.props.breakAfter,
-      breakTime: this.props.breakTime,
+      hourly: props.hourly,
+      breakAfter: props.breakAfter,
+      breakTime: props.breakTime,
       editing: false
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.saveClick = this.saveClick.bind(this);
   }
 
   saveClick() {
@@ -34,8 +36,11 @@ export default class Day extends Component {
 
   handleChange(e) {
     var change = {};
-    change[e.target.name] = e.target.value;
-    this.setState(change);
+    let currentState = this.state[e.target.name];
+    if (!isNaN(e.target.value)) {
+      change[e.target.name] = e.target.value;
+      this.setState(change);
+    }
   }
 
   getDayOfWeek() {
@@ -60,11 +65,11 @@ export default class Day extends Component {
   renderEdit() {
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
-        <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour" value={this.state.enterhour} onChange={this.handleChange.bind(this)}></input>:
-        <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute" value={this.state.enterminute} onChange={this.handleChange.bind(this)}></input>-
-        <input className="form-control hour-input hours-input" name="exithour" ref="exithour" value={this.state.exithour} onChange={this.handleChange.bind(this)}></input>:
-        <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute" value={this.state.exitminute} onChange={this.handleChange.bind(this)}></input><br />
-        <button onClick={this.saveClick.bind(this)} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+        <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour" value={this.state.enterhour} onChange={this.handleChange}></input>:
+        <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute" value={this.state.enterminute} onChange={this.handleChange}></input>-
+        <input className="form-control hour-input hours-input" name="exithour" ref="exithour" value={this.state.exithour} onChange={this.handleChange}></input>:
+        <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute" value={this.state.exitminute} onChange={this.handleChange}></input><br />
+        <button onClick={this.saveClick} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
         <button onClick={() => this.setState({ editing: false })} className="btn btn-primary regular-button"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
       </li>
     );

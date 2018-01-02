@@ -17,6 +17,10 @@ class HoursList extends Component {
       add: false,
       loading: false
     }
+    this.handleChange = this.handleChange.bind(this);
+    this.addDay = this.addDay.bind(this);
+    this.editDay = this.editDay.bind(this);
+    this.deleteDay = this.deleteDay.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +52,7 @@ class HoursList extends Component {
         exitminute: exitminute
       }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
     });
+    // not really - need it as a callback
     setTimeout(() => {
       this.setState({ loading: false, add: false });
     }, 1000);
@@ -60,6 +65,7 @@ class HoursList extends Component {
     this.setState({ loading: true }, () => {
       this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
     });
+    // not really - need it as a callback
     setTimeout(() => {
       this.setState({ loading: false });
     }, 1000);
@@ -69,9 +75,19 @@ class HoursList extends Component {
     this.setState({ loading: true }, () => {
       this.props.deleteDay(day);
     });
+    // not really - need it as a callback
     setTimeout(() => {
       this.setState({ loading: false });
     }, 1000);
+  }
+
+  handleChange(e) {
+    var change = {};
+    let currentState = this.state[e.target.name];
+    if (!isNaN(e.target.value)) {
+      change[e.target.name] = e.target.value;
+      this.setState(change);
+    }
   }
 
   renderAdd() {
@@ -79,14 +95,14 @@ class HoursList extends Component {
       return (
         <li className="col-sm-12 col-md-12 list-group-item">
           <h3>Day On Month:</h3>
-          <input className="form-control hour-input hours-input" ref="dayOfMonth" value={this.state.dayOfMonth} onChange={this.handleChange.bind(this)}></input><br />
+          <input className="form-control hour-input hours-input" name="dayOfMonth" ref="dayOfMonth" value={this.state.dayOfMonth} onChange={this.handleChange}></input><br />
           <h3>Enter Hour:</h3>
-          <input className="form-control hour-input hours-input" ref="enterhour" value={this.state.enterhour} onChange={this.handleChange.bind(this)}></input>:
-          <input className="form-control hour-input hours-input" ref="enterminute" value={this.state.enterminute} onChange={this.handleChange.bind(this)}></input><br />
+          <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour" value={this.state.enterhour} onChange={this.handleChange}></input>:
+          <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute" value={this.state.enterminute} onChange={this.handleChange}></input><br />
           <h3>Exit Hour:</h3>
-          <input className="form-control hour-input hours-input" ref="exithour" value={this.state.exithour} onChange={this.handleChange.bind(this)}></input>:
-          <input className="form-control hour-input hours-input" ref="exitminute" value={this.state.exitminute} onChange={this.handleChange.bind(this)}></input><br />
-          <button onClick={this.addDay.bind(this)} className="btn btn-success regular-button hours-input"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+          <input className="form-control hour-input hours-input" name="exithour" ref="exithour" value={this.state.exithour} onChange={this.handleChange}></input>:
+          <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute" value={this.state.exitminute} onChange={this.handleChange}></input><br />
+          <button onClick={this.addDay} className="btn btn-success regular-button hours-input"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
           <button onClick={() => this.setState({ add: false })} className="btn btn-primary regular-button hours-input"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
         </li>
       );
@@ -101,6 +117,7 @@ class HoursList extends Component {
 
   renderList() {
     const newDays = this.props.days;
+    const settingsObject = newDays[newDays.length - 1]
 
     if (newDays.length === 1) {
       return (
@@ -115,8 +132,8 @@ class HoursList extends Component {
         const key = `${day.year}${day.month}${day.day}`;
         if (day.day !== 0) {
           return <Day key={key} day={day} hourly={newDays[newDays.length - 1].hourly}
-                  breakAfter={newDays[newDays.length - 1].breakAfter} breakTime={newDays[newDays.length - 1].breakTime}
-                  editDay={this.editDay.bind(this)} deleteDay={this.deleteDay.bind(this)} />
+                  breakAfter={settingsObject.breakAfter} breakTime={settingsObject.breakTime}
+                  editDay={this.editDay} deleteDay={this.deleteDay} />
         }
         return day;
       })

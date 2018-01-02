@@ -21,6 +21,8 @@ export default class App extends Component {
       year: new Date().getFullYear(),
       month: (new Date().getMonth() + 1)
     }
+    this.changeYear = this.changeYear.bind(this);
+    this.changeMonth = this.changeMonth.bind(this);
   }
   changeMonth(value) {
     this.setState({ month: value });
@@ -36,7 +38,7 @@ export default class App extends Component {
             <div className="row">
               <div className="col-sm-12 sidebar">
                 <nav className="navbar navbar-toggleable-md fixed-top navbar-inverse bg-uniqueColor">
-                  <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                  <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                   </button>
                   <h2>Logo</h2>
@@ -59,8 +61,8 @@ export default class App extends Component {
               </div>
             </div>
 
-            <ComboYear changeYear={this.changeYear.bind(this)} />
-            <ComboMonth changeMonth={this.changeMonth.bind(this)} />
+            <ComboYear val={this.state.year} changeYear={this.changeYear} />
+            <ComboMonth val={this.state.month} changeMonth={this.changeMonth} />
 
             <hr/>
             <Switch>

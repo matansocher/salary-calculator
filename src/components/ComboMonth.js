@@ -4,8 +4,9 @@ export default class ComboMonth extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMonth: (new Date().getMonth() + 1)
+      currentMonth: props.val
     }
+    this.handleChange = this.handleChange.bind(this);
   }
   handleChange(event) {
     const value = event.target.value;
@@ -16,7 +17,7 @@ export default class ComboMonth extends Component {
   render() {
     return (
       <div className="form-group col-sm-6">
-        <select className="form-control" onChange={this.handleChange.bind(this)} value={this.state.currentMonth}>
+        <select className="form-control" onChange={this.handleChange} value={this.state.currentMonth}>
           <option value="1">January</option><option value="2">February</option>
           <option value="3">March</option><option value="4">April</option>
           <option value="5">May</option><option value="6">June</option>

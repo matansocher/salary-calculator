@@ -20,16 +20,19 @@ class Settings extends Component {
       editing: false,
       loading: false
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
   }
 
   setCurrentState() {
+    const { hourly, breakTime, breakAfter, pension, drives, others } = this.props.settingsObject;
     this.setState({
-      hourly: this.props.settingsObject.hourly,
-      breakTime: this.props.settingsObject.breakTime,
-      breakAfter: this.props.settingsObject.breakAfter,
-      pension: this.props.settingsObject.pension,
-      drives: this.props.settingsObject.drives,
-      others: this.props.settingsObject.others
+      hourly: hourly,
+      breakTime: breakTime,
+      breakAfter: breakAfter,
+      pension: pension,
+      drives: drives,
+      others: others
     });
   }
 
@@ -37,7 +40,7 @@ class Settings extends Component {
     const { year, month } = this.props;
     this.setState({ loading: true }, () => {
       this.props.fetchSettings(year, month);
-      // maybe need to enter setCurrentState into callback function
+      // need to enter setCurrentState into callback function
       this.setCurrentState();
     });
     setTimeout(() => {
@@ -64,6 +67,7 @@ class Settings extends Component {
       }
       this.props.saveSettings(settingsObject);
     });
+    // not really, need it as a callback
     setTimeout(() => {
       this.setState({ loading: false });
       // gesture to user that the changes were saved
@@ -71,27 +75,30 @@ class Settings extends Component {
   }
   handleChange(e) {
     var change = {};
-    change[e.target.name] = e.target.value;
-    this.setState(change);
+    let currentState = this.state[e.target.name];
+    if (!isNaN(e.target.value)) {
+      change[e.target.name] = e.target.value;
+      this.setState(change);
+    }
   }
 
   renderEdit() {
     return(
       <div>
         <h3>Hourly Wage:</h3>
-        <input className="form-control medium-input" name="hourly" ref="hourly" value={this.state.hourly} onChange={this.handleChange.bind(this)}></input>
+        <input className="form-control medium-input" name="hourly" ref="hourly" value={this.state.hourly} onChange={this.handleChange}></input>
         <h3>Break Time:</h3>
-        <input className="form-control medium-input" name="breakTime" ref="breakTime" value={this.state.breakTime} onChange={this.handleChange.bind(this)}></input>
+        <input className="form-control medium-input" name="breakTime" ref="breakTime" value={this.state.breakTime} onChange={this.handleChange}></input>
         <h3>Break After:</h3>
-        <input className="form-control medium-input" name="breakAfter" ref="breakAfter" value={this.state.breakAfter} onChange={this.handleChange.bind(this)}></input>
+        <input className="form-control medium-input" name="breakAfter" ref="breakAfter" value={this.state.breakAfter} onChange={this.handleChange}></input>
         <h3>Pension Reduction %:</h3>
-        <input className="form-control medium-input" name="pension" ref="pension" value={this.state.pension} onChange={this.handleChange.bind(this)}></input>
+        <input className="form-control medium-input" name="pension" ref="pension" value={this.state.pension} onChange={this.handleChange}></input>
         <h3>Drives:</h3>
-        <input className="form-control medium-input" name="drives" ref="drives" value={this.state.drives} onChange={this.handleChange.bind(this)}></input>
+        <input className="form-control medium-input" name="drives" ref="drives" value={this.state.drives} onChange={this.handleChange}></input>
         <h3>Others:</h3>
-        <input className="form-control medium-input" ref="others" value={this.state.others} onChange={this.handleChange.bind(this)}></input>
+        <input className="form-control medium-input" ref="others" value={this.state.others} onChange={this.handleChange}></input>
         <button onClick={() => this.setState({ editing: false })} className="btn btn-primary regular-button"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
-        <button onClick={this.saveSettings.bind(this)} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+        <button onClick={this.saveSettings} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
       </div>
     );
   }
