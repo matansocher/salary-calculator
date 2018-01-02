@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import promise from 'redux-promise';
+import reduxThunk from 'redux-thunk';
 import ComboYear from './components/ComboYear';
 import ComboMonth from './components/ComboMonth';
 // import MenuBar from './components/MenuBar';
@@ -12,7 +12,7 @@ import Settings from './components/Settings';
 import NoMatch from './components/NoMatch';
 import reducers from './reducers';
 
-const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
+const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 
 export default class App extends Component {
   constructor(props) {

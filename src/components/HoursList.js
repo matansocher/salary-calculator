@@ -20,7 +20,7 @@ class HoursList extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props.route;
+    const { year, month } = this.props;
     this.props.fetchDays(year, month);
   }
 
@@ -35,7 +35,7 @@ class HoursList extends Component {
     const breakAfter = newDays[newDays.length-1].breakAfter;
     const breakTime = newDays[newDays.length-1].breakTime;
 
-    const { year, month } = this.props.route;
+    const { year, month } = this.props;
 
     this.setState({ loading: true }, () => {
       this.props.setDay({

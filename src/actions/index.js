@@ -6,15 +6,39 @@ export function fetchDays(year, month) {
   fire.database().ref(`days/${year}/${month}`).on('value', snap => {
     const daysObject = snap.val();
     request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
+
     console.log("inside: "+request);
+
+    return (dispatch) => {
+      request.then(({data}) => {
+        dispatch({ type: FETCH_DAYS, payload: data })
+      });
+      // maybe need to handle error state returned
+    };
   });
+
+
+  //****************************uninstall redux-promise*******************************
+  //****************************install redux-thunk***********************************
+
+
+    // const request = axios.get('http://jsonplaceholder.typicode.com/users');
+    //
+    //
+    // return (dispatch) => {
+    //   request.then(({data}) => {
+    //     dispatch({ type: 'FETCH_PROFILES', payload: data })
+    //   });
+    // };
+
+
   // wait for the request(daysObject) to come back and only then return the actions
   // redux promise should take care of that
-  console.log("outside: "+request);
-  return {
-    type: FETCH_DAYS,
-    payload: request
-  }
+  // console.log("outside: "+request);
+  // return {
+  //   type: FETCH_DAYS,
+  //   payload: request
+  // }
 }
 
 export function setDay(day, breakAfter, breakTime, addOrEdit) {
@@ -59,30 +83,48 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     numberOfHours100: numberOfHours100,
     numberOfHours125: numberOfHours125,
     numberOfHours150: numberOfHours150
+  }).then(() => {
+    if(addOrEdit === 1) { // to add
+      return {
+        type: ADD_DAY,
+        payload: day
+      }
+    } else { // to edit
+      return {
+        type: EDIT_DAY,
+        payload: day
+      }
+    }
   });
   // wait for the request to come back and oly then return the actions
   // redux promise should take care of that
-  if(addOrEdit === 1) { // to add
-    return {
-      type: ADD_DAY,
-      payload: day
-    }
-  } else { // to edit
-    return {
-      type: EDIT_DAY,
-      payload: day
-    }
-  }
+  // if(addOrEdit === 1) { // to add
+  //   return {
+  //     type: ADD_DAY,
+  //     payload: day
+  //   }
+  // } else { // to edit
+  //   return {
+  //     type: EDIT_DAY,
+  //     payload: day
+  //   }
+  // }
 }
 
 export function deleteDay(day) {
-  fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove();
+  fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove()
+  .then(() => {
+      return {
+        type: DELETE_DAY,
+        payload: day
+      }
+  });
   // wait for the request to come back and oly then return the actions
   // redux promise should take care of that
-  return {
-    type: DELETE_DAY,
-    payload: day
-  }
+  // return {
+  //   type: DELETE_DAY,
+  //   payload: day
+  // }
 }
 
 export function fetchSettings(year, month) {
@@ -107,21 +149,33 @@ export function fetchSettings(year, month) {
 
   settings_ref.on('value', snap => {
     settingsObject = snap.val();
+    return (dispatch) => {
+      settingsObject.then(({data}) => {
+        dispatch({ type: FETCH_SETTINGS, payload: data })
+      });
+      // maybe need to handle error state returned
+    };
   });
   // wait for the request(settingsObject) to come back and oly then return the actions
   // redux promise should take care of that
-  return {
-    type: FETCH_SETTINGS,
-    payload: settingsObject
-  }
+  // return {
+  //   type: FETCH_SETTINGS,
+  //   payload: settingsObject
+  // }
 }
 
 export function saveSettings(settingsObject) {
-  fire.database().ref(`days/${settingsObject.year}/${settingsObject.month}/settings`).set({settingsObject});
+  fire.database().ref(`days/${settingsObject.year}/${settingsObject.month}/settings`).set({settingsObject})
+  .then(() => {
+      return {
+        type: SAVE_SETTINGS,
+        payload: day
+      }
+  });
   // wait for the request(settingsObject) to come back and oly then return the actions
   // redux promise should take care of that
-  return {
-    type: SAVE_SETTINGS,
-    payload: settingsObject
-  }
+  // return {
+  //   type: SAVE_SETTINGS,
+  //   payload: settingsObject
+  // }
 }

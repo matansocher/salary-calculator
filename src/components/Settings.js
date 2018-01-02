@@ -34,7 +34,7 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props.route;
+    const { year, month } = this.props;
     this.setState({ loading: true }, () => {
       this.props.fetchSettings(year, month);
       // maybe need to enter setCurrentState into callback function
@@ -46,7 +46,7 @@ class Settings extends Component {
   }
 
   saveSettings() {
-    const { year, month } = this.props.route;
+    const { year, month } = this.props;
     // not sure if we can drop these refs states. now, the refs has no states
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.refs;
     this.setState({ loading: true }, () => {
