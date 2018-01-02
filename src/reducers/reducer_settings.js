@@ -3,6 +3,7 @@ import { FETCH_SETTINGS, SAVE_SETTINGS } from '../actions/types';
 export default function(state = {}, action) {
   switch (action.type) {
     case FETCH_SETTINGS:
+      console.log(action.payload);
       return action.payload;
     case SAVE_SETTINGS:
       return action.payload;

@@ -28,7 +28,15 @@ class MainPage extends Component {
       // maybe need to enter fetchSettings into callback function
       this.props.fetchSettings(year, month);
       // maybe need to enter mapOnDays into callback function
-      this.mapOnDays();
+
+      // not really - need it as a callback
+      setTimeout(() => {
+        this.setState({ loading: false, add: false });
+        console.log('*');
+        console.log(this.props.days);
+        console.log(this.props.settingsObject);
+        this.mapOnDays();
+      }, 1500);
     });
   }
 

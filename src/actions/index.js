@@ -145,6 +145,7 @@ export function fetchSettings(year, month) {
   // if no settings object exists - create empty one
   fire.database().ref(`days/${year}/${month}`).once('value', snap => {
     if (!snap.hasChild('settings')) {
+      console.log('there is no child in: '+month);
       settings_ref.set({
         day: 0,
         month: month,
@@ -158,7 +159,7 @@ export function fetchSettings(year, month) {
       });
     }
   });
-  let settingsObject;
+  // let settingsObject;
 
 
 
@@ -166,7 +167,7 @@ export function fetchSettings(year, month) {
     settings_ref.on('value', snap => {
       dispatch({
         type: FETCH_SETTINGS,
-        payload: snapshot.val()
+        payload: snap.val()
       });
     });
   };
@@ -196,7 +197,7 @@ export function saveSettings(settingsObject) {
   .then(() => {
       return {
         type: SAVE_SETTINGS,
-        payload: day
+        payload: settingsObject
       }
   });
   // wait for the request(settingsObject) to come back and oly then return the actions

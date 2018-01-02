@@ -50,7 +50,6 @@ class Settings extends Component {
 
   saveSettings() {
     const { year, month } = this.props;
-    // not sure if we can drop these refs states. now, the refs has no states
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.refs;
     this.setState({ loading: true }, () => {
       console.log(`days/${year}/${month}/settings`);
@@ -75,7 +74,7 @@ class Settings extends Component {
   }
   handleChange(e) {
     var change = {};
-    let currentState = this.state[e.target.name];
+    // let currentState = this.state[e.target.name];
     if (!isNaN(e.target.value)) {
       change[e.target.name] = e.target.value;
       this.setState(change);
@@ -103,15 +102,16 @@ class Settings extends Component {
     );
   }
   renderRegular() {
+    const { hourly, breakTime, breakAfter, pension, drives, others } = this.props.settingsObject;
     return(
       <div>
         <button className="btn btn-info regular-button" onClick={() => this.setState({ editing: true })}><i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
-        <h3>Hourly Wage: {this.props.settingsObject.hourly}</h3>
-        <h3>Break Time: {this.props.settingsObject.breakTime}</h3>
-        <h3>Break After: {this.props.settingsObject.breakAfter}</h3>
-        <h3>Pension Reduction %: {this.props.settingsObject.pension}</h3>
-        <h3>Drives: {this.props.settingsObject.drives}</h3>
-        <h3>Others: {this.props.settingsObject.others}</h3>
+        <h3>Hourly Wage: {hourly}</h3>
+        <h3>Break Time: {breakTime}</h3>
+        <h3>Break After: {breakAfter}</h3>
+        <h3>Pension Reduction %: {pension}</h3>
+        <h3>Drives: {drives}</h3>
+        <h3>Others: {others}</h3>
       </div>
     );
   }

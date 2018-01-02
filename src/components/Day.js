@@ -36,7 +36,7 @@ export default class Day extends Component {
 
   handleChange(e) {
     var change = {};
-    let currentState = this.state[e.target.name];
+    // let currentState = this.state[e.target.name];
     if (!isNaN(e.target.value)) {
       change[e.target.name] = e.target.value;
       this.setState(change);

@@ -26,6 +26,10 @@ class HoursList extends Component {
   componentDidMount() {
     const { year, month } = this.props;
     this.props.fetchDays(year, month);
+    // not really - need it as a callback
+    setTimeout(() => {
+      this.setState({ loading: false, add: false });
+    }, 1500);
   }
 
   addDay() {
@@ -83,7 +87,7 @@ class HoursList extends Component {
 
   handleChange(e) {
     var change = {};
-    let currentState = this.state[e.target.name];
+    // let currentState = this.state[e.target.name];
     if (!isNaN(e.target.value)) {
       change[e.target.name] = e.target.value;
       this.setState(change);
