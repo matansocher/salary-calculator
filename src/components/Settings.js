@@ -37,7 +37,7 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props;
+    const { year, month } = this.props.time;
     this.setState({ loading: true }, () => {
       this.props.fetchSettings(year, month);
       // need to enter setCurrentState into callback function
@@ -49,7 +49,7 @@ class Settings extends Component {
   }
 
   saveSettings() {
-    const { year, month } = this.props;
+    const { year, month } = this.props.time;
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.refs;
     this.setState({ loading: true }, () => {
       console.log(`days/${year}/${month}/settings`);
@@ -129,6 +129,7 @@ class Settings extends Component {
 
 function mapStateToProps(state) {
   return {
+    time: state.time,
     settingsObject: state.settingsObject
   };
 }

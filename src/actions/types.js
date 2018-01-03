@@ -4,5 +4,4 @@ export const EDIT_DAY = 'edit_day';
 export const DELETE_DAY = 'delete_day';
 export const FETCH_SETTINGS = 'fetch_settings';
 export const SAVE_SETTINGS = 'save_settings';
-export const SAVE_YEAR = 'save_year';
-export const SAVE_MONTH = 'save_year';
+export const SAVE_TIME = 'save_time';

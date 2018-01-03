@@ -24,7 +24,7 @@ class HoursList extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props;
+    const { year, month } = this.props.time;
     this.props.fetchDays(year, month);
     // not really - need it as a callback
     setTimeout(() => {
@@ -43,7 +43,7 @@ class HoursList extends Component {
     const breakAfter = newDays[newDays.length-1].breakAfter;
     const breakTime = newDays[newDays.length-1].breakTime;
 
-    const { year, month } = this.props;
+    const { year, month } = this.props.time;
 
     this.setState({ loading: true }, () => {
       this.props.setDay({
@@ -121,7 +121,7 @@ class HoursList extends Component {
 
   renderList() {
     const newDays = this.props.days;
-    const settingsObject = newDays[newDays.length - 1]
+    const settingsObject = newDays[newDays.length - 1];
 
     if (newDays.length === 1) {
       return (
@@ -159,6 +159,7 @@ class HoursList extends Component {
 
 function mapStateToProps(state) {
   return {
+    time: state.time,
     days: state.days
   };
 }

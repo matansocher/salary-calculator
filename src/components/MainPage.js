@@ -22,14 +22,12 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props;
+    const { year, month } = this.props.time;
     this.setState({ loading: true }, () => {
       this.props.fetchDays(year, month);
-      // maybe need to enter fetchSettings into callback function
+      // need to enter fetchSettings into callback function
       this.props.fetchSettings(year, month);
-      // maybe need to enter mapOnDays into callback function
-
-      // not really - need it as a callback
+      //not really - need it as a callback
       setTimeout(() => {
         this.setState({ loading: false, add: false });
         console.log('*');
@@ -131,11 +129,12 @@ class MainPage extends Component {
 
 function mapStateToProps(state) {
   return {
+    time: state.time,
     days: state.days,
-    settingsObject: state.settingsObject
+    settingsObject: state.days[state.days.length - 1]
   };
 }
-
+// if removing the fetchSettings worked, remove it from bindActionCreators
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchDays, fetchSettings }, dispatch);
 }

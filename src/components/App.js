@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { saveTime } from '../actions';
 import ComboYear from './components/ComboYear';
 import ComboMonth from './components/ComboMonth';
 import MenuBar from './components/MenuBar';
@@ -19,10 +20,14 @@ export default class App extends Component {
     this.changeMonth = this.changeMonth.bind(this);
   }
   changeMonth(value) {
-    this.setState({ month: value });
+    this.setState({ month: value }, () => {
+      this.props.saveTime(this.state.year, this.state.month);
+    });
   }
   changeYear(value) {
-    this.setState({ year: value });
+    this.setState({ year: value }, () => {
+      this.props.saveTime(this.state.year, this.state.month);
+    });
   }
   render() {
     return (
@@ -36,9 +41,9 @@ export default class App extends Component {
 
           <hr/>
           <Switch>
-            <Route path="/HoursList" render={()=><HoursList year={this.state.year} month={this.state.month}/>}/>
-            <Route path="/Settings" render={()=><Settings year={this.state.year} month={this.state.month}/>}/>
-            <Route path="/" render={()=><MainPage year={this.state.year} month={this.state.month}/>}/>
+            <Route path="HoursList" component={HoursList}/>
+            <Route path="Settings" component={Settings}/>
+            <Route path="/" component={MainPage}/>
             <Route path="*" component={NoMatch}/>
           </Switch>
         </div>
@@ -49,13 +54,13 @@ export default class App extends Component {
 
 // function mapStateToProps(state) {
 //   return {
-//     settingsObject: state.settingsObject
+//     time: state.time
 //   };
 // }
-//
-// function mapDispatchToProps(dispatch) {
-//   return bindActionCreators({ saveMonth, saveYear }, dispatch);
-// }
-//
-// export default connect(null, mapDispatchToProps)(App);
-// export default connect(mapStateToProps, { saveMonth, saveYear })(App);
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ saveTime }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(App);
+// export default connect(mapStateToProps, { saveTime })(App);

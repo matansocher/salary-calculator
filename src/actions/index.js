@@ -1,4 +1,4 @@
-import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS } from '../actions/types';
+import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS, SAVE_TIME } from '../actions/types';
 import fire from '../config';
 
 export function fetchDays(year, month) {
@@ -206,4 +206,16 @@ export function saveSettings(settingsObject) {
   //   type: SAVE_SETTINGS,
   //   payload: settingsObject
   // }
+}
+
+export function saveTime(year, month) {
+  const time = {
+    year: year,
+    month: month
+  }
+  return {
+    type: SAVE_TIME,
+    payload: time
+  }
+
 }
