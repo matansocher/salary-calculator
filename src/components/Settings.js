@@ -28,13 +28,15 @@ class Settings extends Component {
   }
 
   componentDidMount() {
+    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
     const { year, month } = this.props.time;
     this.props.fetchSettings(year, month);
     this.setState({ year, month });
-    console.log(this.state.year,this.state.month);
+    console.log(this.state.year, this.state.month);
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     this.setState({ settingsObject: nextProps.settingsObject, year: this.props.time.year, month: this.props.time.month }, () => {
       console.log(this.state.settingsObject);
       this.setState({ loading: false });
