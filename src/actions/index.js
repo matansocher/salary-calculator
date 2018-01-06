@@ -1,16 +1,53 @@
+import _ from 'lodash';
 import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS, SAVE_TIME } from '../actions/types';
 import fire from '../config';
 
 export function fetchDays(year, month) {
-  let request;
+
+
+  // fire.database().ref(`days/${year}/${month}`).once('value')
+  // .then(snap => {
+  //   const daysObject = snap.val();
+  //   // const request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
+  //   const array = _.values(daysObject);
+  //   console.log("##########");
+  //   console.log(array);
+  //   return {
+  //     type: FETCH_DAYS,
+  //     payload: array
+  //   };
+  // })
+  // .catch(() => {
+  //   return {
+  //     type: FETCH_DAYS,
+  //     payload: []
+  //   };
+  // });
+
+
+  // fire.database().ref(`days/${year}/${month}`).on('value', snap => {
+  //   const daysObject = snap.val();
+  //   // const request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
+  //   const array = _.values(daysObject);
+  //   console.log("##########");
+  //   console.log(array);
+  //   return {
+  //     type: FETCH_DAYS,
+  //     payload: array
+  //   };
+  // });
+
 
   return dispatch => {
     fire.database().ref(`days/${year}/${month}`).on('value', snap => {
       const daysObject = snap.val();
-      request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
+      // const request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
+      const array = _.values(daysObject);
+      console.log("fetch days action");
+      console.log(array);
       dispatch({
         type: FETCH_DAYS,
-        payload: request
+        payload: array
       });
     });
   };
@@ -159,7 +196,13 @@ export function fetchSettings(year, month) {
       });
     }
   });
-  // let settingsObject;
+
+  // settings_ref.on('value', snap => {
+  //   return {
+  //     type: FETCH_SETTINGS,
+  //     payload: snap.val()
+  //   };
+  // });
 
 
 
@@ -213,9 +256,10 @@ export function saveTime(year, month) {
     year: year,
     month: month
   }
+  console.log('saveTime action');
+  console.log(time);
   return {
     type: SAVE_TIME,
     payload: time
   }
-
 }

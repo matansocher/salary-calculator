@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchDays, fetchSettings } from '../actions';
+import { fetchDays } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MainPageObject from './MainPageObject';
 
@@ -9,6 +9,10 @@ class MainPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      days: [],
+      settingsObject: {},
+      year: new Date().getFullYear(),
+      month: (new Date().getMonth() + 1),
       bruto: 0,
       neto: 0,
       tax: 0,
@@ -17,29 +21,48 @@ class MainPage extends Component {
       numberOfHours125: 0,
       numberOfHours150: 0,
       numberOfHoursNeto: 0,
-      loading: false
+      loading: true
     };
   }
 
   componentDidMount() {
     const { year, month } = this.props.time;
-    this.setState({ loading: true }, () => {
-      this.props.fetchDays(year, month);
-      // need to enter fetchSettings into callback function
-      this.props.fetchSettings(year, month);
-      //not really - need it as a callback
-      setTimeout(() => {
-        this.setState({ loading: false, add: false });
-        console.log('*');
-        console.log(this.props.days);
-        console.log(this.props.settingsObject);
-        this.mapOnDays();
-      }, 1500);
-    });
+    console.log('componentDidMount');
+    this.props.fetchDays(year, month);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    console.log('componentWillReceiveProps');
+    if (nextProps.time) {
+      console.log('there is time');
+      console.log(nextProps.time);
+      this.setState({ year: nextProps.time.year, month: nextProps.time.month })
+    }
+    if (nextProps.days) {
+      console.log('there are days');
+      console.log(nextProps.days);
+      this.setState({ days: nextProps.days }, () => {
+        console.log(this.state.days);
+        const days = this.state.days;
+        const settingsObject = days[days.length - 1];
+        this.setState({ settingsObject, loading: false }, () => {
+          console.log(this.state.settingsObject);
+          this.mapOnDays();
+        });
+      });
+    }
+
   }
 
   mapOnDays() {
-    const days = this.props.days;
+    const days = this.state.days;
+    if(days.length  === 0) { // no days array yet from server
+      console.log('did not enter mapOnDays');
+      return;
+    }
+    console.log('mapOnDays in main page');
+    console.log(days);
     let numberOfHours = 0, numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0, numberOfHoursNeto = 0;
     days.map(day => {
       if (day.day !== 0) {
@@ -58,9 +81,8 @@ class MainPage extends Component {
 
   getBruto() {
     const { numberOfHours100, numberOfHours125, numberOfHours150 } = this.state;
-    // const days = this.props.days;
-    const days = this.props.days;
-    const settingsObject = this.props.settingsObject;
+    const days = this.state.days;
+    const settingsObject = this.state.settingsObject;
     const wage100 = numberOfHours100 * (settingsObject.hourly);
     const wage125 = numberOfHours125 * (settingsObject.hourly * 1.25);
     const wage150 = numberOfHours150 * (settingsObject.hourly * 1.5);
@@ -74,7 +96,7 @@ class MainPage extends Component {
 
   getNeto() {
     const bruto = this.state.bruto;
-    const settingsObject = this.props.settingsObject;
+    const settingsObject = this.state.settingsObject;
     const pensionReduction = bruto * settingsObject.pension / 100;
 
     const step1 = 5280, step2 = 9010, step3 = 14000, step4 = 20000, step5 = 41830;
@@ -101,27 +123,37 @@ class MainPage extends Component {
     });
   }
 
+  renderObjects() {
+    // if it is an empty
+    const days = this.state.days;
+    if(days.length === 0) { // no data from server yet
+      return (<span />);
+    } else if(days.length === 1) { // no days on this month
+      return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+    } else { // there is data to show
+      return (
+        <div>
+          <MainPageObject icon="fa fa-money" header="Bruto" value={this.state.bruto} />
+          <MainPageObject icon="fa fa-money" header="Neto" value={this.state.neto} />
+          <MainPageObject icon="fa fa-money" header="Tax" value={this.state.tax} />
+          <MainPageObject icon="fa fa-money" header="Number Of Working Days" value={this.state.days.length - 1} />
+          <MainPageObject icon="fa fa-money" header="Hours Bruto" value={this.state.numberOfHours} />
+          <MainPageObject icon="fa fa-money" header="Hours Neto" value={this.state.numberOfHoursNeto} />
+          <MainPageObject icon="fa fa-money" header="BreaksTime" value={this.state.numberOfHours - this.state.numberOfHoursNeto} />
+          <MainPageObject icon="fa fa-money" header="100% Hours" value={this.state.numberOfHours100} />
+          <MainPageObject icon="fa fa-money" header="125% Hours" value={this.state.numberOfHours125} />
+          <MainPageObject icon="fa fa-money" header="150% Hours" value={this.state.numberOfHours150} />
+        </div>
+      )
+    }
+  }
+
   render() {
     return(
       <div className="container container-fluid">
         <h1>Main Page</h1>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
-
-        {this.props.days.length === 1 ?
-          (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>) :
-          (<div>
-            <MainPageObject icon="fa fa-money" header="Bruto" value={this.state.bruto} />
-            <MainPageObject icon="fa fa-money" header="Neto" value={this.state.neto} />
-            <MainPageObject icon="fa fa-money" header="Tax" value={this.state.tax} />
-            <MainPageObject icon="fa fa-money" header="Number Of Working Days" value={this.props.days.length - 1} />
-            <MainPageObject icon="fa fa-money" header="Hours Bruto" value={this.state.numberOfHours} />
-            <MainPageObject icon="fa fa-money" header="Hours Neto" value={this.state.numberOfHoursNeto} />
-            <MainPageObject icon="fa fa-money" header="BreaksTime" value={this.state.numberOfHours - this.state.numberOfHoursNeto} />
-            <MainPageObject icon="fa fa-money" header="100% Hours" value={this.state.numberOfHours100} />
-            <MainPageObject icon="fa fa-money" header="125% Hours" value={this.state.numberOfHours125} />
-            <MainPageObject icon="fa fa-money" header="150% Hours" value={this.state.numberOfHours150} />
-          </div>)
-        }
+        {this.renderObjects()}
       </div>
     )
   }
@@ -130,14 +162,13 @@ class MainPage extends Component {
 function mapStateToProps(state) {
   return {
     time: state.time,
-    days: state.days,
-    settingsObject: state.days[state.days.length - 1]
+    days: state.days
   };
 }
-// if removing the fetchSettings worked, remove it from bindActionCreators
+
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDays, fetchSettings }, dispatch);
+  return bindActionCreators({ fetchDays }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
-// export default connect(mapStateToProps, { fetchDays, fetchSettings })(HoursList);
+// export default connect(mapStateToProps, { fetchDays })(HoursList);

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { saveTime } from '../actions';
-import ComboYear from './components/ComboYear';
-import ComboMonth from './components/ComboMonth';
-import MenuBar from './components/MenuBar';
-import MainPage from './components/MainPage';
-import HoursList from './components/HoursList';
-import Settings from './components/Settings';
-import NoMatch from './components/NoMatch';
+import ComboYear from './ComboYear';
+import ComboMonth from './ComboMonth';
+import MenuBar from './MenuBar';
+import MainPage from './MainPage';
+import HoursList from './HoursList';
+import Settings from './Settings';
+import NoMatch from './NoMatch';
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,6 +22,7 @@ export default class App extends Component {
     this.changeMonth = this.changeMonth.bind(this);
   }
   changeMonth(value) {
+    console.log('changeMonth');
     this.setState({ month: value }, () => {
       this.props.saveTime(this.state.year, this.state.month);
     });
@@ -41,8 +44,8 @@ export default class App extends Component {
 
           <hr/>
           <Switch>
-            <Route path="HoursList" component={HoursList}/>
-            <Route path="Settings" component={Settings}/>
+            <Route path="/HoursList" component={HoursList}/>
+            <Route path="/Settings" component={Settings}/>
             <Route path="/" component={MainPage}/>
             <Route path="*" component={NoMatch}/>
           </Switch>

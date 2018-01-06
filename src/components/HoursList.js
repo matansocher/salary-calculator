@@ -9,13 +9,15 @@ class HoursList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      days: [],
+      settingsObject: {},
       dayOfMonth: 0,
       enterhour: 0,
       enterminute: 0,
       exithour: 0,
       exitminute: 0,
       add: false,
-      loading: false
+      loading: true
     }
     this.handleChange = this.handleChange.bind(this);
     this.addDay = this.addDay.bind(this);
@@ -26,10 +28,18 @@ class HoursList extends Component {
   componentDidMount() {
     const { year, month } = this.props.time;
     this.props.fetchDays(year, month);
-    // not really - need it as a callback
-    setTimeout(() => {
-      this.setState({ loading: false, add: false });
-    }, 1500);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.days);
+    this.setState({ days: nextProps.days }, () => {
+      console.log(this.state.days);
+      const days = this.state.days;
+      const settingsObject = days[days.length - 1];
+      this.setState({ settingsObject, loading: false }, () => {
+        console.log(this.state.settingsObject);
+      });
+    });
   }
 
   addDay() {
@@ -39,9 +49,7 @@ class HoursList extends Component {
     const exithour = parseFloat(this.refs.exithour.value);
     const exitminute = parseFloat(this.refs.exitminute.value);
 
-    const newDays = this.props.days;
-    const breakAfter = newDays[newDays.length-1].breakAfter;
-    const breakTime = newDays[newDays.length-1].breakTime;
+    const { breakAfter, breakTime } = this.state.settingsObject;
 
     const { year, month } = this.props.time;
 
@@ -63,9 +71,7 @@ class HoursList extends Component {
   }
 
   editDay(day) {
-    const newDays = this.props.days;
-    const breakAfter = newDays[newDays.length-1].breakAfter;
-    const breakTime = newDays[newDays.length-1].breakTime;
+    const { breakAfter, breakTime } = this.state.settingsObject;
     this.setState({ loading: true }, () => {
       this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
     });
@@ -120,10 +126,9 @@ class HoursList extends Component {
   }
 
   renderList() {
-    const newDays = this.props.days;
-    const settingsObject = newDays[newDays.length - 1];
+    const { days, settingsObject } = this.state;
 
-    if (newDays.length === 1) {
+    if (days.length === 1) {
       return (
         <div className="container container-fluid">
           <h1>No Working Days On This Month!</h1>
@@ -132,10 +137,10 @@ class HoursList extends Component {
     }
 
     return (
-      newDays.map(day => {
+      days.map(day => {
         const key = `${day.year}${day.month}${day.day}`;
         if (day.day !== 0) {
-          return <Day key={key} day={day} hourly={newDays[newDays.length - 1].hourly}
+          return <Day key={key} day={day} hourly={settingsObject.hourly}
                   breakAfter={settingsObject.breakAfter} breakTime={settingsObject.breakTime}
                   editDay={this.editDay} deleteDay={this.deleteDay} />
         }

@@ -11,6 +11,9 @@ class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      settingsObject: {},
+      year: this.props.time.year,
+      month: this.props.time.month,
       hourly: 0,
       breakTime: 0,
       breakAfter: 0,
@@ -18,14 +21,32 @@ class Settings extends Component {
       drives: 0,
       others: 0,
       editing: false,
-      loading: false
+      loading: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.saveSettings = this.saveSettings.bind(this);
   }
 
+  componentDidMount() {
+    const { year, month } = this.props.time;
+    this.props.fetchSettings(year, month);
+    this.setState({ year, month });
+    console.log(this.state.year,this.state.month);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ settingsObject: nextProps.settingsObject, year: this.props.time.year, month: this.props.time.month }, () => {
+      console.log(this.state.settingsObject);
+      this.setState({ loading: false });
+      this.setCurrentState();
+    });
+  }
+
   setCurrentState() {
-    const { hourly, breakTime, breakAfter, pension, drives, others } = this.props.settingsObject;
+    const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
+    if(this.state.settingsObject.length  === 0) { // no settings object yet from server
+      return;
+    }
     this.setState({
       hourly: hourly,
       breakTime: breakTime,
@@ -34,18 +55,6 @@ class Settings extends Component {
       drives: drives,
       others: others
     });
-  }
-
-  componentDidMount() {
-    const { year, month } = this.props.time;
-    this.setState({ loading: true }, () => {
-      this.props.fetchSettings(year, month);
-      // need to enter setCurrentState into callback function
-      this.setCurrentState();
-    });
-    setTimeout(() => {
-      this.setState({ loading: false });
-    }, 1000);
   }
 
   saveSettings() {
@@ -96,13 +105,13 @@ class Settings extends Component {
         <input className="form-control medium-input" name="drives" ref="drives" value={this.state.drives} onChange={this.handleChange}></input>
         <h3>Others:</h3>
         <input className="form-control medium-input" ref="others" value={this.state.others} onChange={this.handleChange}></input>
-        <button onClick={() => this.setState({ editing: false })} className="btn btn-primary regular-button"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
         <button onClick={this.saveSettings} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
+        <button onClick={() => this.setState({ editing: false })} className="btn btn-primary regular-button"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
       </div>
     );
   }
   renderRegular() {
-    const { hourly, breakTime, breakAfter, pension, drives, others } = this.props.settingsObject;
+    const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
     return(
       <div>
         <button className="btn btn-info regular-button" onClick={() => this.setState({ editing: true })}><i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
