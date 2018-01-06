@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { fetchSettings, saveSettings } from '../actions';
 import MDSpinner from 'react-md-spinner';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Snackbar from 'material-ui/Snackbar';
+import TextField from 'material-ui/TextField';
 
 class Settings extends Component {
   constructor(props) {
@@ -34,7 +36,7 @@ class Settings extends Component {
       (this.props.time.month !== nextProps.time.month)) { // check if date has changed
         this.props.fetchSettings(nextProps.time.year, nextProps.time.month);
     }
-    if (this.props.settingsObject !== nextProps.settingsObject) { // check if settings object has changed
+    if (this.props.settingsObject !== nextProps.settingsObject && nextProps.settingsObject) { // check if settings object has changed
       const settingsObject = nextProps.settingsObject;
       const { hourly, breakTime, breakAfter, pension, drives, others} = settingsObject;
       this.setState({
@@ -54,7 +56,7 @@ class Settings extends Component {
     this.setState({ loading: true });
     const { year, month } = this.props.time;
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.refs;
-    console.log(`days/${year}/${month}/settings`);
+
     this.props.saveSettings({
       day: 0,
       month,
@@ -65,14 +67,13 @@ class Settings extends Component {
       pension: pension.value,
       drives: drives.value,
       others: others.value
+    }, () => {
+      setTimeout(() => {
+        this.setState({ loading: false, gesture: true });
+      }, 2000);
     });
-    // not really, need it as a callback
-    setTimeout(() => {
-      this.setState({ loading: false });
-      // this.setState({ gesture: true });
-      // gesture to user that the changes were saved
-    }, 1000);
   }
+
   handleChange(e) {
     var change = {};
     // let currentState = this.state[e.target.name];
@@ -91,38 +92,36 @@ class Settings extends Component {
     this.setState({ editing: true });
   }
 
+  handleRequestClose = () => {
+    this.setState({
+      gesture: false,
+    });
+  };
+
   renderEdit() {
     return(
-      <div>
-        <h3>Hourly Wage:</h3>
-        <input className="form-control medium-input" name="hourly" ref="hourly"
-          value={this.state.hourly} onChange={this.handleChange}>
-        </input>
-
-        <h3>Break Time:</h3>
-        <input className="form-control medium-input" name="breakTime" ref="breakTime"
-          value={this.state.breakTime} onChange={this.handleChange}>
-        </input>
-
-        <h3>Break After:</h3>
-        <input className="form-control medium-input" name="breakAfter" ref="breakAfter"
-          value={this.state.breakAfter} onChange={this.handleChange}>
-        </input>
-
-        <h3>Pension Reduction %:</h3>
-        <input className="form-control medium-input" name="pension" ref="pension"
-          value={this.state.pension} onChange={this.handleChange}>
-        </input>
-
-        <h3>Drives:</h3>
-        <input className="form-control medium-input" name="drives" ref="drives"
-          value={this.state.drives} onChange={this.handleChange}>
-        </input>
-
-        <h3>Others:</h3>
-        <input className="form-control medium-input" name="others" ref="others"
-          value={this.state.others} onChange={this.handleChange}>
-        </input>
+      <div className="container container-fluid">
+        <MuiThemeProvider>
+          <div>
+            <TextField floatingLabelText="Hourly Wage" name="hourly" ref="hourly"
+                value={this.state.hourly} onChange={this.handleChange} />
+            <br />
+            <TextField floatingLabelText="Break Time" name="breakTime" ref="breakTime"
+                value={this.state.breakTime} onChange={this.handleChange} />
+            <br />
+            <TextField floatingLabelText="Break After" name="breakAfter" ref="breakAfter"
+                value={this.state.breakAfter} onChange={this.handleChange} />
+            <br />
+            <TextField floatingLabelText="Pension" name="pension" ref="pension"
+                value={this.state.pension} onChange={this.handleChange} />
+            <br />
+            <TextField floatingLabelText="Drives" name="drives" ref="drives"
+                value={this.state.drives} onChange={this.handleChange} />
+            <br />
+            <TextField floatingLabelText="Others" name="others" ref="others"
+                value={this.state.others} onChange={this.handleChange} />
+          </div>
+        </MuiThemeProvider>
 
         <button onClick={this.saveSettings} className="btn btn-success regular-button">
           <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
@@ -137,9 +136,10 @@ class Settings extends Component {
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
     return(
       <div>
-        <button className="btn btn-info regular-button" onClick={this.handleEditClick}>
-          <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-        </button>
+      <button className="btn btn-warning regular-button" onClick={this.handleEditClick}>
+        <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+      </button>
+
         <h3>Hourly Wage: {hourly}</h3>
         <h3>Break Time: {breakTime}</h3>
         <h3>Break After: {breakAfter}</h3>
@@ -151,8 +151,12 @@ class Settings extends Component {
   }
   render() {
     return(
-      <div className="container container-fluid">
+      <div className="container container-fluid blue-font">
         <h1>Settings</h1>
+        <MuiThemeProvider>
+          <Snackbar open={this.state.gesture} message="Settings were saved successfully"
+            autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
+        </MuiThemeProvider>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
         {this.state.editing ? this.renderEdit() : this.renderRegular()}
@@ -168,9 +172,4 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ saveSettings, fetchSettings }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
-// export default connect(mapStateToProps, { saveSettings, fetchSettings })(HoursList);
+export default connect(mapStateToProps, { saveSettings, fetchSettings })(Settings);

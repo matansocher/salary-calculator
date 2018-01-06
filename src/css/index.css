@@ -2,26 +2,19 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  background-color: #edf3ff;
+}
+.blue-font{
+  color: #072f70;
 }
 .hour-input {
   width: 100px;
   height: 30px;
+  display: inline;
 }
 .regular-button {
   margin: 5px;
   width: 100%;
-}
-.hours-input {
-  display: inline;
-}
-.small-input {
-  width: 45px;
-  height: 30px;
-}
-.medium-input{
-  width: 65px;
-  height: 30px;
-  display: inline;
 }
 .spinner {
   margin: auto;
@@ -30,7 +23,13 @@ body {
 .bg-uniqueColor {
   background-color: #4BB7B5;
 }
-.nav-link {
-  color: white !important;
-  margin-left: 5px;
+.float {
+	position:fixed;
+	bottom:40px;
+	right:40px;
+  z-index: 10;
 }
+/* .time-picker {
+  width: 50%;
+  color: red;
+} */

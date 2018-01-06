@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
 import { fetchDays, setDay, deleteDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import Day from './Day';
+// import DayAvatar from './DayAvatar';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+// import MobileTearSheet from 'material-ui/MobileTearSheet';
+// import { List } from 'material-ui/List';
+
 
 class HoursList extends Component {
   constructor(props) {
@@ -120,42 +126,41 @@ class HoursList extends Component {
       return (
         <li className="col-sm-12 col-md-12 list-group-item">
           <h3>Day On Month:</h3>
-          <input className="form-control hour-input hours-input" name="dayOfMonth" ref="dayOfMonth"
+          <input className="form-control hour-input" name="dayOfMonth" ref="dayOfMonth"
             value={this.state.dayOfMonth} onChange={this.handleChange}>
           </input>
 
           <h3>Enter Hour:</h3>
-          <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour"
+          <input className="form-control hour-input" name="enterhour" ref="enterhour"
             value={this.state.enterhour} onChange={this.handleChange}>
           </input>:
-          <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute"
+          <input className="form-control hour-input" name="enterminute" ref="enterminute"
             value={this.state.enterminute} onChange={this.handleChange}>
           </input>
 
           <h3>Exit Hour:</h3>
-          <input className="form-control hour-input hours-input" name="exithour" ref="exithour"
+          <input className="form-control hour-input" name="exithour" ref="exithour"
             value={this.state.exithour} onChange={this.handleChange}>
           </input>:
-          <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute"
+          <input className="form-control hour-input" name="exitminute" ref="exitminute"
             value={this.state.exitminute} onChange={this.handleChange}>
           </input>
 
-          <button onClick={this.addDay} className="btn btn-success regular-button hours-input">
+          <button onClick={this.addDay} className="btn btn-success regular-button">
             <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
           </button>
-          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button hours-input">
+          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button">
             <i className="fa fa-times" aria-hidden="true"></i> Cancel
           </button>
         </li>
       );
     } else {
-      // change this to floating button
       return(
-        <li className="col-sm-12 col-md-12 list-group-item">
-          <button className="btn btn-info add-button regular-button" onClick={this.handleAddClick}>
-            <i className="fa fa-plus" aria-hidden="true"></i> Add
-          </button>
-        </li>
+        <MuiThemeProvider>
+          <FloatingActionButton className="float" onClick={this.handleAddClick}>
+            <ContentAdd />
+          </FloatingActionButton>
+        </MuiThemeProvider>
       );
     }
   }
@@ -180,14 +185,35 @@ class HoursList extends Component {
     }
   }
 
+  // renderListTwo() {
+  //   const { days, settingsObject } = this.state;
+  //   // if (days.length === 0)
+  //   //   return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+  //   if (days.length === 1)
+  //     return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+  //   else {
+  //     return (
+  //       days.map(day => {
+  //         const key = `${day.year}${day.month}${day.day}`;
+  //         if (day.day !== 0) {
+  //           return <DayAvatar />
+  //         }
+  //         return <span key={key}/>;
+  //       })
+  //     );
+  //   }
+  // }
+
   render() {
     return(
-      <div className="container container-fluid">
+      <div className="container container-fluid blue-font">
+
         <h1>Hours List</h1>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
         {this.renderAdd()}
         {this.renderList()}
+
       </div>
     );
   }
@@ -200,9 +226,10 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDays, setDay , deleteDay }, dispatch);
-}
+export default connect(mapStateToProps, { fetchDays, setDay , deleteDay })(HoursList);
 
-export default connect(mapStateToProps, mapDispatchToProps)(HoursList);
-// export default connect(mapStateToProps, { fetchDays, setDay , deleteDay })(HoursList);
+// <MuiThemeProvider>
+//   <List>
+//     {this.renderListTwo()}
+//   </List>
+// </MuiThemeProvider>

@@ -77,16 +77,16 @@ export default class Day extends Component {
   renderEdit() {
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
-        <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour"
+        <input className="form-control hour-input" name="enterhour" ref="enterhour"
           value={this.state.enterhour} onChange={this.handleChange}>
         </input>:
-        <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute"
+        <input className="form-control hour-input" name="enterminute" ref="enterminute"
           value={this.state.enterminute} onChange={this.handleChange}>
         </input>-
-        <input className="form-control hour-input hours-input" name="exithour" ref="exithour"
-          value={this.state.exithour} onChange={this.handleChange}>
+        <input className="form-control hour-input" name="exithour" ref="exithour"
+          value={this.state.exithour}>
         </input>:
-        <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute"
+        <input className="form-control hour-input" name="exitminute" ref="exitminute"
           value={this.state.exitminute} onChange={this.handleChange}>
         </input><br />
 
@@ -104,6 +104,7 @@ export default class Day extends Component {
     const { day, month, numberOfHours, numberOfHours100, numberOfHours125 ,numberOfHours150 } = this.state.day;
     let { enterhour, enterminute, exithour, exitminute } = this.state;
     const { hourly } = this.state.settingsObject;
+    // maybe we dont need this
     enterminute = '0' ? '00' : enterminute;
     exitminute = '0' ? '00' : exitminute;
     return(

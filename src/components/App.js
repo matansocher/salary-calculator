@@ -11,7 +11,6 @@ import MainPage from './MainPage';
 import HoursList from './HoursList';
 import Settings from './Settings';
 import NoMatch from './NoMatch';
-// import { Button } from 'material-ui';
 
 class App extends Component {
   constructor(props) {

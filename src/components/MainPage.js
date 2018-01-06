@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { fetchDays } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MainPageObject from './MainPageObject';
@@ -88,24 +87,33 @@ class MainPage extends Component {
   }
 
   getNeto(bruto) {
+    const steps = [5280, 9010, 14000, 20000, 41830];
+    const stepsPer = [0.1, 0.14, 0.23, 0.30, 0.33, 0.45];
+    let tax = 0, flag = 0;
 
-    const step1 = 5280, step2 = 9010, step3 = 14000, step4 = 20000, step5 = 41830;
-    const step1per = 0.1, step2per = 0.14, step3per = 0.23, step4per = 0.30, step5per = 0.33, step6per = 0.45;
-    let tax = 0;
-
-    if (bruto <= step1)
-      tax += bruto*step1per;
-    if (bruto > step1 && bruto <= step2)
-      tax += (bruto-step1)*step2per;
-    if (bruto > step2 && bruto <= step3)
-      tax += (bruto-step2)*step3per;
-    if (bruto > step3 && bruto <= step4)
-      tax += (bruto-step3)*step4per;
-    if (bruto > step4 && bruto <= step5)
-      tax += (bruto-step4)*step5per;
-    if (bruto > step5)
-      tax += (bruto-step5)*step6per;
-
+    if (bruto > steps[0]) {
+      tax += steps[0]*stepsPer[0];
+      flag = flag + 1;
+    }
+    if (bruto > steps[1]) {
+      tax += (steps[1]-steps[0])*stepsPer[1];
+      flag = flag + 1;
+    }
+    if (bruto > steps[2]) {
+      tax += (steps[2]-steps[1])*stepsPer[2];
+      flag = flag + 1;
+    }
+    if (bruto > steps[3]) {
+      tax += (steps[3]-steps[2])*stepsPer[3];
+      flag = flag + 1;
+    }
+    if (bruto > steps[4]) {
+      tax += (steps[4]-steps[3])*stepsPer[4];
+      flag = flag + 1;
+    }
+    if (flag !== 0) {
+      tax += (bruto - steps[flag-1]) * stepsPer[flag];
+    }
 
     const { pension } = this.state.settingsObject;
     const pensionReduction = bruto * pension / 100;
@@ -140,7 +148,7 @@ class MainPage extends Component {
 
   render() {
     return(
-      <div className="container container-fluid">
+      <div className="container container-fluid blue-font">
         <h1>Main Page</h1>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
         {this.renderObjects()}
@@ -156,9 +164,4 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDays }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
-// export default connect(mapStateToProps, { fetchDays })(HoursList);
+export default connect(mapStateToProps, { fetchDays })(MainPage);
