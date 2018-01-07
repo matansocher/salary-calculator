@@ -39,11 +39,11 @@ class Settings extends Component {
       console.log('time has changed, data should change');
       this.props.fetchSettings(nextYear, nextMonth);
     }
-    if (props.days != nextProps.days) {
-      const settingsObject = days[days.length - 1];
+    if (this.props.settingsObject != nextProps.settingsObject) {
+      const settingsObject = nextProps.settingsObject;
       this.setState({
         settingsObject,
-        hourly: hourly,
+        hourly: settingsObject.hourly,
         breakTime: settingsObject.breakTime,
         breakAfter: settingsObject.breakAfter,
         pension: settingsObject.pension,

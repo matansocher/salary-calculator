@@ -40,7 +40,7 @@ class MainPage extends Component {
       this.props.fetchDays(nextYear, nextMonth);
     }
     // too early, need to wait for the server and only then set the state
-    if (props.days != nextProps.days) {
+    if (this.props.days != nextProps.days) {
       console.log('there are days');
       console.log(nextProps.days);
       const days = nextProps.days;
@@ -80,11 +80,11 @@ class MainPage extends Component {
 
   getBruto() {
     const { numberOfDays, numberOfHours100, numberOfHours125, numberOfHours150 } = this.state;
-    const { hourly, drives, others } = this.state.settingsObject;
+    let { hourly, drives, others } = this.state.settingsObject;
     const wage100 = numberOfHours100 * hourly;
     const wage125 = numberOfHours125 * hourly * 1.25;
     const wage150 = numberOfHours150 * hourly * 1.5;
-    const drives = numberOfDays * drives;
+    drives = numberOfDays * drives;
     const bruto = wage100 + wage125 + wage150 + drives + others;
     this.setState({ bruto }, () => {
       this.getNeto();

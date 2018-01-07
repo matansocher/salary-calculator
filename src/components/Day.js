@@ -101,7 +101,7 @@ export default class Day extends Component {
 
   renderRegular() {
     const { day, month, numberOfHours, numberOfHours100, numberOfHours125 ,numberOfHours150 } = this.state.day;
-    const { enterhour, enterminute, exithour, exitminute } = this.state;
+    let { enterhour, enterminute, exithour, exitminute } = this.state;
     const { hourly } = this.state.settingsObject;
     enterminute = '0' ? '00' : enterminute;
     exitminute = '0' ? '00' : exitminute;

@@ -38,7 +38,7 @@ class HoursList extends Component {
       console.log('time has changed, data should change');
       this.props.fetchDays(nextYear, nextMonth);
     }
-    if (props.days != nextProps.days) {
+    if (this.props.days != nextProps.days) {
       const days = nextProps.days;
       const settingsObject = days[days.length - 1];
       this.setState({ days, settingsObject, loading: false }, () => {
@@ -48,12 +48,12 @@ class HoursList extends Component {
   }
 
   addDay() {
-    const { dayOfMonth, enterhour, enterminute, exithour, exitminute} = this.refs;
-    const dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
-    const enterhour = parseFloat(enterhour.value);
-    const enterminute = parseFloat(enterminute.value);
-    const exithour = parseFloat(exithour.value);
-    const exitminute = parseFloat(exitminute.value);
+    let { dayOfMonth, enterhour, enterminute, exithour, exitminute} = this.refs;
+    dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
+    enterhour = parseFloat(enterhour.value);
+    enterminute = parseFloat(enterminute.value);
+    exithour = parseFloat(exithour.value);
+    exitminute = parseFloat(exitminute.value);
 
     const { breakAfter, breakTime } = this.state.settingsObject;
 
