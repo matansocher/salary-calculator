@@ -43,24 +43,26 @@ class AddDay extends Component {
   }
 
   addDay() {
-    this.setState({ loading: true });
-    const { breakAfter, breakTime } = this.state.settingsObject;
-    const { year, month } = this.props.time;
-    let { day, enterTime, exitTime } = this.state;
+    this.setState({ loading: true }, () => {
+      const { breakAfter, breakTime } = this.state.settingsObject;
+      const { year, month } = this.props.time;
+      let { day, enterTime, exitTime } = this.state;
 
-    this.props.setDay({
-      day,
-      month,
-      year,
-      enterTime,
-      exitTime
-    }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
+      this.props.setDay({
+        day,
+        month,
+        year,
+        enterTime,
+        exitTime
+      }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
 
-    // not really - need it as a callback
-    setTimeout(() => {
-      this.setState({ loading: false });
-      this.props.history.push('/HoursList');
-    }, 1000);
+      // not really - need it as a callback
+      // setTimeout(() => {
+        this.setState({ loading: false });
+        this.props.history.push('/HoursList');
+      // }, 1000);
+    });
+
   }
 
   populateOptionsForDayMonth() {
@@ -85,6 +87,8 @@ class AddDay extends Component {
   }
 
   handleDayChange(a, value) {
+    console.log(a);
+    console.log(value);
     this.setState({ day: value });
   }
 
@@ -123,7 +127,7 @@ class AddDay extends Component {
             <i className="fa fa-floppy-o" aria-hidden="true"></i> Add
           </button>
           <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
-            <i className="fa fa-trash" aria-hidden="true"></i>
+            <i className="fa fa-trash" aria-hidden="true"></i> Cancel
           </button>
 
           iloveyou

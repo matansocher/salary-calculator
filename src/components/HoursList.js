@@ -7,6 +7,7 @@ import Day from './Day';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import Snackbar from 'material-ui/Snackbar';
 // import MobileTearSheet from 'material-ui/MobileTearSheet';
 // import { List } from 'material-ui/List';
 
@@ -26,7 +27,6 @@ class HoursList extends Component {
       loading: true
     }
     this.handleChange = this.handleChange.bind(this);
-    this.addDay = this.addDay.bind(this);
     this.editDay = this.editDay.bind(this);
     this.deleteDay = this.deleteDay.bind(this);
   }
@@ -104,7 +104,7 @@ class HoursList extends Component {
           const key = `${day.year}${day.month}${day.day}`;
           if (day.day !== 0) {
             return <Day key={key} day={day} settingsObject={settingsObject}
-                    editDay={this.editDay} deleteDay={this.deleteDay} />
+                    editDay={this.editDay} deleteDay={this.deleteDay} time={this.props.time} />
           }
           return <span key={key}/>;
         })
@@ -148,7 +148,6 @@ class HoursList extends Component {
           </FloatingActionButton>
         </MuiThemeProvider>
 
-        {this.renderAdd()}
         {this.renderList()}
 
       </div>

@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import TimePicker from 'material-ui/TimePicker';
 import Delete from 'material-ui/svg-icons/action/delete';
+import MenuItem from 'material-ui/MenuItem';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 export default class Day extends Component {
   constructor(props) {
@@ -19,6 +22,7 @@ export default class Day extends Component {
     this.handleDayChange = this.handleDayChange.bind(this);
     this.handleEnterHourChange = this.handleEnterHourChange.bind(this);
     this.handleExitHourChange = this.handleExitHourChange.bind(this);
+    // this.populateOptionsForDayMonth = this.populateOptionsForDayMonth.bind(this);
     this.saveClick = this.saveClick.bind(this);
   }
 
@@ -131,7 +135,7 @@ export default class Day extends Component {
           <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
         </button>
         <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
-          <i className="fa fa-trash" aria-hidden="true"></i>
+          <i className="fa fa-trash" aria-hidden="true"></i> Cancel
         </button>
       </li>
     );
@@ -151,13 +155,12 @@ export default class Day extends Component {
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             targetOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-            <MenuItem primaryText="Edit" onClick={this.handleEditClick}>>
-              <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
-              <i className="material-icons">mode_edit</i>
+            <MenuItem primaryText="Edit" onClick={this.handleEditClick}>
+              <i className="fa fa-pencil" aria-hidden="true"></i>
             </MenuItem>
-            <MenuItem primaryText="Edit" leftIcon={<ContentCopy />} onClick={this.handleEditClick} />
-            <MenuItem primaryText="Edit" leftIcon={<Edit />} onClick={this.handleEditClick} />
-            <MenuItem primaryText="Delete" leftIcon={<Delete onClick={this.handleDeleteClick} />} />
+            <MenuItem primaryText="Delete" leftIcon={
+              <Delete onClick={this.handleDeleteClick} />
+            } />
           </IconMenu>
         </MuiThemeProvider>
 

@@ -84,6 +84,9 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
   }
 
+  console.log(enterTime);
+  console.log(exitTime);
+
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
         day: day.day,
@@ -97,8 +100,8 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
         numberOfHours150
       });
       dispatch({
-        type: FETCH_DAYS,
-        payload: array
+        type: addOrEdit,
+        payload: day
       });
   };
 
@@ -133,8 +136,8 @@ export function deleteDay(day) {
         type: DELETE_DAY,
         payload: day
       });
-    });
-  };
+    }
+
 
   // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove()
   // .then(() => {
