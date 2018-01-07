@@ -4,7 +4,7 @@ export default class ComboYear extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentYear: props.val
+      currentYear: new Date().getFullYear()
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -18,7 +18,6 @@ export default class ComboYear extends Component {
     return (
       <div className="form-group col-sm-6">
         <select className="form-control" onChange={this.handleChange} value={this.state.currentYear}>
-          <option value="2017">2017</option>
           <option value="2018">2018</option>
           <option value="2019">2019</option>
         </select>

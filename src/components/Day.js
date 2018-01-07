@@ -5,13 +5,11 @@ export default class Day extends Component {
     super(props);
     this.state = {
       day: props.day,
+      settingsObject: props.settingsObject,
       enterhour: props.day.enterhour,
       enterminute: props.day.enterminute,
       exithour: props.day.exithour,
       exitminute: props.day.exitminute,
-      hourly: props.hourly,
-      breakAfter: props.breakAfter,
-      breakTime: props.breakTime,
       editing: false
     };
     this.handleChange = this.handleChange.bind(this);
@@ -20,7 +18,8 @@ export default class Day extends Component {
 
   saveClick() {
     const { day, month, year } = this.state.day;
-    const { enterhour, enterminute, exithour, exitminute, breakAfter, breakTime } = this.state;
+    const { enterhour, enterminute, exithour, exitminute } = this.state;
+    const { breakAfter, breakTime } = this.state.settingsObject;
 
     this.props.editDay({
       day: day,
@@ -62,21 +61,48 @@ export default class Day extends Component {
     return dayString;
   }
 
+  handleCancelClick = () => {
+    this.setState({ editing: false })
+  }
+
+  handleEditClick = () => {
+    this.setState({ editing: true });
+  }
+
+  handleDeleteClick = () => {
+    this.props.deleteDay(this.props.day);
+  }
+
   renderEdit() {
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
-        <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour" value={this.state.enterhour} onChange={this.handleChange}></input>:
-        <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute" value={this.state.enterminute} onChange={this.handleChange}></input>-
-        <input className="form-control hour-input hours-input" name="exithour" ref="exithour" value={this.state.exithour} onChange={this.handleChange}></input>:
-        <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute" value={this.state.exitminute} onChange={this.handleChange}></input><br />
-        <button onClick={this.saveClick} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
-        <button onClick={() => this.setState({ editing: false })} className="btn btn-primary regular-button"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
+        <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour"
+          value={this.state.enterhour} onChange={this.handleChange}>
+        </input>:
+        <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute"
+          value={this.state.enterminute} onChange={this.handleChange}>
+        </input>-
+        <input className="form-control hour-input hours-input" name="exithour" ref="exithour"
+          value={this.state.exithour} onChange={this.handleChange}>
+        </input>:
+        <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute"
+          value={this.state.exitminute} onChange={this.handleChange}>
+        </input><br />
+
+        <button onClick={this.saveClick} className="btn btn-success regular-button">
+          <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
+        </button>
+        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button">
+          <i className="fa fa-times" aria-hidden="true"></i> Cancel
+        </button>
       </li>
     );
   }
 
   renderRegular() {
-    let { day, month, enterhour, enterminute, exithour, exitminute, numberOfHours, numberOfHours100, numberOfHours125 ,numberOfHours150, hourly } = this.state.day;
+    const { day, month, numberOfHours, numberOfHours100, numberOfHours125 ,numberOfHours150 } = this.state.day;
+    const { enterhour, enterminute, exithour, exitminute } = this.state;
+    const { hourly } = this.state.settingsObject;
     enterminute = '0' ? '00' : enterminute;
     exitminute = '0' ? '00' : exitminute;
     return(
@@ -85,8 +111,13 @@ export default class Day extends Component {
         <p>{enterhour}:{enterminute} - {exithour}:{exitminute}</p>
         <p>{numberOfHours} Hours</p>
         <p>Wage: {(numberOfHours100 + numberOfHours125*1.25 + numberOfHours150*1.5)*hourly}</p>
-        <button className="btn btn-warning regular-button" onClick={() => this.setState({ editing: true })}><i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
-        <button className="btn btn-danger regular-button" onClick={() => this.props.deleteDay(this.props.day)}><i className="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+
+        <button className="btn btn-warning regular-button" onClick={this.handleEditClick}>
+          <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+        </button>
+        <button className="btn btn-danger regular-button" onClick={this.handleDeleteClick}>
+          <i className="fa fa-trash-o" aria-hidden="true"></i> Delete
+        </button>
       </li>
     );
   }

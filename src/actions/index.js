@@ -98,6 +98,7 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
   const enterAsMinutes = (enterhour * 60) + enterminute;
   const exitAsMinutes = (exithour * 60) - exitminute;
   const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
+  const hoursAfterUpgrade = 2;
 
   let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
 
@@ -107,17 +108,17 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
   if (numberOfHours === breakAfter) { // numberOfHours = 8
     numberOfHours100 = breakAfter - breakTime;
   }
-  if (numberOfHours > breakAfter && numberOfHours < (breakAfter + 2)) { // 8 <= numberOfHours < 10
+  if (numberOfHours > breakAfter && numberOfHours < (breakAfter + hoursAfterUpgrade)) { // 8 <= numberOfHours < 10
     numberOfHours100 = breakAfter - breakTime;
-    numberOfHours125 = 2 - (numberOfHours - numberOfHours100);
+    numberOfHours125 = hoursAfterUpgrade - (numberOfHours - numberOfHours100);
   }
-  if (numberOfHours === (breakAfter + 2)) { // numberOfHours = 10
+  if (numberOfHours === (breakAfter + hoursAfterUpgrade)) { // numberOfHours = 10
     numberOfHours100 = breakAfter - breakTime;
-    numberOfHours125 = 2 - breakTime;
+    numberOfHours125 = hoursAfterUpgrade - breakTime;
   }
-  if (numberOfHours > (breakAfter + 2)) { // numberOfHours >= 10
+  if (numberOfHours > (breakAfter + hoursAfterUpgrade)) { // numberOfHours >= 10
     numberOfHours100 = breakAfter - breakTime;
-    numberOfHours125 = 2;
+    numberOfHours125 = hoursAfterUpgrade;
     numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
   }
 
@@ -236,7 +237,8 @@ export function fetchSettings(year, month) {
 }
 
 export function saveSettings(settingsObject) {
-  fire.database().ref(`days/${settingsObject.year}/${settingsObject.month}/settings`).set({settingsObject})
+  const { year, month } = settingsObject;
+  fire.database().ref(`days/${year}/${month}/settings`).set({settingsObject})
   .then(() => {
       return {
         type: SAVE_SETTINGS,

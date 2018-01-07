@@ -12,8 +12,6 @@ class Settings extends Component {
     super(props);
     this.state = {
       settingsObject: {},
-      year: this.props.time.year,
-      month: this.props.time.month,
       hourly: 0,
       breakTime: 0,
       breakAfter: 0,
@@ -28,36 +26,51 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
     const { year, month } = this.props.time;
+    console.log('componentDidMount');
     this.props.fetchSettings(year, month);
-    this.setState({ year, month });
-    console.log(this.state.year, this.state.month);
   }
 
   componentWillReceiveProps(nextProps) {
     console.log(nextProps);
-    this.setState({ settingsObject: nextProps.settingsObject, year: this.props.time.year, month: this.props.time.month }, () => {
-      console.log(this.state.settingsObject);
-      this.setState({ loading: false });
-      this.setCurrentState();
-    });
+    const { prevYear, prevMonth } = this.props.time;
+    const { nextYear, nextMonth } = nextProps.time;
+    if ((prevYear != nextYear) || (prevMonth != nextMonth)) { // check if date has changed
+      console.log('time has changed, data should change');
+      this.props.fetchSettings(nextYear, nextMonth);
+    }
+    if (props.days != nextProps.days) {
+      const settingsObject = days[days.length - 1];
+      this.setState({
+        settingsObject,
+        hourly: hourly,
+        breakTime: settingsObject.breakTime,
+        breakAfter: settingsObject.breakAfter,
+        pension: settingsObject.pension,
+        drives: settingsObject.drives,
+        others: settingsObject.others,
+        loading: false
+      }, () => {
+        console.log(this.state.settingsObject);
+        // setCurrentState();
+      });
+    }
   }
 
-  setCurrentState() {
-    const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
-    if(this.state.settingsObject.length  === 0) { // no settings object yet from server
-      return;
-    }
-    this.setState({
-      hourly: hourly,
-      breakTime: breakTime,
-      breakAfter: breakAfter,
-      pension: pension,
-      drives: drives,
-      others: others
-    });
-  }
+  // setCurrentState() {
+  //   const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
+  //   if(this.state.settingsObject.length  === 0) { // no settings object yet from server
+  //     return;
+  //   }
+  //   this.setState({
+  //     hourly: hourly,
+  //     breakTime: breakTime,
+  //     breakAfter: breakAfter,
+  //     pension: pension,
+  //     drives: drives,
+  //     others: others
+  //   });
+  // }
 
   saveSettings() {
     const { year, month } = this.props.time;
@@ -92,23 +105,53 @@ class Settings extends Component {
     }
   }
 
+  handleCancelClick = () => {
+    this.setState({ editing: false })
+  }
+
+  handleEditClick = () => {
+    this.setState({ editing: true });
+  }
+
   renderEdit() {
     return(
       <div>
         <h3>Hourly Wage:</h3>
-        <input className="form-control medium-input" name="hourly" ref="hourly" value={this.state.hourly} onChange={this.handleChange}></input>
+        <input className="form-control medium-input" name="hourly" ref="hourly"
+          value={this.state.hourly} onChange={this.handleChange}>
+        </input>
+
         <h3>Break Time:</h3>
-        <input className="form-control medium-input" name="breakTime" ref="breakTime" value={this.state.breakTime} onChange={this.handleChange}></input>
+        <input className="form-control medium-input" name="breakTime" ref="breakTime"
+          value={this.state.breakTime} onChange={this.handleChange}>
+        </input>
+
         <h3>Break After:</h3>
-        <input className="form-control medium-input" name="breakAfter" ref="breakAfter" value={this.state.breakAfter} onChange={this.handleChange}></input>
+        <input className="form-control medium-input" name="breakAfter" ref="breakAfter"
+          value={this.state.breakAfter} onChange={this.handleChange}>
+        </input>
+
         <h3>Pension Reduction %:</h3>
-        <input className="form-control medium-input" name="pension" ref="pension" value={this.state.pension} onChange={this.handleChange}></input>
+        <input className="form-control medium-input" name="pension" ref="pension"
+          value={this.state.pension} onChange={this.handleChange}>
+        </input>
+
         <h3>Drives:</h3>
-        <input className="form-control medium-input" name="drives" ref="drives" value={this.state.drives} onChange={this.handleChange}></input>
+        <input className="form-control medium-input" name="drives" ref="drives"
+          value={this.state.drives} onChange={this.handleChange}>
+        </input>
+
         <h3>Others:</h3>
-        <input className="form-control medium-input" ref="others" value={this.state.others} onChange={this.handleChange}></input>
-        <button onClick={this.saveSettings} className="btn btn-success regular-button"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
-        <button onClick={() => this.setState({ editing: false })} className="btn btn-primary regular-button"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
+        <input className="form-control medium-input" ref="others"
+          value={this.state.others} onChange={this.handleChange}>
+        </input>
+
+        <button onClick={this.saveSettings} className="btn btn-success regular-button">
+          <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
+        </button>
+        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button">
+          <i className="fa fa-times" aria-hidden="true"></i> Cancel
+        </button>
       </div>
     );
   }
@@ -116,7 +159,9 @@ class Settings extends Component {
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
     return(
       <div>
-        <button className="btn btn-info regular-button" onClick={() => this.setState({ editing: true })}><i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+        <button className="btn btn-info regular-button" onClick={this.handleEditClick}>
+          <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+        </button>
         <h3>Hourly Wage: {hourly}</h3>
         <h3>Break Time: {breakTime}</h3>
         <h3>Break After: {breakAfter}</h3>

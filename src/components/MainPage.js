@@ -11,11 +11,10 @@ class MainPage extends Component {
     this.state = {
       days: [],
       settingsObject: {},
-      year: new Date().getFullYear(),
-      month: (new Date().getMonth() + 1),
       bruto: 0,
       neto: 0,
       tax: 0,
+      numberOfDays: 0,
       numberOfHours: 0,
       numberOfHours100: 0,
       numberOfHours125: 0,
@@ -34,25 +33,24 @@ class MainPage extends Component {
   componentWillReceiveProps(nextProps) {
     console.log(nextProps);
     console.log('componentWillReceiveProps');
-    if (nextProps.time) {
-      console.log('there is time');
-      console.log(nextProps.time);
-      this.setState({ year: nextProps.time.year, month: nextProps.time.month })
+    const { prevYear, prevMonth } = this.props.time;
+    const { nextYear, nextMonth } = nextProps.time;
+    if ((prevYear != nextYear) || (prevMonth != nextMonth)) { // check if year or month has changed
+      console.log('time has changed, data should change');
+      this.props.fetchDays(nextYear, nextMonth);
     }
-    if (nextProps.days) {
+    // too early, need to wait for the server and only then set the state
+    if (props.days != nextProps.days) {
       console.log('there are days');
       console.log(nextProps.days);
-      this.setState({ days: nextProps.days }, () => {
+      const days = nextProps.days;
+      const settingsObject = days[days.length - 1];
+      this.setState({ days, settingsObject, loading: false }, () => {
         console.log(this.state.days);
-        const days = this.state.days;
-        const settingsObject = days[days.length - 1];
-        this.setState({ settingsObject, loading: false }, () => {
-          console.log(this.state.settingsObject);
-          this.mapOnDays();
-        });
+        console.log(this.state.settingsObject);
+        this.mapOnDays();
       });
     }
-
   }
 
   mapOnDays() {
@@ -63,9 +61,10 @@ class MainPage extends Component {
     }
     console.log('mapOnDays in main page');
     console.log(days);
-    let numberOfHours = 0, numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0, numberOfHoursNeto = 0;
+    let numberOfDays = 0, numberOfHours = 0, numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0, numberOfHoursNeto = 0;
     days.map(day => {
       if (day.day !== 0) {
+        numberOfDays += 1;
         numberOfHours += parseFloat(day.numberOfHours);
         numberOfHours100 += parseFloat(day.numberOfHours100);
         numberOfHours125 += parseFloat(day.numberOfHours125);
@@ -74,20 +73,18 @@ class MainPage extends Component {
       }
       return day;
     })
-    this.setState({ numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150, numberOfHoursNeto }, () => {
+    this.setState({ numberOfDays, numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150, numberOfHoursNeto }, () => {
       this.getBruto();
     });
   }
 
   getBruto() {
-    const { numberOfHours100, numberOfHours125, numberOfHours150 } = this.state;
-    const days = this.state.days;
-    const settingsObject = this.state.settingsObject;
-    const wage100 = numberOfHours100 * (settingsObject.hourly);
-    const wage125 = numberOfHours125 * (settingsObject.hourly * 1.25);
-    const wage150 = numberOfHours150 * (settingsObject.hourly * 1.5);
-    const drives = (days.length - 1) * (settingsObject.drives);
-    const others = settingsObject.others;
+    const { numberOfDays, numberOfHours100, numberOfHours125, numberOfHours150 } = this.state;
+    const { hourly, drives, others } = this.state.settingsObject;
+    const wage100 = numberOfHours100 * hourly;
+    const wage125 = numberOfHours125 * hourly * 1.25;
+    const wage150 = numberOfHours150 * hourly * 1.5;
+    const drives = numberOfDays * drives;
     const bruto = wage100 + wage125 + wage150 + drives + others;
     this.setState({ bruto }, () => {
       this.getNeto();
@@ -95,9 +92,9 @@ class MainPage extends Component {
   }
 
   getNeto() {
-    const bruto = this.state.bruto;
-    const settingsObject = this.state.settingsObject;
-    const pensionReduction = bruto * settingsObject.pension / 100;
+    const { bruto } = this.state;
+    const { pension } = this.state.settingsObject;
+    const pensionReduction = bruto * pension / 100;
 
     const step1 = 5280, step2 = 9010, step3 = 14000, step4 = 20000, step5 = 41830;
     const step1per = 0.1, step2per = 0.14, step3per = 0.23, step4per = 0.30, step5per = 0.33, step6per = 0.45;
@@ -124,7 +121,6 @@ class MainPage extends Component {
   }
 
   renderObjects() {
-    // if it is an empty
     const days = this.state.days;
     if(days.length === 0) { // no data from server yet
       return (<span />);

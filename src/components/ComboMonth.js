@@ -4,7 +4,7 @@ export default class ComboMonth extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMonth: props.val
+      currentMonth: (new Date().getMonth() + 1)
     }
     this.handleChange = this.handleChange.bind(this);
   }

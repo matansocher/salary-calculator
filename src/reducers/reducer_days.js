@@ -8,8 +8,9 @@ export default function(state = [], action) {
       console.log(action.payload);
       return action.payload;
     case ADD_DAY:
-      newState[newState.length] = action.payload;
-      return newState;
+      return _.concat(newState, action.payload);
+      // newState[newState.length] = action.payload;
+      // return newState;
     case EDIT_DAY:
       const index = _.findIndex(state, (day) => {
         return day.day === action.payload.day;

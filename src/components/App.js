@@ -14,10 +14,7 @@ import NoMatch from './NoMatch';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      year: new Date().getFullYear(),
-      month: (new Date().getMonth() + 1)
-    }
+
     this.changeYear = this.changeYear.bind(this);
     this.changeMonth = this.changeMonth.bind(this);
   }
@@ -39,8 +36,8 @@ class App extends Component {
 
           <MenuBar />
 
-          <ComboYear val={this.state.year} changeYear={this.changeYear} />
-          <ComboMonth val={this.state.month} changeMonth={this.changeMonth} />
+          <ComboYear changeYear={this.changeYear} />
+          <ComboMonth changeMonth={this.changeMonth} />
 
           <hr/>
           <Switch>

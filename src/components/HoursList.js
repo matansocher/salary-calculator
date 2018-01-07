@@ -31,23 +31,29 @@ class HoursList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.days);
-    this.setState({ days: nextProps.days }, () => {
-      console.log(this.state.days);
-      const days = this.state.days;
+    console.log(nextProps);
+    const { prevYear, prevMonth } = this.props.time;
+    const { nextYear, nextMonth } = nextProps.time;
+    if ((prevYear != nextYear) || (prevMonth != nextMonth)) { // check if date has changed
+      console.log('time has changed, data should change');
+      this.props.fetchDays(nextYear, nextMonth);
+    }
+    if (props.days != nextProps.days) {
+      const days = nextProps.days;
       const settingsObject = days[days.length - 1];
-      this.setState({ settingsObject, loading: false }, () => {
-        console.log(this.state.settingsObject);
+      this.setState({ days, settingsObject, loading: false }, () => {
+        console.log(this.state.days);
       });
-    });
+    }
   }
 
   addDay() {
-    const dayOfMonth = parseInt(this.refs.dayOfMonth.value.substring(this.refs.dayOfMonth.value.length - 1), 10)
-    const enterhour = parseFloat(this.refs.enterhour.value);
-    const enterminute = parseFloat(this.refs.enterminute.value);
-    const exithour = parseFloat(this.refs.exithour.value);
-    const exitminute = parseFloat(this.refs.exitminute.value);
+    const { dayOfMonth, enterhour, enterminute, exithour, exitminute} = this.refs;
+    const dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
+    const enterhour = parseFloat(enterhour.value);
+    const enterminute = parseFloat(enterminute.value);
+    const exithour = parseFloat(exithour.value);
+    const exitminute = parseFloat(exitminute.value);
 
     const { breakAfter, breakTime } = this.state.settingsObject;
 
@@ -100,26 +106,53 @@ class HoursList extends Component {
     }
   }
 
+  handleCancelClick = () => {
+    this.setState({ add: false })
+  }
+
+  handleAddClick = () => {
+    this.setState({ add: true });
+  }
+
   renderAdd() {
     if(this.state.add) {
       return (
         <li className="col-sm-12 col-md-12 list-group-item">
           <h3>Day On Month:</h3>
-          <input className="form-control hour-input hours-input" name="dayOfMonth" ref="dayOfMonth" value={this.state.dayOfMonth} onChange={this.handleChange}></input><br />
+          <input className="form-control hour-input hours-input" name="dayOfMonth" ref="dayOfMonth"
+            value={this.state.dayOfMonth} onChange={this.handleChange}>
+          </input>
+          <br />
           <h3>Enter Hour:</h3>
-          <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour" value={this.state.enterhour} onChange={this.handleChange}></input>:
-          <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute" value={this.state.enterminute} onChange={this.handleChange}></input><br />
+          <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour"
+            value={this.state.enterhour} onChange={this.handleChange}>
+          </input>:
+          <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute"
+            value={this.state.enterminute} onChange={this.handleChange}>
+          </input>
+          <br />
           <h3>Exit Hour:</h3>
-          <input className="form-control hour-input hours-input" name="exithour" ref="exithour" value={this.state.exithour} onChange={this.handleChange}></input>:
-          <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute" value={this.state.exitminute} onChange={this.handleChange}></input><br />
-          <button onClick={this.addDay} className="btn btn-success regular-button hours-input"><i className="fa fa-floppy-o" aria-hidden="true"></i> Save</button>
-          <button onClick={() => this.setState({ add: false })} className="btn btn-primary regular-button hours-input"><i className="fa fa-times" aria-hidden="true"></i> Cancel</button>
+          <input className="form-control hour-input hours-input" name="exithour" ref="exithour"
+            value={this.state.exithour} onChange={this.handleChange}>
+          </input>:
+          <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute"
+            value={this.state.exitminute} onChange={this.handleChange}>
+          </input>
+          <br />
+          <button onClick={this.addDay} className="btn btn-success regular-button hours-input">
+            <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
+          </button>
+          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button hours-input">
+            <i className="fa fa-times" aria-hidden="true"></i> Cancel
+          </button>
         </li>
       );
     } else {
       return(
         <li className="col-sm-12 col-md-12 list-group-item">
-          <button className="btn btn-info add-button regular-button" onClick={() => this.setState({ add: true })}><i className="fa fa-plus" aria-hidden="true"></i> Add</button>
+          <button className="btn btn-info add-button regular-button" onClick={this.handleAddClick}>
+            <i className="fa fa-plus" aria-hidden="true"></i> Add
+          </button>
         </li>
       );
     }
@@ -140,8 +173,7 @@ class HoursList extends Component {
       days.map(day => {
         const key = `${day.year}${day.month}${day.day}`;
         if (day.day !== 0) {
-          return <Day key={key} day={day} hourly={settingsObject.hourly}
-                  breakAfter={settingsObject.breakAfter} breakTime={settingsObject.breakTime}
+          return <Day key={key} day={day} settingsObject={settingsObject}
                   editDay={this.editDay} deleteDay={this.deleteDay} />
         }
         return day;
