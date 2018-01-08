@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS, SAVE_TIME } from '../actions/types';
 import fire from '../config';
 
-export function fetchDays(year, month) {
+export function fetchDays(year, month, callback) {
 
 
   // fire.database().ref(`days/${year}/${month}`).once('value')
@@ -43,13 +43,12 @@ export function fetchDays(year, month) {
       const daysObject = snap.val();
       // const request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
       const array = _.values(daysObject);
-      console.log("fetch days action");
-      console.log(array);
       dispatch({
         type: FETCH_DAYS,
         payload: array
       });
     });
+    // }).then(() => callback());
   };
 
 
@@ -258,8 +257,6 @@ export function saveTime(year, month) {
     year: year,
     month: month
   }
-  console.log('saveTime action');
-  console.log(time);
   return {
     type: SAVE_TIME,
     payload: time

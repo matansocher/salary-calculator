@@ -26,28 +26,23 @@ class MainPage extends Component {
 
   componentDidMount() {
     const { year, month } = this.props.time;
-    console.log('componentDidMount');
     this.props.fetchDays(year, month);
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    console.log('componentWillReceiveProps');
-    const { prevYear, prevMonth } = this.props.time;
-    const { nextYear, nextMonth } = nextProps.time;
-    if ((prevYear != nextYear) || (prevMonth != nextMonth)) { // check if year or month has changed
-      console.log('time has changed, data should change');
+    const prevYear = this.props.time.year;
+    const prevMonth = this.props.time.month;
+    const nextYear = nextProps.time.year;
+    const nextMonth = nextProps.time.month;
+
+    if ((prevYear !== nextYear) || (prevMonth !== nextMonth)) { // check if year or month has changed
       this.props.fetchDays(nextYear, nextMonth);
     }
     // too early, need to wait for the server and only then set the state
-    if (this.props.days != nextProps.days) {
-      console.log('there are days');
-      console.log(nextProps.days);
+    if (this.props.days !== nextProps.days) {
       const days = nextProps.days;
       const settingsObject = days[days.length - 1];
       this.setState({ days, settingsObject, loading: false }, () => {
-        console.log(this.state.days);
-        console.log(this.state.settingsObject);
         this.mapOnDays();
       });
     }
@@ -56,11 +51,8 @@ class MainPage extends Component {
   mapOnDays() {
     const days = this.state.days;
     if(days.length  === 0) { // no days array yet from server
-      console.log('did not enter mapOnDays');
       return;
     }
-    console.log('mapOnDays in main page');
-    console.log(days);
     let numberOfDays = 0, numberOfHours = 0, numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0, numberOfHoursNeto = 0;
     days.map(day => {
       if (day.day !== 0) {
@@ -122,9 +114,7 @@ class MainPage extends Component {
 
   renderObjects() {
     const days = this.state.days;
-    if(days.length === 0) { // no data from server yet
-      return (<span />);
-    } else if(days.length === 1) { // no days on this month
+    if(days.length === 0 || days.length === 1) { // no days on this month
       return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
     } else { // there is data to show
       return (

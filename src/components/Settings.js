@@ -27,19 +27,19 @@ class Settings extends Component {
 
   componentDidMount() {
     const { year, month } = this.props.time;
-    console.log('componentDidMount');
     this.props.fetchSettings(year, month);
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    const { prevYear, prevMonth } = this.props.time;
-    const { nextYear, nextMonth } = nextProps.time;
-    if ((prevYear != nextYear) || (prevMonth != nextMonth)) { // check if date has changed
-      console.log('time has changed, data should change');
+    // this.setState({ loading: true })
+    const prevYear = this.props.time.year;
+    const prevMonth = this.props.time.month;
+    const nextYear = nextProps.time.year;
+    const nextMonth = nextProps.time.month;
+    if ((prevYear !== nextYear) || (prevMonth !== nextMonth)) { // check if date has changed
       this.props.fetchSettings(nextYear, nextMonth);
     }
-    if (this.props.settingsObject != nextProps.settingsObject) {
+    if (this.props.settingsObject !== nextProps.settingsObject) {
       const settingsObject = nextProps.settingsObject;
       this.setState({
         settingsObject,
@@ -50,9 +50,6 @@ class Settings extends Component {
         drives: settingsObject.drives,
         others: settingsObject.others,
         loading: false
-      }, () => {
-        console.log(this.state.settingsObject);
-        // setCurrentState();
       });
     }
   }

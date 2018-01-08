@@ -31,19 +31,17 @@ class HoursList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    const { prevYear, prevMonth } = this.props.time;
-    const { nextYear, nextMonth } = nextProps.time;
-    if ((prevYear != nextYear) || (prevMonth != nextMonth)) { // check if date has changed
-      console.log('time has changed, data should change');
+    const prevYear = this.props.time.year;
+    const prevMonth = this.props.time.month;
+    const nextYear = nextProps.time.year;
+    const nextMonth = nextProps.time.month;
+    if ((prevYear !== nextYear) || (prevMonth !== nextMonth)) { // check if date has changed
       this.props.fetchDays(nextYear, nextMonth);
     }
-    if (this.props.days != nextProps.days) {
+    if (this.props.days !== nextProps.days) {
       const days = nextProps.days;
       const settingsObject = days[days.length - 1];
-      this.setState({ days, settingsObject, loading: false }, () => {
-        console.log(this.state.days);
-      });
+      this.setState({ days, settingsObject, loading: false });
     }
   }
 
@@ -161,7 +159,7 @@ class HoursList extends Component {
   renderList() {
     const { days, settingsObject } = this.state;
 
-    if (days.length === 1) {
+    if (days.length === 0 || days.length === 1) {
       return (
         <div className="container container-fluid">
           <h1>No Working Days On This Month!</h1>
@@ -176,7 +174,7 @@ class HoursList extends Component {
           return <Day key={key} day={day} settingsObject={settingsObject}
                   editDay={this.editDay} deleteDay={this.deleteDay} />
         }
-        return day;
+        return <span key={key}/>;
       })
     )
   }

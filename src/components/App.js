@@ -10,16 +10,21 @@ import MainPage from './MainPage';
 import HoursList from './HoursList';
 import Settings from './Settings';
 import NoMatch from './NoMatch';
+// import { Button } from 'material-ui';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      year: new Date().getFullYear(),
+      month: (new Date().getMonth() + 1)
+    }
+
     this.changeYear = this.changeYear.bind(this);
     this.changeMonth = this.changeMonth.bind(this);
   }
   changeMonth(value) {
-    console.log('changeMonth');
     this.setState({ month: value }, () => {
       this.props.saveTime(this.state.year, this.state.month);
     });

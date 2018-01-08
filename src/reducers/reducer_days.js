@@ -5,7 +5,6 @@ export default function(state = [], action) {
   let newState = state;
   switch (action.type) {
     case FETCH_DAYS:
-      console.log(action.payload);
       return action.payload;
     case ADD_DAY:
       return _.concat(newState, action.payload);
