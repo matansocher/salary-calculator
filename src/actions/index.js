@@ -23,6 +23,7 @@ export function fetchDays(year, month, callback) {
   //     payload: []
   //   };
   // });
+  const settings_ref = fire.database().ref(`days/${year}/${month}/settings`);
   fire.database().ref(`days/${year}/${month}`).once('value', snap => {
     if (!snap.hasChild('settings')) {
       settings_ref.set({
@@ -154,7 +155,7 @@ export function deleteDay(day) {
 }
 
 export function fetchSettings(year, month) {
-  let settings_ref = fire.database().ref(`days/${year}/${month}/settings`);
+  const settings_ref = fire.database().ref(`days/${year}/${month}/settings`);
   // if no settings object exists - create empty one
   fire.database().ref(`days/${year}/${month}`).once('value', snap => {
     if (!snap.hasChild('settings')) {

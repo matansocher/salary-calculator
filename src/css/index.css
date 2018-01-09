@@ -4,7 +4,7 @@ body {
   font-family: sans-serif;
 }
 .hour-input {
-  width: 45px;
+  width: 100px;
   height: 30px;
 }
 .regular-button {

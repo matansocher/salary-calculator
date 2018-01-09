@@ -32,41 +32,39 @@ class HoursList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ loading: true, add: false }, () => {
-      if ((this.props.time.year !== this.props.time.month) ||
-        (nextProps.time.year !== nextProps.time.month)) { // check if date has changed
-          this.props.fetchDays(nextYear, nextMonth);
-      }
-      if (this.props.days !== nextProps.days) { // check if days array has changed
-        const days = nextProps.days;
-        const settingsObject = days[days.length - 1];
-        this.setState({ days, settingsObject, loading: false });
-      }
-    });
+    this.setState({ loading: true });
+    if ((this.props.time.year !== nextProps.time.year) ||
+      (this.props.time.month !== nextProps.time.month)) { // check if date has changed
+        this.props.fetchDays(nextProps.time.year, nextProps.time.month);
+    }
+    if (this.props.days !== nextProps.days) { // check if days array has changed
+      const days = nextProps.days;
+      const settingsObject = days[days.length - 1];
+      this.setState({ days, settingsObject, loading: false });
+    }
   }
 
   addDay() {
-    this.setState({ loading: true }, () => {
-      const { breakAfter, breakTime } = this.state.settingsObject;
-      const { year, month } = this.props.time;
-      let { dayOfMonth, enterhour, enterminute, exithour, exitminute } = this.refs;
-      // maybe we dont need the parseFloat and parseInt
-      dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
-      enterhour = parseFloat(enterhour.value);
-      enterminute = parseFloat(enterminute.value);
-      exithour = parseFloat(exithour.value);
-      exitminute = parseFloat(exitminute.value);
+    this.setState({ loading: true });
+    const { breakAfter, breakTime } = this.state.settingsObject;
+    const { year, month } = this.props.time;
+    let { dayOfMonth, enterhour, enterminute, exithour, exitminute } = this.refs;
+    // maybe we dont need the parseFloat and parseInt
+    dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
+    enterhour = parseFloat(enterhour.value);
+    enterminute = parseFloat(enterminute.value);
+    exithour = parseFloat(exithour.value);
+    exitminute = parseFloat(exitminute.value);
 
-      this.props.setDay({
-        day: dayOfMonth,
-        month: month,
-        year: year,
-        enterhour: enterhour,
-        enterminute: enterminute,
-        exithour: exithour,
-        exitminute: exitminute
-      }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
-    });
+    this.props.setDay({
+      day: dayOfMonth,
+      month: month,
+      year: year,
+      enterhour: enterhour,
+      enterminute: enterminute,
+      exithour: exithour,
+      exitminute: exitminute
+    }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
     // not really - need it as a callback
     setTimeout(() => {
       // gesture to user that the changes were saved
@@ -76,10 +74,9 @@ class HoursList extends Component {
   }
 
   editDay(day) {
-    this.setState({ loading: true }, () => {
-      const { breakAfter, breakTime } = this.state.settingsObject;
-      this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
-    });
+    this.setState({ loading: true });
+    const { breakAfter, breakTime } = this.state.settingsObject;
+    this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
     // not really - need it as a callback
     setTimeout(() => {
       // gesture to user that the changes were saved
@@ -89,9 +86,8 @@ class HoursList extends Component {
   }
 
   deleteDay(day) {
-    this.setState({ loading: true }, () => {
-      this.props.deleteDay(day);
-    });
+    this.setState({ loading: true });
+    this.props.deleteDay(day);
     // not really - need it as a callback
     setTimeout(() => {
       // gesture to user that the changes were saved
@@ -115,8 +111,8 @@ class HoursList extends Component {
   }
 
   handleAddClick = () => {
-    this.setState({ add: true });
-    // this.props.history.push('/AddDay');
+    // this.setState({ add: true });
+    this.props.history.push('/AddDay');
   }
 
   renderAdd() {
@@ -168,7 +164,7 @@ class HoursList extends Component {
     const { days, settingsObject } = this.state;
     // if (days.length === 0)
     //   return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
-    else if (days.length === 1)
+    if (days.length === 1)
       return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
     else {
       return (

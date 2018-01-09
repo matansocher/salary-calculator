@@ -29,44 +29,42 @@ class Settings extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ loading: true, editing: false }, () => {
-      if ((this.props.time.year !== this.props.time.month) ||
-        (nextProps.time.year !== nextProps.time.month)) { // check if date has changed
-          this.props.fetchSettings(nextYear, nextMonth);
-      }
-      if (this.props.settingsObject !== nextProps.settingsObject) { // check if settings object has changed
-        const settingsObject = nextProps.settingsObject;
-        const { hourly, breakTime, breakAfter, pension, drives, others} = settingsObject;
-        this.setState({
-          settingsObject,
-          hourly,
-          breakTime,
-          breakAfter,
-          pension,
-          drives,
-          others,
-          loading: false
-        });
-      }
-    });
+    this.setState({ loading: true });
+    if ((this.props.time.year !== nextProps.time.year) ||
+      (this.props.time.month !== nextProps.time.month)) { // check if date has changed
+        this.props.fetchSettings(nextProps.time.year, nextProps.time.month);
+    }
+    if (this.props.settingsObject !== nextProps.settingsObject) { // check if settings object has changed
+      const settingsObject = nextProps.settingsObject;
+      const { hourly, breakTime, breakAfter, pension, drives, others} = settingsObject;
+      this.setState({
+        settingsObject,
+        hourly,
+        breakTime,
+        breakAfter,
+        pension,
+        drives,
+        others,
+        loading: false
+      });
+    }
   }
 
   saveSettings() {
-    this.setState({ loading: true }, () => {
-      const { year, month } = this.props.time;
-      const { hourly, breakTime, breakAfter, pension, drives, others } = this.refs;
-      console.log(`days/${year}/${month}/settings`);
-      this.props.saveSettings({
-        day: 0,
-        month,
-        year,
-        hourly: hourly.value,
-        breakTime: breakTime.value,
-        breakAfter: breakAfter.value,
-        pension: pension.value,
-        drives: drives.value,
-        others: others.value
-      });
+    this.setState({ loading: true });
+    const { year, month } = this.props.time;
+    const { hourly, breakTime, breakAfter, pension, drives, others } = this.refs;
+    console.log(`days/${year}/${month}/settings`);
+    this.props.saveSettings({
+      day: 0,
+      month,
+      year,
+      hourly: hourly.value,
+      breakTime: breakTime.value,
+      breakAfter: breakAfter.value,
+      pension: pension.value,
+      drives: drives.value,
+      others: others.value
     });
     // not really, need it as a callback
     setTimeout(() => {

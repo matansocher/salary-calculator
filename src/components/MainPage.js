@@ -30,19 +30,18 @@ class MainPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ loading: true }, () => {
-      if ((this.props.time.year !== this.props.time.month) ||
-        (nextProps.time.year !== nextProps.time.month)) { // check if date has changed
-          this.props.fetchDays(nextYear, nextMonth);
-      }
-      if (this.props.days !== nextProps.days) {
-        const days = nextProps.days;
-        const settingsObject = days[days.length - 1];
-        this.setState({ days, settingsObject }, () => {
-          this.mapOnDays();
-        });
-      }
-    });
+    this.setState({ loading: true });
+    if ((this.props.time.year !== nextProps.time.year) ||
+      (this.props.time.month !== nextProps.time.month)) { // check if date has changed
+        this.props.fetchDays(nextProps.time.year, nextProps.time.month);
+    }
+    if (this.props.days !== nextProps.days) {
+      const days = nextProps.days;
+      const settingsObject = days[days.length - 1];
+      this.setState({ days, settingsObject }, () => {
+        this.mapOnDays();
+      });
+    }
   }
 
   mapOnDays() {
@@ -57,11 +56,11 @@ class MainPage extends Component {
         const { numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150 } = day;
         numberOfWorkingDays += 1;
         // maybe we dont need the parseFloat
-        totalNumberOfHours += parseFloat(numberOfHours);
-        totalNumberOfHours100 += parseFloat(numberOfHours100);
-        totalNumberOfHours125 += parseFloat(numberOfHours125);
-        totalNumberOfHours150 += parseFloat(numberOfHours150);
-        totalNumberOfHoursNeto += parseFloat(numberOfHours100) + parseFloat(numberOfHours125) + parseFloat(numberOfHours150);
+        totalNumberOfHours += numberOfHours;
+        totalNumberOfHours100 += numberOfHours100;
+        totalNumberOfHours125 += numberOfHours125;
+        totalNumberOfHours150 += numberOfHours150;
+        totalNumberOfHoursNeto += numberOfHours100 + numberOfHours125 + numberOfHours150;
       }
       return day;
     })
@@ -119,7 +118,7 @@ class MainPage extends Component {
     const days = this.state.days;
     // if(days.length === 0) { // no days on this month
     //   return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
-    else if(days.length === 1) { // no days on this month
+    if(days.length === 1) { // no days on this month
       return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
     } else { // there is data to show
       return (

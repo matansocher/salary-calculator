@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { saveTime } from '../actions';
+import AddDay from './AddDay';
 import ComboYear from './ComboYear';
 import ComboMonth from './ComboMonth';
 import MenuBar from './MenuBar';
@@ -48,6 +49,7 @@ class App extends Component {
           <Switch>
             <Route path="/HoursList" component={HoursList}/>
             <Route path="/Settings" component={Settings}/>
+            <Route path="/AddDay" component={AddDay}/>
             <Route path="/" component={MainPage}/>
             <Route path="*" component={NoMatch}/>
           </Switch>
