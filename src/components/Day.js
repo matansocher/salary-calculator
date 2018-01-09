@@ -81,10 +81,6 @@ export default class Day extends Component {
           </div>
         </MuiThemeProvider>
 
-        <Save className="pull-xs-right" onClick={this.saveClick} />
-
-        <Delete className="pull-xs-left" onClick={this.handleCancelClick} />
-
         <button onClick={this.saveClick} className="btn btn-success regular-button pull-xs-right">
           <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
         </button>
@@ -99,10 +95,13 @@ export default class Day extends Component {
   renderRegular() {
     const { day, month, year } = this.state.day;
     const { breakAfter, breakTime } = this.state.settingsObject;
+    console.log('asdfasdfasdf');
+    console.log(this.state.day);
     const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
     const { enterTime, exitTime } = this.state;
     const { hourly } = this.state.settingsObject;
 
+    console.log(enterTime, exitTime);
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
 
@@ -111,13 +110,19 @@ export default class Day extends Component {
             iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             targetOrigin={{horizontal: 'right', vertical: 'top'}}>
+
             <MenuItem primaryText="Edit" onClick={this.handleEditClick}>
               <i className="fa fa-pencil" aria-hidden="true"></i>
             </MenuItem>
 
+            <MenuItem primaryText="Edit" leftIcon={
+              <Delete onClick={this.handleEditClick} />
+            } />
+
             <MenuItem primaryText="Delete" leftIcon={
               <Delete onClick={this.handleDeleteClick} />
             } />
+
           </IconMenu>
         </MuiThemeProvider>
 

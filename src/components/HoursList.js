@@ -53,24 +53,26 @@ class HoursList extends Component {
   }
 
   editDay(day) {
-    // if in add day at AddDay class works the callback after the loading true state, add to here also
-    this.setState({ loading: true });
-    const { breakAfter, breakTime } = this.state.settingsObject;
-    this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
-    // not really - need it as a callback
-    setTimeout(() => {
-      this.setState({ loading: false, gestureText: "Changes Saved!", gesture: true });
-    }, 1000);
+    this.setState({ loading: true }, () => {
+      const { breakAfter, breakTime } = this.state.settingsObject;
+      this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
+      // not really - need it as a callback
+      setTimeout(() => {
+        this.setState({ loading: false, gestureText: "Changes Saved!", gesture: true });
+      }, 1000);
+    });
+
   }
 
   deleteDay(day) {
     // if in add day at AddDay class works the callback after the loading true state, add to here also
-    this.setState({ loading: true });
-    this.props.deleteDay(day);
-    // not really - need it as a callback
-    setTimeout(() => {
-      this.setState({ loading: false, gestureText: "Day Deleted Successfully", gesture: true });
-    }, 1000);
+    this.setState({ loading: true },() => {
+      this.props.deleteDay(day);
+      // not really - need it as a callback
+      setTimeout(() => {
+        this.setState({ loading: false, gestureText: "Day Deleted Successfully", gesture: true });
+      }, 1000);
+    });
   }
 
   handleCancelClick = () => {

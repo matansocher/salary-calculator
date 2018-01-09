@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS, SAVE_TIME } from '../actions/types';
+import { getCorrectTime } from '../CommonFunctions';
 import fire from '../config';
 
 export function fetchDays(year, month, callback) {
@@ -65,13 +66,15 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     default: addOrEdit = ADD_DAY;
   }
 
+  const arrayOfHours = getCorrectTime(day);
+
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
         day: day.day,
         year: day.year,
         month: day.month,
-        enterTime: day.enterTime,
-        exitTime: day.exitTime
+        enterTime: arrayOfHours[0],
+        exitTime: arrayOfHours[1]
       });
       dispatch({
         type: addOrEdit,

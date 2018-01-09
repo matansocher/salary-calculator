@@ -49,10 +49,12 @@ export function calculateHours(day, breakAfter, breakTime) {
 
 function getNumberOfHoursForADay(day) {
   const { enterTime, exitTime } = day;
+  console.log(day);
   return (getTimeInMinutes(exitTime) - getTimeInMinutes(enterTime)) / 60;
 }
 
 function getTimeInMinutes(time) {
+  console.log(time);
   const separated = time.split(':');
   const hourInMinutes = parseInt(separated[0], 10) * 60;
   const minutesInMinutes = parseInt(separated[1], 10);
@@ -100,7 +102,7 @@ export function getDayOfWeek(date) {
 }
 
 export function mapOnDays(days, breakAfter, breakTime) {
-
+  console.log('mapOnDays');
   let numberOfDays = 0, numberOfHours = 0, numberOfHoursNeto = 0;
   let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
 
@@ -167,4 +169,17 @@ export function getNeto(bruto, tax, settingsObject) {
   const pensionReduction = bruto * pension / 100;
 
   return bruto - pensionReduction - tax;
+}
+
+export function getCorrectTime(day) {
+  const { month, year } = day;
+  const enterTimeHour = (day.enterTime.getHours() < 10 ? `0${day.enterTime.getHours()}` : day.enterTime.getHours());
+  const enterTimeMinute = (day.enterTime.getMinutes() < 10 ? `0${day.enterTime.getMinutes()}` : day.enterTime.getMinutes());
+  const exitTimeHour = (day.exitTime.getHours() < 10 ? `0${day.exitTime.getHours()}` : day.exitTime.getHours());
+  const exitTimeMinute = (day.exitTime.getMinutes() < 10 ? `0${day.exitTime.getMinutes()}` : day.exitTime.getMinutes());
+
+  const enterTime = `${enterTimeHour}:${enterTimeMinute}`;
+  const exitTime = `${exitTimeHour}:${exitTimeMinute}`;
+
+  return [enterTime, exitTime];
 }

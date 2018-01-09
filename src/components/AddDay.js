@@ -45,10 +45,15 @@ class AddDay extends Component {
 
   addDay() {
     this.setState({ loading: true }, () => {
+
       const { breakAfter, breakTime } = this.state.settingsObject;
       const { year, month } = this.props.time;
-      let { day, enterTime, exitTime } = this.state;
-
+      const { day, enterTime, exitTime } = this.state;
+      console.log(day);
+      console.log(month);
+      console.log(year);
+      console.log(enterTime);
+      console.log(exitTime);
       this.props.setDay({
         day,
         month,
@@ -66,14 +71,17 @@ class AddDay extends Component {
   }
 
   handleDayChange = (a, value) => {
+    console.log(value);
     this.setState({ day: value + 1 });
   }
 
   handleEnterHourChange = (a, value) => {
+    console.log(value);
     this.setState({ enterTime: value });
   }
 
   handleExitHourChange = (a, value) => {
+    console.log(value);
     this.setState({ exitTime: value });
   }
 
