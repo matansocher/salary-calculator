@@ -100,10 +100,10 @@ class AddDay extends Component {
             </div>
           </MuiThemeProvider>
 
-          <button onClick={this.addDay} className="btn btn-success regular-button float-xs-right">
+          <button onClick={this.addDay} className="btn btn-success regular-button pull-xs-right">
             <i className="fa fa-floppy-o" aria-hidden="true"></i> Add
           </button>
-          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button float-xs-left">
+          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
             <i className="fa fa-trash" aria-hidden="true"></i> Cancel
           </button>
         </li>

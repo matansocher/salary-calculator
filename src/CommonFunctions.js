@@ -47,15 +47,15 @@ export function calculateHours(day, breakAfter, breakTime) {
   return [numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150];
 }
 
-getNumberOfHoursForADay(day) {
+function getNumberOfHoursForADay(day) {
   const { enterTime, exitTime } = day;
   return (getTimeInMinutes(exitTime) - getTimeInMinutes(enterTime)) / 60;
 }
 
-getTimeInMinutes(time) {
+function getTimeInMinutes(time) {
   const separated = time.split(':');
-  const hourInMinutes = parseInt(time[0], 10) * 60;
-  const minutesInMinutes = parseInt(time[1], 10);
+  const hourInMinutes = parseInt(separated[0], 10) * 60;
+  const minutesInMinutes = parseInt(separated[1], 10);
   return hourInMinutes + minutesInMinutes;
 }
 
