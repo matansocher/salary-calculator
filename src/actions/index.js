@@ -111,6 +111,11 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
         payload: day
       }
     }
+  }).catch(() => { // did not succed
+    return {
+      type: ADD_DAY,
+      payload: null
+    }
   });
   // wait for the request to come back and oly then return the actions
   // redux promise should take care of that
@@ -130,10 +135,15 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
 export function deleteDay(day) {
   fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove()
   .then(() => {
-      return {
-        type: DELETE_DAY,
-        payload: day
-      }
+    return {
+      type: DELETE_DAY,
+      payload: day
+    }
+  }).catch(() => {
+    return {
+      type: DELETE_DAY,
+      payload: null
+    }
   });
   // wait for the request to come back and oly then return the actions
   // redux promise should take care of that
@@ -190,6 +200,11 @@ export function saveSettings(settingsObject) {
         type: SAVE_SETTINGS,
         payload: settingsObject
       }
+  }).catch(() => {
+    return {
+      type: SAVE_SETTINGS,
+      payload: settingsObject
+    }
   });
   // wait for the request(settingsObject) to come back and oly then return the actions
   // redux promise should take care of that

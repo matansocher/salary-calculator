@@ -31,10 +31,6 @@ class MainPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({ loading: true }, () => {
-      // const prevYear = this.props.time.year;
-      // const prevMonth = this.props.time.month;
-      // const nextYear = nextProps.time.year;
-      // const nextMonth = nextProps.time.month;
       if ((this.props.time.year !== this.props.time.month) ||
         (nextProps.time.year !== nextProps.time.month)) { // check if date has changed
           this.props.fetchDays(nextYear, nextMonth);
@@ -98,19 +94,19 @@ class MainPage extends Component {
     const step1per = 0.1, step2per = 0.14, step3per = 0.23, step4per = 0.30, step5per = 0.33, step6per = 0.45;
     let tax = 0;
 
-    if (bruto <= step1) {
+    if (bruto <= step1)
       tax += bruto*step1per;
-    } if (bruto > step1 && bruto <= step2) {
+    if (bruto > step1 && bruto <= step2)
       tax += (bruto-step1)*step2per;
-    } if (bruto > step2 && bruto <= step3) {
+    if (bruto > step2 && bruto <= step3)
       tax += (bruto-step2)*step3per;
-    } if (bruto > step3 && bruto <= step4) {
+    if (bruto > step3 && bruto <= step4)
       tax += (bruto-step3)*step4per;
-    } if (bruto > step4 && bruto <= step5) {
+    if (bruto > step4 && bruto <= step5)
       tax += (bruto-step4)*step5per;
-    } if (bruto > step5) {
+    if (bruto > step5)
       tax += (bruto-step5)*step6per;
-    }
+
 
     const { pension } = this.state.settingsObject;
     const pensionReduction = bruto * pension / 100;

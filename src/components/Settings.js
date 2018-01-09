@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchSettings, saveSettings } from '../actions';
-
-// import { Button, Card, CardBody, CardImage, CardTitle, CardText } from 'mdbreact';
-
 import MDSpinner from 'react-md-spinner';
 
 class Settings extends Component {
@@ -19,6 +16,7 @@ class Settings extends Component {
       drives: 0,
       others: 0,
       editing: false,
+      gesture: false,
       loading: true
     };
     this.handleChange = this.handleChange.bind(this);
@@ -32,10 +30,6 @@ class Settings extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({ loading: true, editing: false }, () => {
-      // const prevYear = this.props.time.year;
-      // const prevMonth = this.props.time.month;
-      // const nextYear = nextProps.time.year;
-      // const nextMonth = nextProps.time.month;
       if ((this.props.time.year !== this.props.time.month) ||
         (nextProps.time.year !== nextProps.time.month)) { // check if date has changed
           this.props.fetchSettings(nextYear, nextMonth);
@@ -77,6 +71,7 @@ class Settings extends Component {
     // not really, need it as a callback
     setTimeout(() => {
       this.setState({ loading: false });
+      // this.setState({ gesture: true });
       // gesture to user that the changes were saved
     }, 1000);
   }
@@ -105,7 +100,7 @@ class Settings extends Component {
         <input className="form-control medium-input" name="hourly" ref="hourly"
           value={this.state.hourly} onChange={this.handleChange}>
         </input>
-        
+
         <h3>Break Time:</h3>
         <input className="form-control medium-input" name="breakTime" ref="breakTime"
           value={this.state.breakTime} onChange={this.handleChange}>

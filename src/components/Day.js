@@ -63,7 +63,7 @@ export default class Day extends Component {
   }
 
   handleCancelClick = () => {
-    this.setState({ editing: false })
+    this.setState({ editing: false });
   }
 
   handleEditClick = () => {

@@ -17,6 +17,7 @@ class HoursList extends Component {
       exithour: 0,
       exitminute: 0,
       add: false,
+      gesture: false,
       loading: true
     }
     this.handleChange = this.handleChange.bind(this);
@@ -32,10 +33,6 @@ class HoursList extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({ loading: true, add: false }, () => {
-      // const prevYear = this.props.time.year;
-      // const prevMonth = this.props.time.month;
-      // const nextYear = nextProps.time.year;
-      // const nextMonth = nextProps.time.month;
       if ((this.props.time.year !== this.props.time.month) ||
         (nextProps.time.year !== nextProps.time.month)) { // check if date has changed
           this.props.fetchDays(nextYear, nextMonth);
@@ -73,6 +70,7 @@ class HoursList extends Component {
     // not really - need it as a callback
     setTimeout(() => {
       // gesture to user that the changes were saved
+      // this.setState({ gesture: true });
       this.setState({ loading: false, add: false });
     }, 1000);
   }
@@ -85,6 +83,7 @@ class HoursList extends Component {
     // not really - need it as a callback
     setTimeout(() => {
       // gesture to user that the changes were saved
+      // this.setState({ gesture: true });
       this.setState({ loading: false });
     }, 1000);
   }
@@ -96,6 +95,7 @@ class HoursList extends Component {
     // not really - need it as a callback
     setTimeout(() => {
       // gesture to user that the changes were saved
+      // this.setState({ gesture: true });
       this.setState({ loading: false });
     }, 1000);
   }
@@ -116,6 +116,7 @@ class HoursList extends Component {
 
   handleAddClick = () => {
     this.setState({ add: true });
+    // this.props.history.push('/AddDay');
   }
 
   renderAdd() {
