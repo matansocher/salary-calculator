@@ -10,6 +10,7 @@ import MenuBar from './MenuBar';
 import MainPage from './MainPage';
 import HoursList from './HoursList';
 import Settings from './Settings';
+import SignInOrSignUp from './SignInOrSignUp';
 import Footer from './Footer';
 import NoMatch from './NoMatch';
 
@@ -56,7 +57,7 @@ class App extends Component {
           </Switch>
 
           <Footer />
-          
+
         </div>
       </Router>
     );

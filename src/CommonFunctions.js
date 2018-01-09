@@ -1,9 +1,22 @@
+import React from 'react';
+import MenuItem from 'material-ui/MenuItem';
+
 export function calculateHours(day, breakAfter, breakTime) {
 
-  const { month, year, enterTime, exitTime } = day;
+  const { enterTime, exitTime } = day;
   breakTime = breakTime/60;
-  const enterAsMinutes = ((enterTime.getHours()) * 60) + (enterTime.getMinutes());
-  const exitAsMinutes = ((exitTime.getHours()) * 60) - (exitTime.getMinutes());
+
+  const enterSeparated = enterTime.split(':');
+  const exitSeparated = exitTime.split(':');
+
+  const enterHourIntInMinutes = parseInt(enterSeparated[0], 10) * 60;
+  const enterMinuteIntInMinutes = parseInt(enterSeparated[1], 10);
+  const exitHourIntInMinutes = parseInt(exitSeparated[0], 10) * 60;
+  const exitMinuteIntInMinutes = parseInt(exitSeparated[1], 10);
+
+  const enterAsMinutes = enterHourIntInMinutes + enterMinuteIntInMinutes; // parseInt(enterSeparated[0] * 60) + parseInt(enterSeparated[1]);
+  const exitAsMinutes = exitHourIntInMinutes + exitMinuteIntInMinutes; // parseInt(exitSeparated[0] * 60) + parseInt(exitSeparated[1]);
+
   const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
   const hoursAfterUpgrade = 2;
 
@@ -28,7 +41,6 @@ export function calculateHours(day, breakAfter, breakTime) {
     numberOfHours125 = hoursAfterUpgrade;
     numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
   }
-
   return [numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150];
 }
 
@@ -53,8 +65,7 @@ export function populateOptionsForDayMonth(month) {
 }
 
 export function getDayOfWeek(day) {
-  const { day, month, year } = day;
-  const date = `${month}/${day}/${year}`;
+  const date = `${day.month}/${day.day}/${day.year}`;
   const dateString = new Date(date);
   const dayNumber = dateString.getDay();
   let dayString = '';
@@ -71,12 +82,33 @@ export function getDayOfWeek(day) {
   return dayString;
 }
 
+export function mapOnDays(days, breakAfter, breakTime) {
+
+  let numberOfDays = 0, numberOfHours = 0, numberOfHoursNeto = 0;
+  let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
+
+  days.map(day => {
+    if (day.day !== 0) {
+      const arrayOfHours = calculateHours(day, breakAfter, breakTime); // [numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150]
+      numberOfDays += 1;
+      // maybe we dont need the parseFloat
+      numberOfHours += arrayOfHours[0];
+      numberOfHours100 += arrayOfHours[1];
+      numberOfHours125 += arrayOfHours[2];
+      numberOfHours150 += arrayOfHours[3];
+      numberOfHoursNeto += arrayOfHours[1] + arrayOfHours[2] + arrayOfHours[3];
+    }
+    return day;
+  });
+  return [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150];
+}
+
 export function getBruto(arrayOfHours, settingsObject) {
   let { hourly, drives, others } = settingsObject;
-  const wage100 = arrayOfHours[1] * hourly;
-  const wage125 = arrayOfHours[2] * hourly * 1.25;
-  const wage150 = arrayOfHours[3] * hourly * 1.5;
-  drives = numberOfDays * drives;
+  const wage100 = arrayOfHours[3] * hourly;
+  const wage125 = arrayOfHours[4] * hourly * 1.25;
+  const wage150 = arrayOfHours[5] * hourly * 1.5;
+  drives = arrayOfHours[0] * drives;
   return wage100 + wage125 + wage150 + drives + others;
 }
 
@@ -108,6 +140,8 @@ export function getTax(bruto) {
   if (flag !== 0) {
     tax += (bruto - steps[flag-1]) * stepsPer[flag];
   }
+
+  return tax;
 }
 
 export function getNeto(bruto, tax, settingsObject) {
@@ -116,25 +150,4 @@ export function getNeto(bruto, tax, settingsObject) {
   const pensionReduction = bruto * pension / 100;
 
   return bruto - pensionReduction - tax;
-}
-
-export function mapOnDays(days) {
-
-  let numberOfDays = 0, numberOfHours = 0, numberOfHoursNeto = 0;
-  let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
-  
-  days.map(day => {
-    if (day.day !== 0) {
-      const arrayOfHours = calculateHours(day); // [numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150]
-      numberOfDays += 1;
-      // maybe we dont need the parseFloat
-      numberOfHours += arrayOfHours[0];
-      numberOfHours100 += arrayOfHours[1];
-      numberOfHours125 += arrayOfHours[2];
-      numberOfHours150 += arrayOfHours[3];
-      numberOfHoursNeto += arrayOfHours[1] + arrayOfHours[2] + arrayOfHours[3];
-    }
-    return day;
-  });
-  return [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150];
 }

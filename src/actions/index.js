@@ -55,48 +55,44 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     default: addOrEdit = ADD_DAY;
   }
 
-  // ******************* to delete **********************
-  const { month, year, enterTime, exitTime } = day;
-  breakTime = breakTime/60;
-  const enterAsMinutes = ((enterTime.getHours()) * 60) + (enterTime.getMinutes());
-  const exitAsMinutes = ((exitTime.getHours()) * 60) - (exitTime.getMinutes());
-  const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
-  const hoursAfterUpgrade = 2;
-
-  let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
-
-  if (numberOfHours < breakAfter) { // numberOfHours < 8
-    numberOfHours100 = numberOfHours;
-  }
-  if (numberOfHours === breakAfter) { // numberOfHours = 8
-    numberOfHours100 = breakAfter - breakTime;
-  }
-  if (numberOfHours > breakAfter && numberOfHours < (breakAfter + hoursAfterUpgrade)) { // 8 <= numberOfHours < 10
-    numberOfHours100 = breakAfter - breakTime;
-    numberOfHours125 = hoursAfterUpgrade - (numberOfHours - numberOfHours100);
-  }
-  if (numberOfHours === (breakAfter + hoursAfterUpgrade)) { // numberOfHours = 10
-    numberOfHours100 = breakAfter - breakTime;
-    numberOfHours125 = hoursAfterUpgrade - breakTime;
-  }
-  if (numberOfHours > (breakAfter + hoursAfterUpgrade)) { // numberOfHours >= 10
-    numberOfHours100 = breakAfter - breakTime;
-    numberOfHours125 = hoursAfterUpgrade;
-    numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
-  }
-  // ******************* / to delete **********************
+  // // ******************* to delete **********************
+  // const { month, year, enterTime, exitTime } = day;
+  // breakTime = breakTime/60;
+  // const enterAsMinutes = ((enterTime.getHours()) * 60) + (enterTime.getMinutes());
+  // const exitAsMinutes = ((exitTime.getHours()) * 60) - (exitTime.getMinutes());
+  // const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
+  // const hoursAfterUpgrade = 2;
+  //
+  // let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
+  //
+  // if (numberOfHours < breakAfter) { // numberOfHours < 8
+  //   numberOfHours100 = numberOfHours;
+  // }
+  // if (numberOfHours === breakAfter) { // numberOfHours = 8
+  //   numberOfHours100 = breakAfter - breakTime;
+  // }
+  // if (numberOfHours > breakAfter && numberOfHours < (breakAfter + hoursAfterUpgrade)) { // 8 <= numberOfHours < 10
+  //   numberOfHours100 = breakAfter - breakTime;
+  //   numberOfHours125 = hoursAfterUpgrade - (numberOfHours - numberOfHours100);
+  // }
+  // if (numberOfHours === (breakAfter + hoursAfterUpgrade)) { // numberOfHours = 10
+  //   numberOfHours100 = breakAfter - breakTime;
+  //   numberOfHours125 = hoursAfterUpgrade - breakTime;
+  // }
+  // if (numberOfHours > (breakAfter + hoursAfterUpgrade)) { // numberOfHours >= 10
+  //   numberOfHours100 = breakAfter - breakTime;
+  //   numberOfHours125 = hoursAfterUpgrade;
+  //   numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
+  // }
+  // // ******************* / to delete **********************
 
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
         day: day.day,
-        year,
-        month,
-        enterTime,
-        exitTime,
-        numberOfHours,
-        numberOfHours100,
-        numberOfHours125,
-        numberOfHours150
+        year: day.year,
+        month: day.month,
+        enterTime: day.enterTime,
+        exitTime: day.exitTime
       });
       dispatch({
         type: addOrEdit,
@@ -193,7 +189,6 @@ export function fetchSettings(year, month) {
 
 export function saveSettings(settings, callback) {
   const { year, month } = settings;
-  const settings_ref = fire.database().ref(`days/${year}/${month}/settings`);
 
   return dispatch => {
     fire.database().ref(`days/${year}/${month}/`).set({ settings });

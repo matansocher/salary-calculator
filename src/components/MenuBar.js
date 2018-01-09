@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import fire from '../config';
-import SignInOrSignUp from './SignInOrSignUp';
+// import fire from '../config';
+// import SignInOrSignUp from './SignInOrSignUp';
+import MDSpinner from 'react-md-spinner';
 
 export default class MenuBar extends Component {
-  constructor() {
+  constructor(props) {
+    super(props);
     this.state = {
       loading: false
     }
     this.logOut = this.logOut.bind(this);
   }
   logOut() {
-    this.setState({ loading: true }, () => {
-      firebase.auth().signOut().then(() => {
-        this.props.history.push('/SignInOrSignUp');
-      }, (error) => {
-        // An error happened.
-      });
-    });
-    this.setState({ loading: false });
+    // this.setState({ loading: true }, () => {
+    //   firebase.auth().signOut().then(() => {
+    //     this.props.history.push('/SignInOrSignUp');
+    //   }, (error) => {
+    //     // An error happened.
+    //   });
+    // });
+    // this.setState({ loading: false });
   }
   render() {
     return(
@@ -55,7 +57,9 @@ export default class MenuBar extends Component {
                   </ul>
                   <ul className="nav navbar-nav navbar-right">
                     <li className="menu-bar-item" onClick={this.logOut}>
-                      <i class="fa fa-sign-out" aria-hidden="true"></i> Log Out
+                      <Link to="/SignInOrSignUp">
+                        <i className="fa fa-user-circle-o" aria-hidden="true"></i> Sign In
+                      </Link>
                     </li>
                   </ul>
                 </div>

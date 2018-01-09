@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import fire from '../config';
+// import fire from '../config';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 
-class SignInOrSignUp extends component {
+class SignInOrSignUp extends Component {
   constructor(props) {
     super(props);
     this.state= {
@@ -46,42 +46,47 @@ class SignInOrSignUp extends component {
   render() {
     return (
       <div className="container container-fluid">
-        <div class="row">
-          <div class="col"></div>
-            <div class="col-5 center">
+
+        {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
+
+        <div className="row">
+          <div className="col"></div>
+            <div className="col-5 center">
 
               <MuiThemeProvider>
-                <h3>Sign In</h3>
-                <TextField hintText="Username" name="SIusername"
-                  value={this.state.SIusername} onChange={this.handleChange}
-                />
-                <br />
-                <TextField hintText="Password" name="SIpassword"
-                  value={this.state.SIpassword} onChange={this.handleChange}
-                />
-                <Checkbox label="Keep Me Signed In" labelPosition="left"
-                  checked={this.state.SICheck} onChange={this.handleChangeCheckBox}
-                />
-                <br />
-                <a href="#">forgot my password</a>
+                <div>
+                  <h3>Sign In</h3>
+                  <TextField hintText="Username" name="SIusername"
+                    value={this.state.SIusername} onChange={this.handleChange}
+                  />
+                  <br />
+                  <TextField hintText="Password" name="SIpassword" type="password"
+                    value={this.state.SIpassword} onChange={this.handleChange}
+                  />
+                  <Checkbox label="Keep Me Signed In" labelPosition="left"
+                    checked={this.state.SICheck} onChange={this.handleChangeCheckBox}
+                  />
+                  <br />
+                  forgot my password
 
-                <br />
-                
-                <h3>Create An Acount</h3>
-                <TextField hintText="Username" name="SUusername"
-                  value={this.state.SUusername} onChange={this.handleChange}
-                />
-                <br />
-                <TextField hintText="Password" name="SUpassword1"
-                  value={this.state.SUpassword1} onChange={this.handleChange}
-                />
-                <br />
-                <TextField hintText="Password" name="SUpassword2"
-                  value={this.state.SUpassword2} onChange={this.handleChange}
-                />
+                  <br />
+
+                  <h3>Create An Acount</h3>
+                  <TextField hintText="Username" name="SUusername"
+                    value={this.state.SUusername} onChange={this.handleChange}
+                  />
+                  <br />
+                  <TextField hintText="Password" name="SUpassword1" type="password"
+                    value={this.state.SUpassword1} onChange={this.handleChange}
+                  />
+                  <br />
+                  <TextField hintText="Password" name="SUpassword2" type="password"
+                    value={this.state.SUpassword2} onChange={this.handleChange}
+                  />
+                </div>
               </MuiThemeProvider>
             </div>
-          <div class="col"></div>
+          <div className="col"></div>
         </div>
       </div>
     );

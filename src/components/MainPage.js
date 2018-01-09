@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { calculateHours, mapOnDays, getBruto, getNeto, getTax } from '../CommonFunctions';
+import { mapOnDays, getBruto, getNeto, getTax } from '../CommonFunctions';
 import { fetchDays } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MainPageObject from './MainPageObject';
@@ -43,8 +43,8 @@ class MainPage extends Component {
       const days = nextProps.days;
       const settingsObject = days[days.length - 1];
       this.setState({ days, settingsObject }, () => {
-        this.mapOnDays();
-        // this.arrangePage();
+        // this.mapOnDays();
+        this.arrangePage();
       });
     }
   }
@@ -55,8 +55,9 @@ class MainPage extends Component {
       return;
     }
 
-    const arrayOfTotalHours = mapOnDays(days);// [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150]
-    const bruto = getBruto([arrayOfTotalHours[1], arrayOfTotalHours[3], arrayOfTotalHours[4], arrayOfTotalHours[5]], this.state.settingsObject);
+    const { breakAfter, breakTime } = this.state.settingsObject;
+    const arrayOfTotalHours = mapOnDays(days, breakAfter, breakTime);// [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150]
+    const bruto = getBruto(arrayOfTotalHours, this.state.settingsObject);
     const tax = getTax(bruto);
     const neto = getNeto(bruto, tax, this.state.settingsObject);
     this.setState({
@@ -71,86 +72,6 @@ class MainPage extends Component {
       numberOfHoursNeto: arrayOfTotalHours[2],
       loading: false
     });
-  }
-  // ****************************** remove
-  mapOnDays() {
-    const days = this.state.days;
-    if(days.length  === 0) { // no days array yet from server
-      return;
-    }
-    let numberOfDays = 0, numberOfHours = 0, numberOfHoursNeto = 0;
-    let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
-    days.map(day => {
-      if (day.day !== 0) {
-        // const arrayOfHours = calculateHours(day); // *************************
-        const { numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150 } = day;
-        numberOfWorkingDays += 1;
-        // maybe we dont need the parseFloat
-        numberOfHours += numberOfHours; // arrayOfHours[0]
-        numberOfHours100 += numberOfHours100; // arrayOfHours[1]
-        numberOfHours125 += numberOfHours125; // arrayOfHours[2]
-        numberOfHours150 += numberOfHours150; // arrayOfHours[3]
-        numberOfHoursNeto += numberOfHours100 + numberOfHours125 + numberOfHours150; // arrayOfHours[1] + // arrayOfHours[2] + // arrayOfHours[3]
-      }
-      return day;
-    })
-    this.setState({
-      numberOfDays,
-      numberOfHours,
-      numberOfHours100,
-      numberOfHours125,
-      numberOfHours150,
-      numberOfHoursNeto
-    }, () => {
-      this.getBruto();
-    });
-  }
-  // ****************************** remove
-  getBruto() {
-    const { numberOfDays, numberOfHours100, numberOfHours125, numberOfHours150 } = this.state;
-    let { hourly, drives, others } = this.state.settingsObject;
-    const wage100 = numberOfHours100 * hourly;
-    const wage125 = numberOfHours125 * hourly * 1.25;
-    const wage150 = numberOfHours150 * hourly * 1.5;
-    drives = numberOfDays * drives;
-    const bruto = wage100 + wage125 + wage150 + drives + others;
-    this.getNeto(bruto);
-  }
-  // ****************************** remove
-  getNeto(bruto) {
-    const steps = [5280, 9010, 14000, 20000, 41830];
-    const stepsPer = [0.1, 0.14, 0.23, 0.30, 0.33, 0.45];
-    let tax = 0, flag = 0;
-
-    if (bruto > steps[0]) {
-      tax += steps[0]*stepsPer[0];
-      flag = flag + 1;
-    }
-    if (bruto > steps[1]) {
-      tax += (steps[1]-steps[0])*stepsPer[1];
-      flag = flag + 1;
-    }
-    if (bruto > steps[2]) {
-      tax += (steps[2]-steps[1])*stepsPer[2];
-      flag = flag + 1;
-    }
-    if (bruto > steps[3]) {
-      tax += (steps[3]-steps[2])*stepsPer[3];
-      flag = flag + 1;
-    }
-    if (bruto > steps[4]) {
-      tax += (steps[4]-steps[3])*stepsPer[4];
-      flag = flag + 1;
-    }
-    if (flag !== 0) {
-      tax += (bruto - steps[flag-1]) * stepsPer[flag];
-    }
-
-    const { pension } = this.state.settingsObject;
-    const pensionReduction = bruto * pension / 100;
-
-    const neto = bruto - pensionReduction - tax;
-    this.setState({ bruto, neto, tax, loading: false });
   }
 
   renderObjects() {

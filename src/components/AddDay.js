@@ -6,7 +6,6 @@ import { fetchDays, setDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import TimePicker from 'material-ui/TimePicker';
 
 class AddDay extends Component {
@@ -64,32 +63,10 @@ class AddDay extends Component {
         this.props.history.push('/HoursList');
       }, 1000);
     });
-
   }
 
-  // populateOptionsForDayMonth() {
-  //   const month = this.props.time.month;
-  //   let numOfDaysInMonth = 0;
-  //   if (month === 2)
-  //     numOfDaysInMonth = 28;
-  //   else if (month === 4 || month === 6 || month === 9 || month === 11)
-  //     numOfDaysInMonth = 30;
-  //   else
-  //     numOfDaysInMonth = 31;
-  //
-  //   const array = new Array(numOfDaysInMonth);
-  //   for (var i = 0; i < array.length; i++) {
-  //     array[i] = i;
-  //   }
-  //   return (
-  //     array.map((i) => {
-  //       return <MenuItem key={i} value={i+1} primaryText={i+1} />;
-  //     })
-  //   )
-  // }
-
   handleDayChange = (a, value) => {
-    this.setState({ day: value });
+    this.setState({ day: value + 1 });
   }
 
   handleEnterHourChange = (a, value) => {
@@ -114,7 +91,7 @@ class AddDay extends Component {
           <MuiThemeProvider>
             <div>
               <SelectField floatingLabelText="Day Of Month" value={this.state.day} onChange={this.handleDayChange} >
-                {this.populateOptionsForDayMonth(this.props.time.month)}
+                {populateOptionsForDayMonth(this.props.time.month)}
               </SelectField>
               <TimePicker className="time-picker" format="24hr" hintText="Enter Hour" okLabel="OK" cancelLabel="Cancel"
                 value={this.state.enterTime} onChange={this.handleEnterHourChange}/>
@@ -129,8 +106,6 @@ class AddDay extends Component {
           <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
             <i className="fa fa-trash" aria-hidden="true"></i> Cancel
           </button>
-
-          iloveyou
         </li>
       </div>
     );
