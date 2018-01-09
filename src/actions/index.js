@@ -23,21 +23,23 @@ export function fetchDays(year, month, callback) {
   //     payload: []
   //   };
   // });
+  fire.database().ref(`days/${year}/${month}`).once('value', snap => {
+    if (!snap.hasChild('settings')) {
+      settings_ref.set({
+        day: 0,
+        month: month,
+        year: year,
+        hourly: 0,
+        breakTime: 0,
+        breakAfter: 0,
+        pension: 0,
+        drives: 0,
+        others: 0
+      });
+    }
+  });
 
-
-  // fire.database().ref(`days/${year}/${month}`).on('value', snap => {
-  //   const daysObject = snap.val();
-  //   // const request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
-  //   const array = _.values(daysObject);
-  //   console.log("##########");
-  //   console.log(array);
-  //   return {
-  //     type: FETCH_DAYS,
-  //     payload: array
-  //   };
-  // });
-
-
+  // might be too early, need to wait for the settings object to be created
   return dispatch => {
     fire.database().ref(`days/${year}/${month}`).on('value', snap => {
       const daysObject = snap.val();
@@ -52,42 +54,6 @@ export function fetchDays(year, month, callback) {
   };
 
 
-  // fire.database().ref(`days/${year}/${month}`).on('value', snap => {
-  //   const daysObject = snap.val();
-  //   request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
-  //
-  //   console.log("inside: "+request);
-  //
-  //   return (dispatch) => {
-  //     request.then(({data}) => {
-  //       dispatch({ type: FETCH_DAYS, payload: data })
-  //     });
-  //     // maybe need to handle error state returned
-  //   };
-  // });
-
-
-  //****************************uninstall redux-promise*******************************
-  //****************************install redux-thunk***********************************
-
-
-    // const request = axios.get('http://jsonplaceholder.typicode.com/users');
-    //
-    //
-    // return (dispatch) => {
-    //   request.then(({data}) => {
-    //     dispatch({ type: 'FETCH_PROFILES', payload: data })
-    //   });
-    // };
-
-
-  // wait for the request(daysObject) to come back and only then return the actions
-  // redux promise should take care of that
-  // console.log("outside: "+request);
-  // return {
-  //   type: FETCH_DAYS,
-  //   payload: request
-  // }
 }
 
 export function setDay(day, breakAfter, breakTime, addOrEdit) {
@@ -214,25 +180,6 @@ export function fetchSettings(year, month) {
       });
     });
   };
-
-
-  // settings_ref.on('value', snap => {
-  //   settingsObject = snap.val();
-  //   return (dispatch) => {
-  //     settingsObject.then(({data}) => {
-  //       dispatch({ type: FETCH_SETTINGS, payload: data })
-  //     });
-  //     // maybe need to handle error state returned
-  //   };
-  // });
-
-
-  // wait for the request(settingsObject) to come back and oly then return the actions
-  // redux promise should take care of that
-  // return {
-  //   type: FETCH_SETTINGS,
-  //   payload: settingsObject
-  // }
 }
 
 export function saveSettings(settingsObject) {

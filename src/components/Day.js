@@ -36,6 +36,7 @@ export default class Day extends Component {
   handleChange(e) {
     var change = {};
     // let currentState = this.state[e.target.name];
+    // remove the check when it is from a dropdown
     if (!isNaN(e.target.value)) {
       change[e.target.name] = e.target.value;
       this.setState(change);

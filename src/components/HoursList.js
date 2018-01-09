@@ -31,33 +31,35 @@ class HoursList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const prevYear = this.props.time.year;
-    const prevMonth = this.props.time.month;
-    const nextYear = nextProps.time.year;
-    const nextMonth = nextProps.time.month;
-    if ((prevYear !== nextYear) || (prevMonth !== nextMonth)) { // check if date has changed
-      this.props.fetchDays(nextYear, nextMonth);
-    }
-    if (this.props.days !== nextProps.days) {
-      const days = nextProps.days;
-      const settingsObject = days[days.length - 1];
-      this.setState({ days, settingsObject, loading: false });
-    }
+    this.setState({ loading: true, add: false }, () => {
+      // const prevYear = this.props.time.year;
+      // const prevMonth = this.props.time.month;
+      // const nextYear = nextProps.time.year;
+      // const nextMonth = nextProps.time.month;
+      if ((this.props.time.year !== this.props.time.month) ||
+        (nextProps.time.year !== nextProps.time.month)) { // check if date has changed
+          this.props.fetchDays(nextYear, nextMonth);
+      }
+      if (this.props.days !== nextProps.days) { // check if days array has changed
+        const days = nextProps.days;
+        const settingsObject = days[days.length - 1];
+        this.setState({ days, settingsObject, loading: false });
+      }
+    });
   }
 
   addDay() {
-    let { dayOfMonth, enterhour, enterminute, exithour, exitminute} = this.refs;
-    dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
-    enterhour = parseFloat(enterhour.value);
-    enterminute = parseFloat(enterminute.value);
-    exithour = parseFloat(exithour.value);
-    exitminute = parseFloat(exitminute.value);
-
-    const { breakAfter, breakTime } = this.state.settingsObject;
-
-    const { year, month } = this.props.time;
-
     this.setState({ loading: true }, () => {
+      const { breakAfter, breakTime } = this.state.settingsObject;
+      const { year, month } = this.props.time;
+      let { dayOfMonth, enterhour, enterminute, exithour, exitminute } = this.refs;
+      // maybe we dont need the parseFloat and parseInt
+      dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
+      enterhour = parseFloat(enterhour.value);
+      enterminute = parseFloat(enterminute.value);
+      exithour = parseFloat(exithour.value);
+      exitminute = parseFloat(exitminute.value);
+
       this.props.setDay({
         day: dayOfMonth,
         month: month,
@@ -70,17 +72,19 @@ class HoursList extends Component {
     });
     // not really - need it as a callback
     setTimeout(() => {
+      // gesture to user that the changes were saved
       this.setState({ loading: false, add: false });
     }, 1000);
   }
 
   editDay(day) {
-    const { breakAfter, breakTime } = this.state.settingsObject;
     this.setState({ loading: true }, () => {
+      const { breakAfter, breakTime } = this.state.settingsObject;
       this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
     });
     // not really - need it as a callback
     setTimeout(() => {
+      // gesture to user that the changes were saved
       this.setState({ loading: false });
     }, 1000);
   }
@@ -91,6 +95,7 @@ class HoursList extends Component {
     });
     // not really - need it as a callback
     setTimeout(() => {
+      // gesture to user that the changes were saved
       this.setState({ loading: false });
     }, 1000);
   }
@@ -98,6 +103,7 @@ class HoursList extends Component {
   handleChange(e) {
     var change = {};
     // let currentState = this.state[e.target.name];
+    // remove the check when it is from a dropdown
     if (!isNaN(e.target.value)) {
       change[e.target.name] = e.target.value;
       this.setState(change);
@@ -120,7 +126,7 @@ class HoursList extends Component {
           <input className="form-control hour-input hours-input" name="dayOfMonth" ref="dayOfMonth"
             value={this.state.dayOfMonth} onChange={this.handleChange}>
           </input>
-          <br />
+
           <h3>Enter Hour:</h3>
           <input className="form-control hour-input hours-input" name="enterhour" ref="enterhour"
             value={this.state.enterhour} onChange={this.handleChange}>
@@ -128,7 +134,7 @@ class HoursList extends Component {
           <input className="form-control hour-input hours-input" name="enterminute" ref="enterminute"
             value={this.state.enterminute} onChange={this.handleChange}>
           </input>
-          <br />
+
           <h3>Exit Hour:</h3>
           <input className="form-control hour-input hours-input" name="exithour" ref="exithour"
             value={this.state.exithour} onChange={this.handleChange}>
@@ -136,7 +142,7 @@ class HoursList extends Component {
           <input className="form-control hour-input hours-input" name="exitminute" ref="exitminute"
             value={this.state.exitminute} onChange={this.handleChange}>
           </input>
-          <br />
+
           <button onClick={this.addDay} className="btn btn-success regular-button hours-input">
             <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
           </button>
@@ -146,6 +152,7 @@ class HoursList extends Component {
         </li>
       );
     } else {
+      // change this to floating button
       return(
         <li className="col-sm-12 col-md-12 list-group-item">
           <button className="btn btn-info add-button regular-button" onClick={this.handleAddClick}>
@@ -158,25 +165,22 @@ class HoursList extends Component {
 
   renderList() {
     const { days, settingsObject } = this.state;
-
-    if (days.length === 0 || days.length === 1) {
+    // if (days.length === 0)
+    //   return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+    else if (days.length === 1)
+      return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+    else {
       return (
-        <div className="container container-fluid">
-          <h1>No Working Days On This Month!</h1>
-        </div>
-      )
+        days.map(day => {
+          const key = `${day.year}${day.month}${day.day}`;
+          if (day.day !== 0) {
+            return <Day key={key} day={day} settingsObject={settingsObject}
+                    editDay={this.editDay} deleteDay={this.deleteDay} />
+          }
+          return <span key={key}/>;
+        })
+      );
     }
-
-    return (
-      days.map(day => {
-        const key = `${day.year}${day.month}${day.day}`;
-        if (day.day !== 0) {
-          return <Day key={key} day={day} settingsObject={settingsObject}
-                  editDay={this.editDay} deleteDay={this.deleteDay} />
-        }
-        return <span key={key}/>;
-      })
-    )
   }
 
   render() {
