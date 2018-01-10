@@ -28,8 +28,8 @@ export function fetchDays(year, month, callback) {
     if (!snap.hasChild('settings')) {
       settings_ref.set({
         day: 0,
-        month: month,
-        year: year,
+        month,
+        year,
         hourly: 0,
         breakTime: 0,
         breakAfter: 0,
@@ -39,6 +39,7 @@ export function fetchDays(year, month, callback) {
       });
     }
   });
+
 
   // might be too early, need to wait for the settings object to be created
   return dispatch => {
@@ -58,6 +59,12 @@ export function fetchDays(year, month, callback) {
 }
 
 export function setDay(day, breakAfter, breakTime, addOrEdit) {
+
+  switch (addOrEdit) {
+    case 1: addOrEdit = ADD_DAY; break;
+    case 2: addOrEdit = EDIT_DAY; break;
+    default: addOrEdit = ADD_DAY;
+  }
 
   const { month, year, enterhour, enterminute, exithour, exitminute } = day;
   breakTime = breakTime/60;
@@ -90,47 +97,27 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
 
   fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
     day: day.day,
-    year: year,
-    month: month,
-    enterhour: enterhour,
-    enterminute: enterminute,
-    exithour: exithour,
-    exitminute: exitminute,
-    numberOfHours: numberOfHours,
-    numberOfHours100: numberOfHours100,
-    numberOfHours125: numberOfHours125,
-    numberOfHours150: numberOfHours150
+    year,
+    month,
+    enterhour,
+    enterminute,
+    exithour,
+    exitminute,
+    numberOfHours,
+    numberOfHours100,
+    numberOfHours125,
+    numberOfHours150
   }).then(() => {
-    if(addOrEdit === 1) { // to add
-      return {
-        type: ADD_DAY,
-        payload: day
-      }
-    } else { // to edit
-      return {
-        type: EDIT_DAY,
-        payload: day
-      }
+    return {
+      type: addOrEdit,
+      payload: day
     }
-  }).catch(() => { // did not succed
+  }).catch(() => { // did not succeed
     return {
       type: ADD_DAY,
       payload: null
     }
   });
-  // wait for the request to come back and oly then return the actions
-  // redux promise should take care of that
-  // if(addOrEdit === 1) { // to add
-  //   return {
-  //     type: ADD_DAY,
-  //     payload: day
-  //   }
-  // } else { // to edit
-  //   return {
-  //     type: EDIT_DAY,
-  //     payload: day
-  //   }
-  // }
 }
 
 export function deleteDay(day) {
@@ -146,12 +133,6 @@ export function deleteDay(day) {
       payload: null
     }
   });
-  // wait for the request to come back and oly then return the actions
-  // redux promise should take care of that
-  // return {
-  //   type: DELETE_DAY,
-  //   payload: day
-  // }
 }
 
 export function fetchSettings(year, month) {
@@ -162,8 +143,8 @@ export function fetchSettings(year, month) {
       console.log('there is no child in: '+month);
       settings_ref.set({
         day: 0,
-        month: month,
-        year: year,
+        month,
+        year,
         hourly: 0,
         breakTime: 0,
         breakAfter: 0,
@@ -174,12 +155,10 @@ export function fetchSettings(year, month) {
     }
   });
 
-  // settings_ref.on('value', snap => {
-  //   return {
-  //     type: FETCH_SETTINGS,
-  //     payload: snap.val()
-  //   };
-  // });
+
+  // insert the next call inside the hasChild check
+  // remove the dispatch and return it
+  // if it is ok remove thunk and do same in fetchDays
 
 
 
@@ -193,26 +172,20 @@ export function fetchSettings(year, month) {
   };
 }
 
-export function saveSettings(settingsObject) {
-  const { year, month } = settingsObject;
-  fire.database().ref(`days/${year}/${month}/settings`).set({settingsObject})
+export function saveSettings(settings) {
+  const { year, month } = settings;
+  fire.database().ref(`days/${year}/${month}/`).set({ settings })
   .then(() => {
       return {
         type: SAVE_SETTINGS,
-        payload: settingsObject
+        payload: settings
       }
   }).catch(() => {
     return {
       type: SAVE_SETTINGS,
-      payload: settingsObject
+      payload: settings
     }
   });
-  // wait for the request(settingsObject) to come back and oly then return the actions
-  // redux promise should take care of that
-  // return {
-  //   type: SAVE_SETTINGS,
-  //   payload: settingsObject
-  // }
 }
 
 export function saveTime(year, month) {
