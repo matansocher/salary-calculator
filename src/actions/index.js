@@ -38,7 +38,6 @@ export function fetchDays(year, month, callback) {
   return dispatch => {
     fire.database().ref(`days/${year}/${month}`).on('value', snap => {
       const daysObject = snap.val();
-      // const request = Object.keys(daysObject).map(function (key) { return daysObject[key]; });
       const array = _.values(daysObject);
       dispatch({
         type: FETCH_DAYS,
@@ -56,7 +55,7 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     default: addOrEdit = ADD_DAY;
   }
 
-  let { month, year, enterTime, exitTime } = day;
+  const { month, year, enterTime, exitTime } = day;
   breakTime = breakTime/60;
   const enterAsMinutes = ((enterTime.getHours()) * 60) + (enterTime.getMinutes());
   const exitAsMinutes = ((exitTime.getHours()) * 60) - (exitTime.getMinutes());
@@ -85,46 +84,71 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
   }
 
-  enterTime = `${enterTime.getHours()}:${enterTime.getMinutes()}`;
-  exitTime = `${exitTime.getHours()}:${exitTime.getMinutes()}`;
-  
-  fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
-    day: day.day,
-    year,
-    month,
-    enterTime,
-    exitTime,
-    numberOfHours,
-    numberOfHours100,
-    numberOfHours125,
-    numberOfHours150
-  }).then(() => {
-    return {
-      type: addOrEdit,
-      payload: day
-    }
-  }).catch(() => { // did not succeed
-    return {
-      type: ADD_DAY,
-      payload: null
-    }
-  });
+  return dispatch => {
+    fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
+        day: day.day,
+        year,
+        month,
+        enterTime,
+        exitTime,
+        numberOfHours,
+        numberOfHours100,
+        numberOfHours125,
+        numberOfHours150
+      });
+      dispatch({
+        type: FETCH_DAYS,
+        payload: array
+      });
+  };
+
+  // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
+  //   day: day.day,
+  //   year,
+  //   month,
+  //   enterTime,
+  //   exitTime,
+  //   numberOfHours,
+  //   numberOfHours100,
+  //   numberOfHours125,
+  //   numberOfHours150
+  // }).then(() => {
+  //   return {
+  //     type: addOrEdit,
+  //     payload: day
+  //   }
+  // }).catch(() => { // did not succeed
+  //   return {
+  //     type: ADD_DAY,
+  //     payload: null
+  //   }
+  // });
 }
 
 export function deleteDay(day) {
-  fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove()
-  .then(() => {
-    console.log('aaa');
-    return {
-      type: DELETE_DAY,
-      payload: day
-    }
-  }).catch(() => {
-    return {
-      type: DELETE_DAY,
-      payload: null
-    }
-  });
+
+  return dispatch => {
+    fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove();
+      dispatch({
+        type: DELETE_DAY,
+        payload: day
+      });
+    });
+  };
+
+  // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove()
+  // .then(() => {
+  //   console.log('aaa');
+  //   return {
+  //     type: DELETE_DAY,
+  //     payload: day
+  //   }
+  // }).catch(() => {
+  //   return {
+  //     type: DELETE_DAY,
+  //     payload: null
+  //   }
+  // });
 }
 
 export function fetchSettings(year, month) {
@@ -168,37 +192,36 @@ export function fetchSettings(year, month) {
 export function saveSettings(settings, callback) {
   const { year, month } = settings;
   const settings_ref = fire.database().ref(`days/${year}/${month}/settings`);
-  fire.database().ref(`days/${year}/${month}/`).set({ settings })
-  .then(() => {
 
-    callback();
-
-    return dispatch => {
-      settings_ref.on('value', snap => {
-        dispatch({
-          type: FETCH_SETTINGS,
-          payload: snap.val()
-        });
+  return dispatch => {
+    fire.database().ref(`days/${year}/${month}/`).set({ settings });
+      dispatch({
+        type: SAVE_SETTINGS,
+        payload: settings
       });
-    }
+  }
 
-    // return {
-    //   type: SAVE_SETTINGS,
-    //   payload: settings
+
+
+  // fire.database().ref(`days/${year}/${month}/`).set({ settings })
+  // .then(() => {
+
+    // callback();
+
+
+
+    // return dispatch => {
+    //   settings_ref.on('value', snap => {
+    //     dispatch({
+    //       type: FETCH_SETTINGS,
+    //       payload: snap.val()
+    //     });
+    //   });
     // }
-  }).catch(() => {
-    return {
-      type: SAVE_SETTINGS,
-      payload: settings
-    }
-  });
 }
 
 export function saveTime(year, month) {
-  const time = {
-    year: year,
-    month: month
-  }
+  const time = { year, month }
   return {
     type: SAVE_TIME,
     payload: time

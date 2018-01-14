@@ -93,9 +93,7 @@ class Settings extends Component {
   }
 
   handleRequestClose = () => {
-    this.setState({
-      gesture: false,
-    });
+    this.setState({ gesture: false, });
   };
 
   renderEdit() {

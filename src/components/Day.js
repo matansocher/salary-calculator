@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import TimePicker from 'material-ui/TimePicker';
+import Delete from 'material-ui/svg-icons/action/delete';
 
 export default class Day extends Component {
   constructor(props) {
@@ -6,29 +11,28 @@ export default class Day extends Component {
     this.state = {
       day: props.day,
       settingsObject: props.settingsObject,
-      enterhour: props.day.enterhour,
-      enterminute: props.day.enterminute,
-      exithour: props.day.exithour,
-      exitminute: props.day.exitminute,
+      enterTime: props.day.enterTime,
+      exitTime: props.day.exitTime,
       editing: false
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleDayChange = this.handleDayChange.bind(this);
+    this.handleEnterHourChange = this.handleEnterHourChange.bind(this);
+    this.handleExitHourChange = this.handleExitHourChange.bind(this);
     this.saveClick = this.saveClick.bind(this);
   }
 
   saveClick() {
     const { day, month, year } = this.state.day;
-    const { enterhour, enterminute, exithour, exitminute } = this.state;
+    const { enterTime, exitTime } = this.state;
     const { breakAfter, breakTime } = this.state.settingsObject;
 
     this.props.editDay({
-      day: day,
-      year: year,
-      month: month,
-      enterhour: enterhour,
-      enterminute: enterminute,
-      exithour: exithour,
-      exitminute: exitminute
+      day,
+      year,
+      month,
+      enterTime,
+      exitTime,
     }, breakAfter, breakTime);
     this.setState({ editing: false });
   }
@@ -62,6 +66,27 @@ export default class Day extends Component {
     return dayString;
   }
 
+  populateOptionsForDayMonth() {
+    const month = this.props.time.month;
+    let numOfDaysInMonth = 0;
+    if (month === 2)
+      numOfDaysInMonth = 28;
+    else if (month === 4 || month === 6 || month === 9 || month === 11)
+      numOfDaysInMonth = 30;
+    else
+      numOfDaysInMonth = 31;
+
+    const array = new Array(numOfDaysInMonth);
+    for (var i = 0; i < array.length; i++) {
+      array[i] = i;
+    }
+    return (
+      array.map((i) => {
+        return <MenuItem key={i} value={i+1} primaryText={i+1} />;
+      })
+    )
+  }
+
   handleCancelClick = () => {
     this.setState({ editing: false });
   }
@@ -74,27 +99,39 @@ export default class Day extends Component {
     this.props.deleteDay(this.props.day);
   }
 
+  handleDayChange(a, value) {
+    this.setState({ day: value });
+  }
+
+  handleEnterHourChange(a, value) {
+    this.setState({ enterTime: value });
+  }
+
+  handleExitHourChange(a, value) {
+    this.setState({ exitTime: value });
+  }
+
   renderEdit() {
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
-        <input className="form-control hour-input" name="enterhour" ref="enterhour"
-          value={this.state.enterhour} onChange={this.handleChange}>
-        </input>:
-        <input className="form-control hour-input" name="enterminute" ref="enterminute"
-          value={this.state.enterminute} onChange={this.handleChange}>
-        </input>-
-        <input className="form-control hour-input" name="exithour" ref="exithour"
-          value={this.state.exithour}>
-        </input>:
-        <input className="form-control hour-input" name="exitminute" ref="exitminute"
-          value={this.state.exitminute} onChange={this.handleChange}>
-        </input><br />
 
-        <button onClick={this.saveClick} className="btn btn-success regular-button">
+        <MuiThemeProvider>
+          <div>
+            <SelectField floatingLabelText="Day Of Month" value={this.state.day} onChange={this.handleDayChange} >
+              {this.populateOptionsForDayMonth()}
+            </SelectField>
+            <TimePicker className="time-picker" format="24hr" hintText="Enter Hour" okLabel="OK" cancelLabel="Cancel"
+              value={this.state.enterTime} onChange={this.handleEnterHourChange}/>
+            <TimePicker className="time-picker" format="24hr" hintText="Exit Hour" okLabel="OK" cancelLabel="Cancel"
+              value={this.state.exitTime} onChange={this.handleExitHourChange}/>
+          </div>
+        </MuiThemeProvider>
+
+        <button onClick={this.saveClick} className="btn btn-success regular-button pull-xs-right">
           <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
         </button>
-        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button">
-          <i className="fa fa-times" aria-hidden="true"></i> Cancel
+        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
+          <i className="fa fa-trash" aria-hidden="true"></i>
         </button>
       </li>
     );
@@ -102,15 +139,30 @@ export default class Day extends Component {
 
   renderRegular() {
     const { day, month, numberOfHours, numberOfHours100, numberOfHours125 ,numberOfHours150 } = this.state.day;
-    let { enterhour, enterminute, exithour, exitminute } = this.state;
+    const { enterTime, exitTime } = this.state;
     const { hourly } = this.state.settingsObject;
-    // maybe we dont need this
-    enterminute = '0' ? '00' : enterminute;
-    exitminute = '0' ? '00' : exitminute;
+
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
+
+        <MuiThemeProvider>
+          <IconMenu className="pull-xs-right"
+            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+            targetOrigin={{horizontal: 'right', vertical: 'top'}}
+            >
+            <MenuItem primaryText="Edit" onClick={this.handleEditClick}>>
+              <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+              <i className="material-icons">mode_edit</i>
+            </MenuItem>
+            <MenuItem primaryText="Edit" leftIcon={<ContentCopy />} onClick={this.handleEditClick} />
+            <MenuItem primaryText="Edit" leftIcon={<Edit />} onClick={this.handleEditClick} />
+            <MenuItem primaryText="Delete" leftIcon={<Delete onClick={this.handleDeleteClick} />} />
+          </IconMenu>
+        </MuiThemeProvider>
+
         <h3>{day}/{month}, {this.getDayOfWeek()}</h3>
-        <p>{enterhour}:{enterminute} - {exithour}:{exitminute}</p>
+        <p>{enterTime} - {exitTime}</p>
         <p>{numberOfHours} Hours</p>
         <p>Wage: {(numberOfHours100 + numberOfHours125*1.25 + numberOfHours150*1.5)*hourly}</p>
 

@@ -58,10 +58,8 @@ class AddDay extends Component {
 
     // not really - need it as a callback
     setTimeout(() => {
-      // gesture to user that the changes were saved
-      // this.setState({ gesture: true });
-      this.props.history.push('/HoursList');
       this.setState({ loading: false });
+      this.props.history.push('/HoursList');
     }, 1000);
   }
 
@@ -111,19 +109,21 @@ class AddDay extends Component {
         <li className="col-sm-12 col-md-12 list-group-item">
           <MuiThemeProvider>
             <div>
-              <SelectField floatingLabelText="Day Of Month" name="aaa" value={this.state.day} onChange={this.handleDayChange} >
+              <SelectField floatingLabelText="Day Of Month" value={this.state.day} onChange={this.handleDayChange} >
                 {this.populateOptionsForDayMonth()}
               </SelectField>
-              <TimePicker className="time-picker" name="enter" format="24hr" hintText="Enter Hour" value={this.state.enterTime} onChange={this.handleEnterHourChange}/>
-              <TimePicker className="time-picker" name="exit" format="24hr" hintText="Exit Hour" value={this.state.exitTime} onChange={this.handleExitHourChange}/>
+              <TimePicker className="time-picker" format="24hr" hintText="Enter Hour" okLabel="OK" cancelLabel="Cancel"
+                value={this.state.enterTime} onChange={this.handleEnterHourChange}/>
+              <TimePicker className="time-picker" format="24hr" hintText="Exit Hour" okLabel="OK" cancelLabel="Cancel"
+                value={this.state.exitTime} onChange={this.handleExitHourChange}/>
             </div>
           </MuiThemeProvider>
 
-          <button onClick={this.addDay} className="btn btn-success regular-button">
+          <button onClick={this.addDay} className="btn btn-success regular-button pull-xs-right">
             <i className="fa fa-floppy-o" aria-hidden="true"></i> Add
           </button>
-          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button">
-            <i className="fa fa-times" aria-hidden="true"></i> Cancel
+          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
+            <i className="fa fa-trash" aria-hidden="true"></i>
           </button>
 
           iloveyou

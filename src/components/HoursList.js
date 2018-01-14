@@ -18,12 +18,11 @@ class HoursList extends Component {
       days: [],
       settingsObject: {},
       dayOfMonth: 0,
-      enterhour: 0,
-      enterminute: 0,
-      exithour: 0,
-      exitminute: 0,
+      enterTime: '00:00',
+      exitTime: '00:00',
       add: false,
       gesture: false,
+      gestureText: '',
       loading: true
     }
     this.handleChange = this.handleChange.bind(this);
@@ -50,44 +49,13 @@ class HoursList extends Component {
     }
   }
 
-  addDay() {
-    this.setState({ loading: true });
-    const { breakAfter, breakTime } = this.state.settingsObject;
-    const { year, month } = this.props.time;
-    let { dayOfMonth, enterhour, enterminute, exithour, exitminute } = this.refs;
-    // maybe we dont need the parseFloat and parseInt
-    dayOfMonth = parseInt(dayOfMonth.value.substring(dayOfMonth.value.length - 1), 10)
-    enterhour = parseFloat(enterhour.value);
-    enterminute = parseFloat(enterminute.value);
-    exithour = parseFloat(exithour.value);
-    exitminute = parseFloat(exitminute.value);
-
-    this.props.setDay({
-      day: dayOfMonth,
-      month: month,
-      year: year,
-      enterhour: enterhour,
-      enterminute: enterminute,
-      exithour: exithour,
-      exitminute: exitminute
-    }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
-    // not really - need it as a callback
-    setTimeout(() => {
-      // gesture to user that the changes were saved
-      // this.setState({ gesture: true });
-      this.setState({ loading: false, add: false });
-    }, 1000);
-  }
-
   editDay(day) {
     this.setState({ loading: true });
     const { breakAfter, breakTime } = this.state.settingsObject;
     this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
     // not really - need it as a callback
     setTimeout(() => {
-      // gesture to user that the changes were saved
-      // this.setState({ gesture: true });
-      this.setState({ loading: false });
+      this.setState({ loading: false, gestureText: "Changes Saved!", gesture: true });
     }, 1000);
   }
 
@@ -98,7 +66,7 @@ class HoursList extends Component {
     setTimeout(() => {
       // gesture to user that the changes were saved
       // this.setState({ gesture: true });
-      this.setState({ loading: false });
+      this.setState({ loading: false, gestureText: "Day Deleted Successfully", gesture: true });
     }, 1000);
   }
 
@@ -117,53 +85,12 @@ class HoursList extends Component {
   }
 
   handleAddClick = () => {
-    // this.setState({ add: true });
     this.props.history.push('/AddDay');
   }
 
-  renderAdd() {
-    if(this.state.add) {
-      return (
-        <li className="col-sm-12 col-md-12 list-group-item">
-          <h3>Day On Month:</h3>
-          <input className="form-control hour-input" name="dayOfMonth" ref="dayOfMonth"
-            value={this.state.dayOfMonth} onChange={this.handleChange}>
-          </input>
-
-          <h3>Enter Hour:</h3>
-          <input className="form-control hour-input" name="enterhour" ref="enterhour"
-            value={this.state.enterhour} onChange={this.handleChange}>
-          </input>:
-          <input className="form-control hour-input" name="enterminute" ref="enterminute"
-            value={this.state.enterminute} onChange={this.handleChange}>
-          </input>
-
-          <h3>Exit Hour:</h3>
-          <input className="form-control hour-input" name="exithour" ref="exithour"
-            value={this.state.exithour} onChange={this.handleChange}>
-          </input>:
-          <input className="form-control hour-input" name="exitminute" ref="exitminute"
-            value={this.state.exitminute} onChange={this.handleChange}>
-          </input>
-
-          <button onClick={this.addDay} className="btn btn-success regular-button">
-            <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
-          </button>
-          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button">
-            <i className="fa fa-times" aria-hidden="true"></i> Cancel
-          </button>
-        </li>
-      );
-    } else {
-      return(
-        <MuiThemeProvider>
-          <FloatingActionButton className="float" onClick={this.handleAddClick}>
-            <ContentAdd />
-          </FloatingActionButton>
-        </MuiThemeProvider>
-      );
-    }
-  }
+  handleRequestClose = () => {
+    this.setState({ gesture: false, });
+  };
 
   renderList() {
     const { days, settingsObject } = this.state;
@@ -209,7 +136,17 @@ class HoursList extends Component {
       <div className="container container-fluid blue-font">
 
         <h1>Hours List</h1>
+        <MuiThemeProvider>
+          <Snackbar open={this.state.gesture} message={this.state.gestureText}
+            autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
+        </MuiThemeProvider>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
+
+        <MuiThemeProvider>
+          <FloatingActionButton className="float" onClick={this.handleAddClick}>
+            <ContentAdd />
+          </FloatingActionButton>
+        </MuiThemeProvider>
 
         {this.renderAdd()}
         {this.renderList()}
