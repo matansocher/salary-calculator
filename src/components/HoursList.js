@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { fetchDays, setDay, deleteDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import Day from './Day';
@@ -26,14 +27,16 @@ class HoursList extends Component {
       gestureText: '',
       loading: true
     }
-    this.handleChange = this.handleChange.bind(this);
     this.editDay = this.editDay.bind(this);
     this.deleteDay = this.deleteDay.bind(this);
   }
 
   componentDidMount() {
-    const { year, month } = this.props.time;
-    this.props.fetchDays(year, month);
+    const { days, settingsObject } = this.state;
+    if(_.isEmpty(days) || _.isEmpty(settingsObject)) {
+      const { year, month } = this.props.time;
+      this.props.fetchDays(year, month);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -50,6 +53,7 @@ class HoursList extends Component {
   }
 
   editDay(day) {
+    // if in add day at AddDay class works the callback after the loading true state, add to here also
     this.setState({ loading: true });
     const { breakAfter, breakTime } = this.state.settingsObject;
     this.props.setDay(day, breakAfter, breakTime, 2); // the 2 is to edit, 1 is to add
@@ -60,24 +64,13 @@ class HoursList extends Component {
   }
 
   deleteDay(day) {
+    // if in add day at AddDay class works the callback after the loading true state, add to here also
     this.setState({ loading: true });
     this.props.deleteDay(day);
     // not really - need it as a callback
     setTimeout(() => {
-      // gesture to user that the changes were saved
-      // this.setState({ gesture: true });
       this.setState({ loading: false, gestureText: "Day Deleted Successfully", gesture: true });
     }, 1000);
-  }
-
-  handleChange(e) {
-    var change = {};
-    // let currentState = this.state[e.target.name];
-    // remove the check when it is from a dropdown
-    if (!isNaN(e.target.value)) {
-      change[e.target.name] = e.target.value;
-      this.setState(change);
-    }
   }
 
   handleCancelClick = () => {

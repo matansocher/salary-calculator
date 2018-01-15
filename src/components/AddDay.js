@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+import { populateOptionsForDayMonth } from '../CommonFunctions';
 import { fetchDays, setDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -18,15 +20,15 @@ class AddDay extends Component {
       exitTime: new Date(),
       loading: false
     };
-    this.handleDayChange = this.handleDayChange.bind(this);
-    this.handleEnterHourChange = this.handleEnterHourChange.bind(this);
-    this.handleExitHourChange = this.handleExitHourChange.bind(this);
     this.addDay = this.addDay.bind(this);
   }
 
   componentDidMount() {
-    const { year, month } = this.props.time;
-    this.props.fetchDays(year, month);
+    const { days, settingsObject } = this.state;
+    if(_.isEmpty(days) || _.isEmpty(settingsObject)) {
+      const { year, month } = this.props.time;
+      this.props.fetchDays(year, month);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,46 +59,44 @@ class AddDay extends Component {
       }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
 
       // not really - need it as a callback
-      // setTimeout(() => {
+      setTimeout(() => {
         this.setState({ loading: false });
         this.props.history.push('/HoursList');
-      // }, 1000);
+      }, 1000);
     });
 
   }
 
-  populateOptionsForDayMonth() {
-    const month = this.props.time.month;
-    let numOfDaysInMonth = 0;
-    if (month === 2)
-      numOfDaysInMonth = 28;
-    else if (month === 4 || month === 6 || month === 9 || month === 11)
-      numOfDaysInMonth = 30;
-    else
-      numOfDaysInMonth = 31;
+  // populateOptionsForDayMonth() {
+  //   const month = this.props.time.month;
+  //   let numOfDaysInMonth = 0;
+  //   if (month === 2)
+  //     numOfDaysInMonth = 28;
+  //   else if (month === 4 || month === 6 || month === 9 || month === 11)
+  //     numOfDaysInMonth = 30;
+  //   else
+  //     numOfDaysInMonth = 31;
+  //
+  //   const array = new Array(numOfDaysInMonth);
+  //   for (var i = 0; i < array.length; i++) {
+  //     array[i] = i;
+  //   }
+  //   return (
+  //     array.map((i) => {
+  //       return <MenuItem key={i} value={i+1} primaryText={i+1} />;
+  //     })
+  //   )
+  // }
 
-    const array = new Array(numOfDaysInMonth);
-    for (var i = 0; i < array.length; i++) {
-      array[i] = i;
-    }
-    return (
-      array.map((i) => {
-        return <MenuItem key={i} value={i+1} primaryText={i+1} />;
-      })
-    )
-  }
-
-  handleDayChange(a, value) {
-    console.log(a);
-    console.log(value);
+  handleDayChange = (a, value) => {
     this.setState({ day: value });
   }
 
-  handleEnterHourChange(a, value) {
+  handleEnterHourChange = (a, value) => {
     this.setState({ enterTime: value });
   }
 
-  handleExitHourChange(a, value) {
+  handleExitHourChange = (a, value) => {
     this.setState({ exitTime: value });
   }
 
@@ -114,7 +114,7 @@ class AddDay extends Component {
           <MuiThemeProvider>
             <div>
               <SelectField floatingLabelText="Day Of Month" value={this.state.day} onChange={this.handleDayChange} >
-                {this.populateOptionsForDayMonth()}
+                {this.populateOptionsForDayMonth(this.props.time.month)}
               </SelectField>
               <TimePicker className="time-picker" format="24hr" hintText="Enter Hour" okLabel="OK" cancelLabel="Cancel"
                 value={this.state.enterTime} onChange={this.handleEnterHourChange}/>

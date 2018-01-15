@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { fetchSettings, saveSettings } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -26,8 +27,11 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props.time;
-    this.props.fetchSettings(year, month);
+    const { settingsObject } = this.state;
+    if(_.isEmpty(settingsObject)) {
+      const { year, month } = this.props.time;
+      this.props.fetchSettings(year, month);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -101,22 +105,22 @@ class Settings extends Component {
       <div className="container container-fluid">
         <MuiThemeProvider>
           <div>
-            <TextField floatingLabelText="Hourly Wage" name="hourly" ref="hourly"
+            <TextField floatingLabelText="Hourly Wage" name="hourly"
                 value={this.state.hourly} onChange={this.handleChange} />
             <br />
-            <TextField floatingLabelText="Break Time" name="breakTime" ref="breakTime"
+            <TextField floatingLabelText="Break Time" name="breakTime"
                 value={this.state.breakTime} onChange={this.handleChange} />
             <br />
-            <TextField floatingLabelText="Break After" name="breakAfter" ref="breakAfter"
+            <TextField floatingLabelText="Break After" name="breakAfter"
                 value={this.state.breakAfter} onChange={this.handleChange} />
             <br />
-            <TextField floatingLabelText="Pension" name="pension" ref="pension"
+            <TextField floatingLabelText="Pension" name="pension"
                 value={this.state.pension} onChange={this.handleChange} />
             <br />
-            <TextField floatingLabelText="Drives" name="drives" ref="drives"
+            <TextField floatingLabelText="Drives" name="drives"
                 value={this.state.drives} onChange={this.handleChange} />
             <br />
-            <TextField floatingLabelText="Others" name="others" ref="others"
+            <TextField floatingLabelText="Others" name="others"
                 value={this.state.others} onChange={this.handleChange} />
           </div>
         </MuiThemeProvider>
@@ -134,9 +138,9 @@ class Settings extends Component {
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
     return(
       <div>
-      <button className="btn btn-warning regular-button" onClick={this.handleEditClick}>
-        <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-      </button>
+        <button className="btn btn-warning regular-button" onClick={this.handleEditClick}>
+          <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+        </button>
 
         <h3>Hourly Wage: {hourly}</h3>
         <h3>Break Time: {breakTime}</h3>

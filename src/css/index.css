@@ -4,6 +4,9 @@ body {
   font-family: sans-serif;
   background-color: #edf3ff;
 }
+.center {
+  text-align: center;
+}
 .blue-font{
   color: #072f70;
 }

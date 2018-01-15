@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+import { calculateHours, mapOnDays, getBruto, getNeto, getTax } from '../CommonFunctions';
 import { fetchDays } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MainPageObject from './MainPageObject';
@@ -24,8 +26,11 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    const { year, month } = this.props.time;
-    this.props.fetchDays(year, month);
+    const { days, settingsObject } = this.state;
+    if(_.isEmpty(days) || _.isEmpty(settingsObject)) {
+      const { year, month } = this.props.time;
+      this.props.fetchDays(year, month);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,42 +44,68 @@ class MainPage extends Component {
       const settingsObject = days[days.length - 1];
       this.setState({ days, settingsObject }, () => {
         this.mapOnDays();
+        // this.arrangePage();
       });
     }
   }
 
+  arrangePage() {
+    const days = this.state.days;
+    if(days.length  === 0) { // no days array yet from server
+      return;
+    }
+
+    const arrayOfTotalHours = mapOnDays(days);// [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150]
+    const bruto = getBruto([arrayOfTotalHours[1], arrayOfTotalHours[3], arrayOfTotalHours[4], arrayOfTotalHours[5]], this.state.settingsObject);
+    const tax = getTax(bruto);
+    const neto = getNeto(bruto, tax, this.state.settingsObject);
+    this.setState({
+      bruto,
+      neto,
+      tax,
+      numberOfDays: arrayOfTotalHours[0],
+      numberOfHours: arrayOfTotalHours[1],
+      numberOfHours100: arrayOfTotalHours[3],
+      numberOfHours125: arrayOfTotalHours[4],
+      numberOfHours150: arrayOfTotalHours[5],
+      numberOfHoursNeto: arrayOfTotalHours[2],
+      loading: false
+    });
+  }
+  // ****************************** remove
   mapOnDays() {
     const days = this.state.days;
     if(days.length  === 0) { // no days array yet from server
       return;
     }
-    let numberOfWorkingDays = 0, totalNumberOfHours = 0, totalNumberOfHoursNeto = 0;
-    let totalNumberOfHours100 = 0, totalNumberOfHours125 = 0, totalNumberOfHours150 = 0;
+    let numberOfDays = 0, numberOfHours = 0, numberOfHoursNeto = 0;
+    let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
     days.map(day => {
       if (day.day !== 0) {
+        // const arrayOfHours = calculateHours(day); // *************************
         const { numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150 } = day;
         numberOfWorkingDays += 1;
         // maybe we dont need the parseFloat
-        totalNumberOfHours += numberOfHours;
-        totalNumberOfHours100 += numberOfHours100;
-        totalNumberOfHours125 += numberOfHours125;
-        totalNumberOfHours150 += numberOfHours150;
-        totalNumberOfHoursNeto += numberOfHours100 + numberOfHours125 + numberOfHours150;
+        numberOfHours += numberOfHours; // arrayOfHours[0]
+        numberOfHours100 += numberOfHours100; // arrayOfHours[1]
+        numberOfHours125 += numberOfHours125; // arrayOfHours[2]
+        numberOfHours150 += numberOfHours150; // arrayOfHours[3]
+        numberOfHoursNeto += numberOfHours100 + numberOfHours125 + numberOfHours150; // arrayOfHours[1] + // arrayOfHours[2] + // arrayOfHours[3]
       }
       return day;
     })
     this.setState({
-      numberOfDays: numberOfWorkingDays,
-      numberOfHours: totalNumberOfHours,
-      numberOfHours100: totalNumberOfHours100,
-      numberOfHours125: totalNumberOfHours125,
-      numberOfHours150: totalNumberOfHours150,
-      numberOfHoursNeto: totalNumberOfHoursNeto
+      numberOfDays,
+      numberOfHours,
+      numberOfHours100,
+      numberOfHours125,
+      numberOfHours150,
+      numberOfHoursNeto
     }, () => {
       this.getBruto();
     });
   }
-
+  // ****************************** remove
   getBruto() {
     const { numberOfDays, numberOfHours100, numberOfHours125, numberOfHours150 } = this.state;
     let { hourly, drives, others } = this.state.settingsObject;
@@ -85,7 +116,7 @@ class MainPage extends Component {
     const bruto = wage100 + wage125 + wage150 + drives + others;
     this.getNeto(bruto);
   }
-
+  // ****************************** remove
   getNeto(bruto) {
     const steps = [5280, 9010, 14000, 20000, 41830];
     const stepsPer = [0.1, 0.14, 0.23, 0.30, 0.33, 0.45];

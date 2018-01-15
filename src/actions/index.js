@@ -55,6 +55,7 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     default: addOrEdit = ADD_DAY;
   }
 
+  // ******************* to delete **********************
   const { month, year, enterTime, exitTime } = day;
   breakTime = breakTime/60;
   const enterAsMinutes = ((enterTime.getHours()) * 60) + (enterTime.getMinutes());
@@ -83,9 +84,7 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     numberOfHours125 = hoursAfterUpgrade;
     numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
   }
-
-  console.log(enterTime);
-  console.log(exitTime);
+  // ******************* / to delete **********************
 
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({

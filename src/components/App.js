@@ -10,6 +10,7 @@ import MenuBar from './MenuBar';
 import MainPage from './MainPage';
 import HoursList from './HoursList';
 import Settings from './Settings';
+import Footer from './Footer';
 import NoMatch from './NoMatch';
 
 class App extends Component {
@@ -49,9 +50,13 @@ class App extends Component {
             <Route path="/HoursList" component={HoursList}/>
             <Route path="/Settings" component={Settings}/>
             <Route path="/AddDay" component={AddDay}/>
+            <Route path="/SignInOrSignUp" component={SignInOrSignUp}/>
             <Route path="/" component={MainPage}/>
             <Route path="*" component={NoMatch}/>
           </Switch>
+
+          <Footer />
+          
         </div>
       </Router>
     );
