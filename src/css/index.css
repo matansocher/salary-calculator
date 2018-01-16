@@ -32,6 +32,10 @@ body {
 	right:40px;
   z-index: 10;
 }
+.footer {
+  position: absolute;
+  bottom: 0;
+}
 /* .time-picker {
   width: 50%;
   color: red;

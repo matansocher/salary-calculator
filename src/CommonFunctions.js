@@ -3,21 +3,24 @@ import MenuItem from 'material-ui/MenuItem';
 
 export function calculateHours(day, breakAfter, breakTime) {
 
-  const { enterTime, exitTime } = day;
   breakTime = breakTime/60;
 
-  const enterSeparated = enterTime.split(':');
-  const exitSeparated = exitTime.split(':');
+  // const { enterTime, exitTime } = day;
+  //
+  // const enterSeparated = enterTime.split(':');
+  // const exitSeparated = exitTime.split(':');
+  //
+  // const enterHourIntInMinutes = parseInt(enterSeparated[0], 10) * 60;
+  // const enterMinuteIntInMinutes = parseInt(enterSeparated[1], 10);
+  // const exitHourIntInMinutes = parseInt(exitSeparated[0], 10) * 60;
+  // const exitMinuteIntInMinutes = parseInt(exitSeparated[1], 10);
+  //
+  // const enterAsMinutes = enterHourIntInMinutes + enterMinuteIntInMinutes;
+  // const exitAsMinutes = exitHourIntInMinutes + exitMinuteIntInMinutes;
+  //
+  // const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
 
-  const enterHourIntInMinutes = parseInt(enterSeparated[0], 10) * 60;
-  const enterMinuteIntInMinutes = parseInt(enterSeparated[1], 10);
-  const exitHourIntInMinutes = parseInt(exitSeparated[0], 10) * 60;
-  const exitMinuteIntInMinutes = parseInt(exitSeparated[1], 10);
-
-  const enterAsMinutes = enterHourIntInMinutes + enterMinuteIntInMinutes; // parseInt(enterSeparated[0] * 60) + parseInt(enterSeparated[1]);
-  const exitAsMinutes = exitHourIntInMinutes + exitMinuteIntInMinutes; // parseInt(exitSeparated[0] * 60) + parseInt(exitSeparated[1]);
-
-  const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
+  const numberOfHours = getNumberOfHoursForADay(day);
   const hoursAfterUpgrade = 2;
 
   let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
@@ -44,6 +47,18 @@ export function calculateHours(day, breakAfter, breakTime) {
   return [numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150];
 }
 
+getNumberOfHoursForADay(day) {
+  const { enterTime, exitTime } = day;
+  return (getTimeInMinutes(exitTime) - getTimeInMinutes(enterTime)) / 60;
+}
+
+getTimeInMinutes(time) {
+  const separated = time.split(':');
+  const hourInMinutes = parseInt(time[0], 10) * 60;
+  const minutesInMinutes = parseInt(time[1], 10);
+  return hourInMinutes + minutesInMinutes;
+}
+
 export function populateOptionsForDayMonth(month) {
   let numOfDaysInMonth = 0;
   if (month === 2)
@@ -64,10 +79,12 @@ export function populateOptionsForDayMonth(month) {
   )
 }
 
-export function getDayOfWeek(day) {
-  const date = `${day.month}/${day.day}/${day.year}`;
-  const dateString = new Date(date);
-  const dayNumber = dateString.getDay();
+export function getDayOfWeek(date) {
+  // const date = `${day.month}/${day.day}/${day.year}`;
+
+  // const dateString = new Date(date);
+  // const dayNumber = dateString.getDay();
+  const dayNumber = new Date(date).getDay();
   let dayString = '';
   switch(dayNumber) {
     case 0: dayString = "Sun"; break;
@@ -119,23 +136,23 @@ export function getTax(bruto) {
 
   if (bruto > steps[0]) {
     tax += steps[0]*stepsPer[0];
-    flag = flag + 1;
+    flag += 1;
   }
   if (bruto > steps[1]) {
     tax += (steps[1]-steps[0])*stepsPer[1];
-    flag = flag + 1;
+    flag += 1;
   }
   if (bruto > steps[2]) {
     tax += (steps[2]-steps[1])*stepsPer[2];
-    flag = flag + 1;
+    flag += 1;
   }
   if (bruto > steps[3]) {
     tax += (steps[3]-steps[2])*stepsPer[3];
-    flag = flag + 1;
+    flag += 1;
   }
   if (bruto > steps[4]) {
     tax += (steps[4]-steps[3])*stepsPer[4];
-    flag = flag + 1;
+    flag += 1;
   }
   if (flag !== 0) {
     tax += (bruto - steps[flag-1]) * stepsPer[flag];

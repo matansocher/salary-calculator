@@ -81,15 +81,15 @@ export default class Day extends Component {
           </div>
         </MuiThemeProvider>
 
-        <Save className="pull-xs-right" onClick={this.saveClick} />
+        <Save className="float-xs-right" onClick={this.saveClick} />
 
-        <Delete className="pull-xs-left" onClick={this.handleCancelClick} />
+        <Delete className="float-xs-left" onClick={this.handleCancelClick} />
 
-        <button onClick={this.saveClick} className="btn btn-success regular-button pull-xs-right">
+        <button onClick={this.saveClick} className="btn btn-success regular-button float-xs-right">
           <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
         </button>
 
-        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
+        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button float-xs-left">
           <i className="fa fa-trash" aria-hidden="true"></i> Cancel
         </button>
       </li>
@@ -97,7 +97,7 @@ export default class Day extends Component {
   }
 
   renderRegular() {
-    const { day, month } = this.state.day;
+    const { day, month, year } = this.state.day;
     const { breakAfter, breakTime } = this.state.settingsObject;
     const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
     const { enterTime, exitTime } = this.state;
@@ -107,7 +107,7 @@ export default class Day extends Component {
       <li className="col-sm-12 col-md-12 list-group-item">
 
         <MuiThemeProvider>
-          <IconMenu className="pull-xs-right"
+          <IconMenu className="float-xs-right"
             iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             targetOrigin={{horizontal: 'right', vertical: 'top'}}>
@@ -121,7 +121,7 @@ export default class Day extends Component {
           </IconMenu>
         </MuiThemeProvider>
 
-        <h3>{day}/{month}, {getDayOfWeek(this.state.day)}</h3>
+        <h3>{day}/{month}, {getDayOfWeek(`${day.month}/${day.day}/${day.year}`)}</h3>
         <p>{enterTime} - {exitTime}</p>
         <p>{arrayOfHours[0]} Hours</p>
         <p>Wage: {(arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly}</p>

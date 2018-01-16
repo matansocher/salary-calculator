@@ -39,8 +39,8 @@ class SignInOrSignUp extends Component {
   }
 
   handleChangeCheckBox() {
-    const cb = this.state.SICheck;
-    this.setState({ SICheck: !cb });
+    const cb = !this.state.SICheck;
+    this.setState({ SICheck: cb });
   }
 
   render() {

@@ -18,7 +18,6 @@ export function fetchDays(year, month, callback) {
         drives: 0,
         others: 0
       }).then(() => {
-        // might be too early, need to wait for the settings object to be created
         return dispatch => {
           fire.database().ref(`days/${year}/${month}`).on('value', snap => {
             const daysObject = snap.val();
@@ -27,14 +26,21 @@ export function fetchDays(year, month, callback) {
               type: FETCH_DAYS,
               payload: array
             });
+
+            // return {
+            //   type: FETCH_DAYS,
+            //   payload: array
+            // }
+
           });
           // }).then(() => callback());
         };
+
+
       });
     }
   });
 
-  // might be too early, need to wait for the settings object to be created
   return dispatch => {
     fire.database().ref(`days/${year}/${month}`).on('value', snap => {
       const daysObject = snap.val();
@@ -43,6 +49,10 @@ export function fetchDays(year, month, callback) {
         type: FETCH_DAYS,
         payload: array
       });
+      // return {
+      //   type: FETCH_DAYS,
+      //   payload: array
+      // }
     });
   };
 }
@@ -54,37 +64,6 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
     case 2: addOrEdit = EDIT_DAY; break;
     default: addOrEdit = ADD_DAY;
   }
-
-  // // ******************* to delete **********************
-  // const { month, year, enterTime, exitTime } = day;
-  // breakTime = breakTime/60;
-  // const enterAsMinutes = ((enterTime.getHours()) * 60) + (enterTime.getMinutes());
-  // const exitAsMinutes = ((exitTime.getHours()) * 60) - (exitTime.getMinutes());
-  // const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
-  // const hoursAfterUpgrade = 2;
-  //
-  // let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
-  //
-  // if (numberOfHours < breakAfter) { // numberOfHours < 8
-  //   numberOfHours100 = numberOfHours;
-  // }
-  // if (numberOfHours === breakAfter) { // numberOfHours = 8
-  //   numberOfHours100 = breakAfter - breakTime;
-  // }
-  // if (numberOfHours > breakAfter && numberOfHours < (breakAfter + hoursAfterUpgrade)) { // 8 <= numberOfHours < 10
-  //   numberOfHours100 = breakAfter - breakTime;
-  //   numberOfHours125 = hoursAfterUpgrade - (numberOfHours - numberOfHours100);
-  // }
-  // if (numberOfHours === (breakAfter + hoursAfterUpgrade)) { // numberOfHours = 10
-  //   numberOfHours100 = breakAfter - breakTime;
-  //   numberOfHours125 = hoursAfterUpgrade - breakTime;
-  // }
-  // if (numberOfHours > (breakAfter + hoursAfterUpgrade)) { // numberOfHours >= 10
-  //   numberOfHours100 = breakAfter - breakTime;
-  //   numberOfHours125 = hoursAfterUpgrade;
-  //   numberOfHours150 = numberOfHours - numberOfHours100 - numberOfHours125;
-  // }
-  // // ******************* / to delete **********************
 
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
@@ -98,55 +77,27 @@ export function setDay(day, breakAfter, breakTime, addOrEdit) {
         type: addOrEdit,
         payload: day
       });
-  };
 
-  // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
-  //   day: day.day,
-  //   year,
-  //   month,
-  //   enterTime,
-  //   exitTime,
-  //   numberOfHours,
-  //   numberOfHours100,
-  //   numberOfHours125,
-  //   numberOfHours150
-  // }).then(() => {
-  //   return {
-  //     type: addOrEdit,
-  //     payload: day
-  //   }
-  // }).catch(() => { // did not succeed
-  //   return {
-  //     type: ADD_DAY,
-  //     payload: null
-  //   }
-  // });
+      // return {
+      //   type: addOrEdit,
+      //   payload: day
+      // }
+  };
 }
 
 export function deleteDay(day) {
-
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove();
       dispatch({
         type: DELETE_DAY,
         payload: day
       });
+
+      // return {
+      //   type: DELETE_DAY,
+      //   payload: day
+      // }
     }
-
-
-  // fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove()
-  // .then(() => {
-  //   console.log('aaa');
-  //   return {
-  //     type: DELETE_DAY,
-  //     payload: day
-  //   }
-  // }).catch(() => {
-  //   return {
-  //     type: DELETE_DAY,
-  //     payload: null
-  //   }
-  // });
 }
 
 export function fetchSettings(year, month) {
@@ -171,6 +122,11 @@ export function fetchSettings(year, month) {
               type: FETCH_SETTINGS,
               payload: snap.val()
             });
+
+            // return {
+            //   type: FETCH_SETTINGS,
+            //   payload: snap.val()
+            // }
           });
         }
       });
@@ -183,38 +139,29 @@ export function fetchSettings(year, month) {
         type: FETCH_SETTINGS,
         payload: snap.val()
       });
+
+      // return {
+      //   type: FETCH_SETTINGS,
+      //   payload: snap.val()
+      // }
     });
   };
 }
 
 export function saveSettings(settings, callback) {
   const { year, month } = settings;
-
   return dispatch => {
     fire.database().ref(`days/${year}/${month}/`).set({ settings });
-      dispatch({
-        type: SAVE_SETTINGS,
-        payload: settings
-      });
-  }
+    dispatch({
+      type: SAVE_SETTINGS,
+      payload: settings
+    });
 
-
-
-  // fire.database().ref(`days/${year}/${month}/`).set({ settings })
-  // .then(() => {
-
-    // callback();
-
-
-
-    // return dispatch => {
-    //   settings_ref.on('value', snap => {
-    //     dispatch({
-    //       type: FETCH_SETTINGS,
-    //       payload: snap.val()
-    //     });
-    //   });
+    // return {
+    //   type: SAVE_SETTINGS,
+    //   payload: settings
     // }
+  }
 }
 
 export function saveTime(year, month) {
