@@ -58,30 +58,31 @@ class Settings extends Component {
 
   saveSettings() {
     this.setState({ loading: true });
-    const { year, month } = this.props.time;
-    const { hourly, breakTime, breakAfter, pension, drives, others } = this.refs;
+    this.setState({ loading: true }, () => {
+      const { year, month } = this.props.time;
+      const { hourly, breakTime, breakAfter, pension, drives, others } = this.state;
 
-    this.props.saveSettings({
-      day: 0,
-      month,
-      year,
-      hourly: hourly.value,
-      breakTime: breakTime.value,
-      breakAfter: breakAfter.value,
-      pension: pension.value,
-      drives: drives.value,
-      others: others.value
-    }, () => {
-      setTimeout(() => {
-        this.setState({ loading: false, gesture: true });
-      }, 2000);
+      this.props.saveSettings({
+        day: 0,
+        month,
+        year,
+        hourly,
+        breakTime,
+        breakAfter,
+        pension,
+        drives,
+        others
+      }, () => {
+        setTimeout(() => {
+          this.setState({ editing: false, loading: false, gesture: true });
+        }, 1000);
+      });
     });
+    // this.setState({ editing: false, loading: false, gesture: true });
   }
 
   handleChange(e) {
     var change = {};
-    // let currentState = this.state[e.target.name];
-    // remove the check when it is from a dropdown
     if (!isNaN(e.target.value)) {
       change[e.target.name] = e.target.value;
       this.setState(change);
@@ -107,19 +108,19 @@ class Settings extends Component {
           <div>
             <TextField floatingLabelText="Hourly Wage" name="hourly"
                 value={this.state.hourly} onChange={this.handleChange} />
-            <br />
+            
             <TextField floatingLabelText="Break Time" name="breakTime"
                 value={this.state.breakTime} onChange={this.handleChange} />
-            <br />
+            
             <TextField floatingLabelText="Break After" name="breakAfter"
                 value={this.state.breakAfter} onChange={this.handleChange} />
-            <br />
+            
             <TextField floatingLabelText="Pension" name="pension"
                 value={this.state.pension} onChange={this.handleChange} />
-            <br />
+            
             <TextField floatingLabelText="Drives" name="drives"
                 value={this.state.drives} onChange={this.handleChange} />
-            <br />
+            
             <TextField floatingLabelText="Others" name="others"
                 value={this.state.others} onChange={this.handleChange} />
           </div>

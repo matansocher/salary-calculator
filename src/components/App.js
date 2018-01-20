@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { saveTime } from '../actions';
 import AddDay from './AddDay';
 import ComboYear from './ComboYear';
@@ -64,15 +63,4 @@ class App extends Component {
   }
 }
 
-// function mapStateToProps(state) {
-//   return {
-//     time: state.time
-//   };
-// }
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ saveTime }, dispatch);
-}
-
-export default connect(null, mapDispatchToProps)(App);
-// export default connect(mapStateToProps, { saveTime })(App);
+export default connect(null, { saveTime })(App);

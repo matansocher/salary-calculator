@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { FETCH_DAYS, ADD_DAY, EDIT_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS, SAVE_TIME } from '../actions/types';
+import { FETCH_DAYS, ADD_DAY, DELETE_DAY, FETCH_SETTINGS, SAVE_SETTINGS, SAVE_TIME } from '../actions/types';
 import { getCorrectTime } from '../CommonFunctions';
 import fire from '../config';
 
@@ -27,17 +27,8 @@ export function fetchDays(year, month, callback) {
               type: FETCH_DAYS,
               payload: array
             });
-
-            // return {
-            //   type: FETCH_DAYS,
-            //   payload: array
-            // }
-
           });
-          // }).then(() => callback());
         };
-
-
       });
     }
   });
@@ -50,56 +41,38 @@ export function fetchDays(year, month, callback) {
         type: FETCH_DAYS,
         payload: array
       });
-      // return {
-      //   type: FETCH_DAYS,
-      //   payload: array
-      // }
     });
   };
 }
 
-export function setDay(day, breakAfter, breakTime, addOrEdit) {
-
-  switch (addOrEdit) {
-    case 1: addOrEdit = ADD_DAY; break;
-    case 2: addOrEdit = EDIT_DAY; break;
-    default: addOrEdit = ADD_DAY;
-  }
+export function addDay(day, breakAfter, breakTime, callback) {
 
   const arrayOfHours = getCorrectTime(day);
 
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).set({
-        day: day.day,
-        year: day.year,
-        month: day.month,
-        enterTime: arrayOfHours[0],
-        exitTime: arrayOfHours[1]
-      });
-      dispatch({
-        type: addOrEdit,
-        payload: day
-      });
-
-      // return {
-      //   type: addOrEdit,
-      //   payload: day
-      // }
+      day: day.day,
+      year: day.year,
+      month: day.month,
+      enterTime: arrayOfHours[0],
+      exitTime: arrayOfHours[1]
+    });
+    callback();
+    dispatch({
+      type: ADD_DAY,
+      payload: day
+    });
   };
 }
 
-export function deleteDay(day) {
+export function deleteDay(day, callback) {
   return dispatch => {
     fire.database().ref(`days/${day.year}/${day.month}/${day.day}`).remove();
-      dispatch({
-        type: DELETE_DAY,
-        payload: day
-      });
-
-      // return {
-      //   type: DELETE_DAY,
-      //   payload: day
-      // }
+    callback();
+    dispatch({
+      type: DELETE_DAY,
+      payload: day
+    });
     }
 }
 
@@ -125,11 +98,6 @@ export function fetchSettings(year, month) {
               type: FETCH_SETTINGS,
               payload: snap.val()
             });
-
-            // return {
-            //   type: FETCH_SETTINGS,
-            //   payload: snap.val()
-            // }
           });
         }
       });
@@ -142,11 +110,6 @@ export function fetchSettings(year, month) {
         type: FETCH_SETTINGS,
         payload: snap.val()
       });
-
-      // return {
-      //   type: FETCH_SETTINGS,
-      //   payload: snap.val()
-      // }
     });
   };
 }
@@ -155,15 +118,11 @@ export function saveSettings(settings, callback) {
   const { year, month } = settings;
   return dispatch => {
     fire.database().ref(`days/${year}/${month}/`).set({ settings });
+    callback();
     dispatch({
       type: SAVE_SETTINGS,
       payload: settings
     });
-
-    // return {
-    //   type: SAVE_SETTINGS,
-    //   payload: settings
-    // }
   }
 }
 

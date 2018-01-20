@@ -5,21 +5,6 @@ export function calculateHours(day, breakAfter, breakTime) {
 
   breakTime = breakTime/60;
 
-  // const { enterTime, exitTime } = day;
-  //
-  // const enterSeparated = enterTime.split(':');
-  // const exitSeparated = exitTime.split(':');
-  //
-  // const enterHourIntInMinutes = parseInt(enterSeparated[0], 10) * 60;
-  // const enterMinuteIntInMinutes = parseInt(enterSeparated[1], 10);
-  // const exitHourIntInMinutes = parseInt(exitSeparated[0], 10) * 60;
-  // const exitMinuteIntInMinutes = parseInt(exitSeparated[1], 10);
-  //
-  // const enterAsMinutes = enterHourIntInMinutes + enterMinuteIntInMinutes;
-  // const exitAsMinutes = exitHourIntInMinutes + exitMinuteIntInMinutes;
-  //
-  // const numberOfHours = (exitAsMinutes - enterAsMinutes) / 60;
-
   const numberOfHours = getNumberOfHoursForADay(day);
   const hoursAfterUpgrade = 2;
 
@@ -49,12 +34,10 @@ export function calculateHours(day, breakAfter, breakTime) {
 
 function getNumberOfHoursForADay(day) {
   const { enterTime, exitTime } = day;
-  console.log(day);
   return (getTimeInMinutes(exitTime) - getTimeInMinutes(enterTime)) / 60;
 }
 
 function getTimeInMinutes(time) {
-  console.log(time);
   const separated = time.split(':');
   const hourInMinutes = parseInt(separated[0], 10) * 60;
   const minutesInMinutes = parseInt(separated[1], 10);
@@ -102,7 +85,6 @@ export function getDayOfWeek(date) {
 }
 
 export function mapOnDays(days, breakAfter, breakTime) {
-  console.log('mapOnDays');
   let numberOfDays = 0, numberOfHours = 0, numberOfHoursNeto = 0;
   let numberOfHours100 = 0, numberOfHours125 = 0, numberOfHours150 = 0;
 
@@ -164,15 +146,12 @@ export function getTax(bruto) {
 }
 
 export function getNeto(bruto, tax, settingsObject) {
-
   const { pension } = settingsObject;
   const pensionReduction = bruto * pension / 100;
-
   return bruto - pensionReduction - tax;
 }
 
 export function getCorrectTime(day) {
-  const { month, year } = day;
   const enterTimeHour = (day.enterTime.getHours() < 10 ? `0${day.enterTime.getHours()}` : day.enterTime.getHours());
   const enterTimeMinute = (day.enterTime.getMinutes() < 10 ? `0${day.enterTime.getMinutes()}` : day.enterTime.getMinutes());
   const exitTimeHour = (day.exitTime.getHours() < 10 ? `0${day.exitTime.getHours()}` : day.exitTime.getHours());

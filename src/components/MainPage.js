@@ -5,6 +5,9 @@ import { mapOnDays, getBruto, getNeto, getTax } from '../CommonFunctions';
 import { fetchDays } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MainPageObject from './MainPageObject';
+import money from '../images/money.png';
+import money2 from '../images/money2.png';
+import wallet from '../images/wallet.png';
 
 class MainPage extends Component {
   constructor(props) {
@@ -44,12 +47,12 @@ class MainPage extends Component {
       const settingsObject = days[days.length - 1];
       this.setState({ days, settingsObject }, () => {
         // this.mapOnDays();
-        this.arrangePage();
+        this.buildPage();
       });
     }
   }
 
-  arrangePage() {
+  buildPage() {
     const days = this.state.days;
     if(days.length  === 0) { // no days array yet from server
       return;
@@ -61,15 +64,15 @@ class MainPage extends Component {
     const tax = getTax(bruto);
     const neto = getNeto(bruto, tax, this.state.settingsObject);
     this.setState({
-      bruto,
-      neto,
-      tax,
-      numberOfDays: arrayOfTotalHours[0],
-      numberOfHours: arrayOfTotalHours[1],
-      numberOfHours100: arrayOfTotalHours[3],
-      numberOfHours125: arrayOfTotalHours[4],
-      numberOfHours150: arrayOfTotalHours[5],
-      numberOfHoursNeto: arrayOfTotalHours[2],
+      bruto: bruto.toFixed(2),
+      neto: neto.toFixed(2),
+      tax: tax.toFixed(2),
+      numberOfDays: arrayOfTotalHours[0].toFixed(2),
+      numberOfHours: arrayOfTotalHours[1].toFixed(2),
+      numberOfHours100: arrayOfTotalHours[3].toFixed(2),
+      numberOfHours125: arrayOfTotalHours[4].toFixed(2),
+      numberOfHours150: arrayOfTotalHours[5].toFixed(2),
+      numberOfHoursNeto: arrayOfTotalHours[2].toFixed(2),
       loading: false
     });
   }
@@ -83,16 +86,16 @@ class MainPage extends Component {
     } else { // there is data to show
       return (
         <div>
-          <MainPageObject icon="fa fa-money" header="Bruto" value={this.state.bruto} />
-          <MainPageObject icon="fa fa-money" header="Neto" value={this.state.neto} />
-          <MainPageObject icon="fa fa-money" header="Tax" value={this.state.tax} />
-          <MainPageObject icon="fa fa-money" header="Number Of Working Days" value={this.state.numberOfDays} />
-          <MainPageObject icon="fa fa-money" header="Hours Bruto" value={this.state.numberOfHours} />
-          <MainPageObject icon="fa fa-money" header="Hours Neto" value={this.state.numberOfHoursNeto} />
-          <MainPageObject icon="fa fa-money" header="BreaksTime" value={this.state.numberOfHours - this.state.numberOfHoursNeto} />
-          <MainPageObject icon="fa fa-money" header="100% Hours" value={this.state.numberOfHours100} />
-          <MainPageObject icon="fa fa-money" header="125% Hours" value={this.state.numberOfHours125} />
-          <MainPageObject icon="fa fa-money" header="150% Hours" value={this.state.numberOfHours150} />
+          <MainPageObject image={money} icon="fa fa-money" header="Bruto" value={this.state.bruto} />
+          <MainPageObject image={wallet} icon="fa fa-money" header="Neto" value={this.state.neto} />
+          <MainPageObject image={money2} icon="fa fa-money" header="Tax" value={this.state.tax} />
+          <MainPageObject image={money} icon="fa fa-money" header="Number Of Working Days" value={this.state.numberOfDays} />
+          <MainPageObject image={money2} icon="fa fa-money" header="Hours Bruto" value={this.state.numberOfHours} />
+          <MainPageObject image={money} icon="fa fa-money" header="Hours Neto" value={this.state.numberOfHoursNeto} />
+          <MainPageObject image={money2} icon="fa fa-money" header="BreaksTime" value={this.state.numberOfHours - this.state.numberOfHoursNeto} />
+          <MainPageObject image={money} icon="fa fa-money" header="100% Hours" value={this.state.numberOfHours100} />
+          <MainPageObject image={money2} icon="fa fa-money" header="125% Hours" value={this.state.numberOfHours125} />
+          <MainPageObject image={money} icon="fa fa-money" header="150% Hours" value={this.state.numberOfHours150} />
         </div>
       )
     }

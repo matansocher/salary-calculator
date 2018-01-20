@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { populateOptionsForDayMonth } from '../CommonFunctions';
-import { fetchDays, setDay } from '../actions';
+import { fetchDays, addDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SelectField from 'material-ui/SelectField';
 import TimePicker from 'material-ui/TimePicker';
+import Snackbar from 'material-ui/Snackbar';
+
 
 class AddDay extends Component {
   constructor(props) {
@@ -17,6 +19,8 @@ class AddDay extends Component {
       day: new Date().getDate(),
       enterTime: new Date(),
       exitTime: new Date(),
+      gesture: false,
+      gestureText: '',
       loading: false
     };
     this.addDay = this.addDay.bind(this);
@@ -49,39 +53,30 @@ class AddDay extends Component {
       const { breakAfter, breakTime } = this.state.settingsObject;
       const { year, month } = this.props.time;
       const { day, enterTime, exitTime } = this.state;
-      console.log(day);
-      console.log(month);
-      console.log(year);
-      console.log(enterTime);
-      console.log(exitTime);
-      this.props.setDay({
+      this.props.addDay({
         day,
         month,
         year,
         enterTime,
         exitTime
-      }, breakAfter, breakTime, 1); // the 1 is to add, 2 is to edit
-
-      // not really - need it as a callback
-      setTimeout(() => {
-        this.setState({ loading: false });
-        this.props.history.push('/HoursList');
-      }, 1000);
+      }, breakAfter, breakTime, () => { // the 1 is to add, 2 is to edit
+        setTimeout(() => {
+          this.setState({ loading: false, gestureText: "Day Added Successfully!", gesture: true });
+          this.props.history.push('/HoursList');
+        }, 1000);
+      });
     });
   }
 
   handleDayChange = (a, value) => {
-    console.log(value);
     this.setState({ day: value + 1 });
   }
 
   handleEnterHourChange = (a, value) => {
-    console.log(value);
     this.setState({ enterTime: value });
   }
 
   handleExitHourChange = (a, value) => {
-    console.log(value);
     this.setState({ exitTime: value });
   }
 
@@ -94,6 +89,11 @@ class AddDay extends Component {
       <div className="container container-fluid blue-font">
         <h1>Add Day</h1>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
+
+        <MuiThemeProvider>
+          <Snackbar open={this.state.gesture} message={this.state.gestureText}
+            autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
+        </MuiThemeProvider>
 
         <li className="col-sm-12 col-md-12 list-group-item">
           <MuiThemeProvider>
@@ -127,4 +127,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchDays, setDay })(AddDay);
+export default connect(mapStateToProps, { fetchDays, addDay })(AddDay);
