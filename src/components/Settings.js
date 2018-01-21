@@ -98,7 +98,7 @@ class Settings extends Component {
   }
 
   handleRequestClose = () => {
-    this.setState({ gesture: false, });
+    this.setState({ gesture: false });
   };
 
   renderEdit() {
@@ -108,23 +108,29 @@ class Settings extends Component {
           <div>
             <TextField floatingLabelText="Hourly Wage" name="hourly"
                 value={this.state.hourly} onChange={this.handleChange} />
-            
+
             <TextField floatingLabelText="Break Time" name="breakTime"
                 value={this.state.breakTime} onChange={this.handleChange} />
-            
+
             <TextField floatingLabelText="Break After" name="breakAfter"
                 value={this.state.breakAfter} onChange={this.handleChange} />
-            
+
             <TextField floatingLabelText="Pension" name="pension"
                 value={this.state.pension} onChange={this.handleChange} />
-            
+
             <TextField floatingLabelText="Drives" name="drives"
                 value={this.state.drives} onChange={this.handleChange} />
-            
+
             <TextField floatingLabelText="Others" name="others"
                 value={this.state.others} onChange={this.handleChange} />
           </div>
         </MuiThemeProvider>
+
+        <i onClick={this.saveSettings} className="fa fa-floppy-o pull-xs-right" aria-hidden="true"></i> Save
+        <i onClick={this.handleCancelClick} className="fa fa-times pull-xs-left" aria-hidden="true"></i> Cancel
+
+        <i onClick={this.saveSettings} className="fa fa-floppy-o pull-xs-right" aria-hidden="true">Save</i>
+        <i onClick={this.handleCancelClick} className="fa fa-times pull-xs-left" aria-hidden="true">Cancel</i>
 
         <button onClick={this.saveSettings} className="btn btn-success regular-button">
           <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
@@ -157,7 +163,7 @@ class Settings extends Component {
       <div className="container container-fluid blue-font">
         <h1>Settings</h1>
         <MuiThemeProvider>
-          <Snackbar open={this.state.gesture} message="Settings were saved successfully"
+          <Snackbar open={this.state.gesture} message="Changes saved successfully"
             autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
         </MuiThemeProvider>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}

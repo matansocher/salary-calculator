@@ -23,7 +23,6 @@ class HoursList extends Component {
     this.state = {
       days: [],
       settingsObject: {},
-      dayOfMonth: 0,
       bruto: 0,
       neto: 0,
       tax: 0,
@@ -39,7 +38,6 @@ class HoursList extends Component {
       loading: true
 
     }
-    this.editDay = this.editDay.bind(this);
     this.deleteDay = this.deleteDay.bind(this);
   }
 
@@ -93,18 +91,6 @@ class HoursList extends Component {
     });
   }
 
-  editDay(day) {
-    this.setState({ loading: true }, () => {
-      const { breakAfter, breakTime } = this.state.settingsObject;
-      this.props.addDay(day, breakAfter, breakTime, () => { // the 2 is to edit, 1 is to add
-        setTimeout(() => {
-          this.setState({ loading: false, gestureText: "Changes Saved!", gesture: true });
-        }, 1000);
-      });
-    });
-
-  }
-
   deleteDay(day) {
     // if in add day at AddDay class works the callback after the loading true state, add to here also
     this.setState({ loading: true },() => {
@@ -126,27 +112,23 @@ class HoursList extends Component {
 
   renderList() {
     const { days, settingsObject } = this.state;
-
     if (days.length === 1)
       return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
-    else {
-      return (
-        days.map(day => {
-          const key = `${day.year}${day.month}${day.day}`;
-          if (day.day !== 0) {
-            return <Day key={key} day={day} settingsObject={settingsObject}
-                    editDay={this.editDay} deleteDay={this.deleteDay} time={this.props.time} />
-          }
-          return <span key={key}/>;
-        })
-      );
-    }
+      
+    return (
+      days.map(day => {
+        const key = `${day.year}${day.month}${day.day}`;
+        if (day.day !== 0) {
+          return (<Day key={key} day={day} settingsObject={settingsObject}
+                  deleteDay={this.deleteDay} />)
+        }
+        return <span key={key}/>;
+      })
+    );
   }
 
   // renderListTwo() {
   //   const { days, settingsObject } = this.state;
-  //   // if (days.length === 0)
-  //   //   return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
   //   if (days.length === 1)
   //     return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
   //   else {
@@ -162,28 +144,53 @@ class HoursList extends Component {
   //   }
   // }
 
+  renderListTwo() {
+    const { days, settingsObject } = this.state;
+    if (days.length === 1)
+      return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+    return (
+      <table className="table table-sm table-hover">
+        <thead>
+          <th scope="col">Day</th>
+          <th scope="col">Hours</th>
+          <th scope="col">Hours</th>
+          <th scope="col">Wage</th>
+        </thead>
+        <tbody>
+          {days.map(day => {
+            const key = `${day.year}${day.month}${day.day}`;
+            if (day.day !== 0) {
+              return (<Day key={key} day={day} settingsObject={settingsObject}
+                      deleteDay={this.deleteDay} />)
+            }
+            return <span key={key}/>;
+          })}
+        </tbody>
+      </table>
+    );
+  }
+
   renderObjects() {
     const days = this.state.days;
-    // if(days.length === 0) { // no days on this month
-    //   return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
     if(days.length === 1) { // no days on this month
       return;
-    } else { // there is data to show
-      return (
-        <div>
-        <MainPageObject image={money} icon="fa fa-money" header="Bruto" value={this.state.bruto} />
-        <MainPageObject image={wallet} icon="fa fa-money" header="Neto" value={this.state.neto} />
-        <MainPageObject image={money2} icon="fa fa-money" header="Tax" value={this.state.tax} />
-        <MainPageObject image={money} icon="fa fa-money" header="Number Of Working Days" value={this.state.numberOfDays} />
-        <MainPageObject image={money2} icon="fa fa-money" header="Hours Bruto" value={this.state.numberOfHours} />
-        <MainPageObject image={money} icon="fa fa-money" header="Hours Neto" value={this.state.numberOfHoursNeto} />
-        <MainPageObject image={money2} icon="fa fa-money" header="BreaksTime" value={this.state.numberOfHours - this.state.numberOfHoursNeto} />
-        <MainPageObject image={money} icon="fa fa-money" header="100% Hours" value={this.state.numberOfHours100} />
-        <MainPageObject image={money2} icon="fa fa-money" header="125% Hours" value={this.state.numberOfHours125} />
-        <MainPageObject image={money} icon="fa fa-money" header="150% Hours" value={this.state.numberOfHours150} />
-        </div>
-      )
-    }
+
+    const { bruto, neto, tax, numberOfDays, numberOfHours, numberOfHours100,
+      numberOfHours125, numberOfHours150, numberOfHoursNeto } = this.state;
+    return (
+      <div>
+        <MainPageObject image={money} header="Bruto" value={bruto} />
+        <MainPageObject image={wallet} header="Neto" value={neto} />
+        <MainPageObject image={money2} header="Tax" value={tax} />
+        <MainPageObject image={money} header="Number Of Working Days" value={numberOfDays} />
+        <MainPageObject image={money2} header="Hours Bruto" value={numberOfHours} />
+        <MainPageObject image={money} header="Hours Neto" value={numberOfHoursNeto} />
+        <MainPageObject image={money2} header="BreaksTime" value={numberOfHours - numberOfHoursNeto} />
+        <MainPageObject image={money} header="100% Hours" value={numberOfHours100} />
+        <MainPageObject image={money2} header="125% Hours" value={numberOfHours125} />
+        <MainPageObject image={money} header="150% Hours" value={numberOfHours150} />
+      </div>
+    )
   }
 
   render() {
@@ -191,13 +198,12 @@ class HoursList extends Component {
       <div className="container container-fluid blue-font">
 
         <h1>Hours List</h1>
-        <MuiThemeProvider>
-          <Snackbar open={this.state.gesture} message={this.state.gestureText}
-            autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
-        </MuiThemeProvider>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
         <MuiThemeProvider>
+          <Snackbar open={this.state.gesture} message={this.state.gestureText}
+            autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
+
           <FloatingActionButton className="float" onClick={this.handleAddClick}>
             <ContentAdd />
           </FloatingActionButton>
@@ -205,6 +211,10 @@ class HoursList extends Component {
 
         {this.renderList()}
         <br />
+
+        {this.renderListTwo()}
+        <br />
+
         {this.renderObjects()}
       </div>
     );
@@ -225,3 +235,14 @@ export default connect(mapStateToProps, { fetchDays, addDay , deleteDay })(Hours
 //     {this.renderListTwo()}
 //   </List>
 // </MuiThemeProvider>
+
+// return (
+//         days.map(day => {
+//           const key = `${day.year}${day.month}${day.day}`;
+//           if (day.day !== 0) {
+//             return <Day key={key} day={day} settingsObject={settingsObject}
+//                     editDay={this.editDay} deleteDay={this.deleteDay} time={this.props.time} />
+//           }
+//           return <span key={key}/>;
+//         })
+//       );

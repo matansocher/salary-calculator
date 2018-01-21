@@ -59,7 +59,7 @@ class AddDay extends Component {
         year,
         enterTime,
         exitTime
-      }, breakAfter, breakTime, () => { // the 1 is to add, 2 is to edit
+      }, breakAfter, breakTime, () => {
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Day Added Successfully!", gesture: true });
           this.props.history.push('/HoursList');
@@ -91,30 +91,31 @@ class AddDay extends Component {
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
         <MuiThemeProvider>
-          <Snackbar open={this.state.gesture} message={this.state.gestureText}
-            autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
+          <div>
+            <Snackbar open={this.state.gesture} message={this.state.gestureText}
+              autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
+            <SelectField floatingLabelText="Day Of Month" value={this.state.day} onChange={this.handleDayChange} >
+              {populateOptionsForDayMonth(this.props.time.month)}
+            </SelectField>
+            <TimePicker className="time-picker" format="24hr" hintText="Enter Hour" okLabel="OK" cancelLabel="Cancel"
+              value={this.state.enterTime} onChange={this.handleEnterHourChange}/>
+            <TimePicker className="time-picker" format="24hr" hintText="Exit Hour" okLabel="OK" cancelLabel="Cancel"
+              value={this.state.exitTime} onChange={this.handleExitHourChange}/>
+          </div>
         </MuiThemeProvider>
 
-        <li className="col-sm-12 col-md-12 list-group-item">
-          <MuiThemeProvider>
-            <div>
-              <SelectField floatingLabelText="Day Of Month" value={this.state.day} onChange={this.handleDayChange} >
-                {populateOptionsForDayMonth(this.props.time.month)}
-              </SelectField>
-              <TimePicker className="time-picker" format="24hr" hintText="Enter Hour" okLabel="OK" cancelLabel="Cancel"
-                value={this.state.enterTime} onChange={this.handleEnterHourChange}/>
-              <TimePicker className="time-picker" format="24hr" hintText="Exit Hour" okLabel="OK" cancelLabel="Cancel"
-                value={this.state.exitTime} onChange={this.handleExitHourChange}/>
-            </div>
-          </MuiThemeProvider>
+        <i onClick={this.addDay} className="fa fa-floppy-o pull-xs-right" aria-hidden="true"></i> Add
+        <i onClick={this.handleCancelClick} className="fa fa-trash pull-xs-left" aria-hidden="true"></i> Cancel
 
-          <button onClick={this.addDay} className="btn btn-success regular-button pull-xs-right">
-            <i className="fa fa-floppy-o" aria-hidden="true"></i> Add
-          </button>
-          <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
-            <i className="fa fa-trash" aria-hidden="true"></i> Cancel
-          </button>
-        </li>
+        <i onClick={this.addDay} className="fa fa-floppy-o pull-xs-right" aria-hidden="true">Add</i>
+        <i onClick={this.handleCancelClick} className="fa fa-trash pull-xs-left" aria-hidden="true">Cancel</i>
+
+        <button onClick={this.addDay} className="btn btn-success regular-button pull-xs-right">
+          <i className="fa fa-floppy-o" aria-hidden="true"></i> Add
+        </button>
+        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
+          <i className="fa fa-trash" aria-hidden="true"></i> Cancel
+        </button>
       </div>
     );
   }

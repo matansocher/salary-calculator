@@ -11,9 +11,7 @@ export default class Day extends Component {
     super(props);
     this.state = {
       day: props.day,
-      settingsObject: props.settingsObject,
-      enterTime: props.day.enterTime,
-      exitTime: props.day.exitTime
+      settingsObject: props.settingsObject
     };
   }
 
@@ -25,47 +23,10 @@ export default class Day extends Component {
     this.setState({ day: value + 1 });
   }
 
-  handleEnterHourChange = (a, value) => {
-    this.setState({ enterTime: value });
-  }
-
-  handleExitHourChange = (a, value) => {
-    this.setState({ exitTime: value });
-  }
-  //
-  // renderEdit() {
-  //   return(
-  //     <li className="col-sm-12 col-md-12 list-group-item">
-  //
-  //       <MuiThemeProvider>
-  //         <div>
-  //           <SelectField floatingLabelText="Day Of Month" value={this.state.day} onChange={this.handleDayChange} >
-  //             {populateOptionsForDayMonth(this.props.time.month)}
-  //           </SelectField>
-  //           <TimePicker className="time-picker" format="24hr" hintText="Enter Hour" okLabel="OK" cancelLabel="Cancel"
-  //             defaultTime={this.state.enterTime} value={this.state.enterTime} onChange={this.handleEnterHourChange}/>
-  //           <TimePicker className="time-picker" format="24hr" hintText="Exit Hour" okLabel="OK" cancelLabel="Cancel"
-  //             defaultTime={this.state.exitTime} value={this.state.exitTime} onChange={this.handleExitHourChange}/>
-  //         </div>
-  //       </MuiThemeProvider>
-  //
-  //       <button onClick={this.saveClick} className="btn btn-success regular-button pull-xs-right">
-  //         <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
-  //       </button>
-  //
-  //       <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
-  //         <i className="fa fa-trash" aria-hidden="true"></i> Cancel
-  //       </button>
-  //     </li>
-  //   );
-  // }
-
   renderRegular() {
-    const { day, month, year } = this.state.day;
-    const { breakAfter, breakTime } = this.state.settingsObject;
+    const { day, month, year, enterTime, exitTime } = this.state.day;
+    const { breakAfter, breakTime, hourly } = this.state.settingsObject;
     const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
-    const { enterTime, exitTime } = this.state;
-    const { hourly } = this.state.settingsObject;
     const wage = ((arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly).toFixed(2);
     const dayOfWeek = `${day}/${month}, ${getDayOfWeek(`${month}/${day}/${year}`)}`;
 
@@ -74,7 +35,7 @@ export default class Day extends Component {
 
         <MuiThemeProvider>
 
-          
+
 
           <IconMenu className="pull-xs-right"
             iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
@@ -97,9 +58,52 @@ export default class Day extends Component {
     );
   }
 
+  renderTable() {
+    const { day, month, year } = this.state.day;
+    const { breakAfter, breakTime, hourly } = this.state.settingsObject;
+    const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
+    const { enterTime, exitTime } = this.state;
+    const wage = ((arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly).toFixed(2);
+    const dayOfWeek;
+    const today = new date();
+    // if (`${month}/${day}/${year}` === `${date.getMonth+1}/${date.getDate}/${date.getFullYear}`)
+    if (`${month}/${day}/${year}`.localeCompare(`${date.getMonth+1}/${date.getDate}/${date.getFullYear}`) === 0)
+      dayOfWeek = `${day}/${month}, ${getDayOfWeek(`${month}/${day}/${year}`)}`;\
+    else
+      dayOfWeek = 'today';
+
+    return(
+      <div>
+
+        <MuiThemeProvider>
+          <IconMenu className="pull-xs-right"
+            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+            targetOrigin={{horizontal: 'right', vertical: 'top'}}>
+
+            <MenuItem primaryText="Delete" onClick={this.handleDeleteClick} leftIcon={
+              <i className="fa fa-trash" aria-hidden="true"></i>
+            } />
+
+          </IconMenu>
+        </MuiThemeProvider>
+
+        <td>
+          <div className="circle">
+            <p>{dayOfWeek}</p>
+          </div>
+        </td>
+        <td>{enterTime} - {exitTime}</td>
+        <td>{arrayOfHours[0].toFixed(2)} Hours</td>
+        <td>Wage: {wage}</td>
+
+      </div>
+    );
+  }
+
   render() {
     return (
-      this.renderRegular()
+      this.renderTable()
     )
   }
 }
