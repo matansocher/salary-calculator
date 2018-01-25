@@ -24,19 +24,23 @@ export default class Day extends Component {
   }
 
   renderRegular() {
-    const { day, month, year, enterTime, exitTime } = this.state.day;
+    const { day, month, year } = this.state.day;
     const { breakAfter, breakTime, hourly } = this.state.settingsObject;
     const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
+    const { enterTime, exitTime } = this.state;
     const wage = ((arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly).toFixed(2);
-    const dayOfWeek = `${day}/${month}, ${getDayOfWeek(`${month}/${day}/${year}`)}`;
+    let dayOfWeek;
+    const today = new Date();
+    const todaysDate = `${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`;
+    if (`${month}/${day}/${year}`.localeCompare(todaysDate) === 0)
+      dayOfWeek = 'Today';
+    else
+      dayOfWeek = `${day}/${month}, ${getDayOfWeek(`${month}/${day}/${year}`)}`;
 
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
 
         <MuiThemeProvider>
-
-
-
           <IconMenu className="pull-xs-right"
             iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
             anchorOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -57,53 +61,41 @@ export default class Day extends Component {
       </li>
     );
   }
-
-  renderTable() {
-    const { day, month, year } = this.state.day;
-    const { breakAfter, breakTime, hourly } = this.state.settingsObject;
-    const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
-    const { enterTime, exitTime } = this.state;
-    const wage = ((arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly).toFixed(2);
-    const dayOfWeek;
-    const today = new date();
-    // if (`${month}/${day}/${year}` === `${date.getMonth+1}/${date.getDate}/${date.getFullYear}`)
-    if (`${month}/${day}/${year}`.localeCompare(`${date.getMonth+1}/${date.getDate}/${date.getFullYear}`) === 0)
-      dayOfWeek = `${day}/${month}, ${getDayOfWeek(`${month}/${day}/${year}`)}`;\
-    else
-      dayOfWeek = 'today';
-
-    return(
-      <div>
-
-        <MuiThemeProvider>
-          <IconMenu className="pull-xs-right"
-            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}>
-
-            <MenuItem primaryText="Delete" onClick={this.handleDeleteClick} leftIcon={
-              <i className="fa fa-trash" aria-hidden="true"></i>
-            } />
-
-          </IconMenu>
-        </MuiThemeProvider>
-
-        <td>
-          <div className="circle">
-            <p>{dayOfWeek}</p>
-          </div>
-        </td>
-        <td>{enterTime} - {exitTime}</td>
-        <td>{arrayOfHours[0].toFixed(2)} Hours</td>
-        <td>Wage: {wage}</td>
-
-      </div>
-    );
-  }
+  //
+  // renderTable() {
+  //   const { day, month, year } = this.state.day;
+  //   const { breakAfter, breakTime, hourly } = this.state.settingsObject;
+  //   const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
+  //   const { enterTime, exitTime } = this.state;
+  //   const wage = ((arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly).toFixed(2);
+  //   let dayOfWeek;
+  //   const today = new Date();
+  //   const todaysDate = `${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`;
+  //   if (`${month}/${day}/${year}`.localeCompare(`${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`) === 0)
+  //     dayOfWeek = 'today';
+  //   else
+  //     dayOfWeek = `${day}/${month}, ${getDayOfWeek(`${month}/${day}/${year}`)}`;
+  //
+  //   return(
+  //     <div>
+  //
+  //
+  //       <td>
+  //         <div className="circle">
+  //           <p>{dayOfWeek}</p>
+  //         </div>
+  //       </td>
+  //       <td>{enterTime} - {exitTime}</td>
+  //       <td>{arrayOfHours[0].toFixed(2)} Hours</td>
+  //       <td>Wage: {wage}</td>
+  //
+  //     </div>
+  //   );
+  // }
 
   render() {
     return (
-      this.renderTable()
+      this.renderRegular()
     )
   }
 }

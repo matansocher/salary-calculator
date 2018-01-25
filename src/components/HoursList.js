@@ -92,8 +92,7 @@ class HoursList extends Component {
   }
 
   deleteDay(day) {
-    // if in add day at AddDay class works the callback after the loading true state, add to here also
-    this.setState({ loading: true },() => {
+    this.setState({ loading: true }, () => {
       this.props.deleteDay(day, () => {
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Day Deleted Successfully", gesture: true });
@@ -114,7 +113,7 @@ class HoursList extends Component {
     const { days, settingsObject } = this.state;
     if (days.length === 1)
       return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
-      
+
     return (
       days.map(day => {
         const key = `${day.year}${day.month}${day.day}`;
@@ -144,35 +143,35 @@ class HoursList extends Component {
   //   }
   // }
 
-  renderListTwo() {
-    const { days, settingsObject } = this.state;
-    if (days.length === 1)
-      return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
-    return (
-      <table className="table table-sm table-hover">
-        <thead>
-          <th scope="col">Day</th>
-          <th scope="col">Hours</th>
-          <th scope="col">Hours</th>
-          <th scope="col">Wage</th>
-        </thead>
-        <tbody>
-          {days.map(day => {
-            const key = `${day.year}${day.month}${day.day}`;
-            if (day.day !== 0) {
-              return (<Day key={key} day={day} settingsObject={settingsObject}
-                      deleteDay={this.deleteDay} />)
-            }
-            return <span key={key}/>;
-          })}
-        </tbody>
-      </table>
-    );
-  }
+  // renderListTwo() {
+  //   const { days, settingsObject } = this.state;
+  //   if (days.length === 1)
+  //     return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+  //   return (
+  //     <table className="table table-sm table-hover">
+  //       <thead>
+  //         <th scope="col">Day</th>
+  //         <th scope="col">Hours</th>
+  //         <th scope="col">Hours</th>
+  //         <th scope="col">Wage</th>
+  //       </thead>
+  //       <tbody>
+  //         {days.map(day => {
+  //           const key = `${day.year}${day.month}${day.day}`;
+  //           if (day.day !== 0) {
+  //             return (<Day key={key} day={day} settingsObject={settingsObject}
+  //                     deleteDay={this.deleteDay} />)
+  //           }
+  //           return;
+  //         })}
+  //       </tbody>
+  //     </table>
+  //   );
+  // }
 
   renderObjects() {
     const days = this.state.days;
-    if(days.length === 1) { // no days on this month
+    if(days.length === 1) // no days on this month
       return;
 
     const { bruto, neto, tax, numberOfDays, numberOfHours, numberOfHours100,
@@ -201,18 +200,19 @@ class HoursList extends Component {
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
         <MuiThemeProvider>
-          <Snackbar open={this.state.gesture} message={this.state.gestureText}
-            autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
+          <div>
+            <Snackbar open={this.state.gesture} message={this.state.gestureText}
+              autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
-          <FloatingActionButton className="float" onClick={this.handleAddClick}>
-            <ContentAdd />
-          </FloatingActionButton>
+            <FloatingActionButton className="float" onClick={this.handleAddClick}>
+              <ContentAdd />
+            </FloatingActionButton>
+          </div>
         </MuiThemeProvider>
 
         {this.renderList()}
         <br />
 
-        {this.renderListTwo()}
         <br />
 
         {this.renderObjects()}

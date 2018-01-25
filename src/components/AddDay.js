@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { populateOptionsForDayMonth } from '../CommonFunctions';
+import { populateOptionsForDayMonth, isValidDayOfMonth } from '../CommonFunctions';
 import { fetchDays, addDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SelectField from 'material-ui/SelectField';
 import TimePicker from 'material-ui/TimePicker';
 import Snackbar from 'material-ui/Snackbar';
+import saveIcon from '../images/save.png';
+import cancelIcon from '../images/cancel.png';
 
 
 class AddDay extends Component {
@@ -49,10 +51,15 @@ class AddDay extends Component {
 
   addDay() {
     this.setState({ loading: true }, () => {
+      const { days, day, enterTime, exitTime } = this.state;
+      if (!isValidDayOfMonth(days, day)) {
+        console.log("this really returned false");
+        this.setState({ loading: false, gestureText: `Day ${day} already exists`, gesture: true })
+        return;
+      }
 
       const { breakAfter, breakTime } = this.state.settingsObject;
       const { year, month } = this.props.time;
-      const { day, enterTime, exitTime } = this.state;
       this.props.addDay({
         day,
         month,
@@ -104,18 +111,11 @@ class AddDay extends Component {
           </div>
         </MuiThemeProvider>
 
-        <i onClick={this.addDay} className="fa fa-floppy-o pull-xs-right" aria-hidden="true"></i> Add
-        <i onClick={this.handleCancelClick} className="fa fa-trash pull-xs-left" aria-hidden="true"></i> Cancel
+        <div>
+          <img src={saveIcon} className="icon pull-right" onClick={this.addDay} alt="save icon" />
+          <img src={cancelIcon} className="icon pull-left" onClick={this.handleCancelClick} alt="cancel icon" />
+        </div>
 
-        <i onClick={this.addDay} className="fa fa-floppy-o pull-xs-right" aria-hidden="true">Add</i>
-        <i onClick={this.handleCancelClick} className="fa fa-trash pull-xs-left" aria-hidden="true">Cancel</i>
-
-        <button onClick={this.addDay} className="btn btn-success regular-button pull-xs-right">
-          <i className="fa fa-floppy-o" aria-hidden="true"></i> Add
-        </button>
-        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button pull-xs-left">
-          <i className="fa fa-trash" aria-hidden="true"></i> Cancel
-        </button>
       </div>
     );
   }

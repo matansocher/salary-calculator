@@ -6,6 +6,9 @@ import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
+import saveIcon from '../images/save.png';
+import cancelIcon from '../images/cancel.png';
+import editIcon from '../images/edit.png';
 
 class Settings extends Component {
   constructor(props) {
@@ -126,25 +129,23 @@ class Settings extends Component {
           </div>
         </MuiThemeProvider>
 
-        <i onClick={this.saveSettings} className="fa fa-floppy-o pull-xs-right" aria-hidden="true"></i> Save
-        <i onClick={this.handleCancelClick} className="fa fa-times pull-xs-left" aria-hidden="true"></i> Cancel
+        <div>
+          <img src={saveIcon} className="icon pull-right" onClick={this.saveSettings} alt="save action icon" />
+          <img src={cancelIcon} className="icon pull-left" onClick={this.handleCancelClick} alt="cancel action icon" />
+        </div>
 
-        <i onClick={this.saveSettings} className="fa fa-floppy-o pull-xs-right" aria-hidden="true">Save</i>
-        <i onClick={this.handleCancelClick} className="fa fa-times pull-xs-left" aria-hidden="true">Cancel</i>
-
-        <button onClick={this.saveSettings} className="btn btn-success regular-button">
-          <i className="fa fa-floppy-o" aria-hidden="true"></i> Save
-        </button>
-        <button onClick={this.handleCancelClick} className="btn btn-primary regular-button">
-          <i className="fa fa-times" aria-hidden="true"></i> Cancel
-        </button>
       </div>
     );
   }
   renderRegular() {
     const { hourly, breakTime, breakAfter, pension, drives, others } = this.state.settingsObject;
     return(
-      <div>
+      <div className="container container-fluid">
+
+        <div>
+          <img src={editIcon} className="icon pull-right" onClick={this.handleEditClick} alt="edit action icon" />
+        </div>
+
         <button className="btn btn-warning regular-button" onClick={this.handleEditClick}>
           <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
         </button>

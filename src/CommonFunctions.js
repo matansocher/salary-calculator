@@ -162,3 +162,24 @@ export function getCorrectTime(day) {
 
   return [enterTime, exitTime];
 }
+
+export function isValidDayOfMonth(days, newDay) {
+  console.log(days);
+  console.log(newDay);
+  for(var i=0;i<days.length;i++) {
+    if(days[i].day === newDay) {
+      return false;
+    }
+  }
+  return true;
+  // days.map(day => {
+  //   console.log("day.day: " + day.day);
+  //   console.log("newDay: " + newDay);
+  //   if(day.day === newDay) {
+  //     console.log("dasdasdfasdfasdfasdfasdfadsf");
+  //     return false;
+  //   }
+  //   return day;
+  // });
+  // return true;
+}

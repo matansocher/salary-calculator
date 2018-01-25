@@ -41,10 +41,9 @@ body {
   height: 70px;
 }
 .circle {
-  border: 1px solid red;
   text-align: center;
   vertical-align: middle;
-  background: red;
+  background: #092b60;
   border-radius: 40px;
   color: white;
   height: 40px;
@@ -57,7 +56,13 @@ body {
   vertical-align: middle;
   display: table-cell;
 }
-/* .time-picker {
-  width: 50%;
-  color: red;
+.icon {
+  width: 60px;
+  height: 60px;
+}
+.icon:hover {
+  cursor: pointer;
+}
+/* .pull-right {
+
 } */
