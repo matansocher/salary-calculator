@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 export default class Day extends Component {
   constructor(props) {
@@ -51,6 +52,10 @@ export default class Day extends Component {
             } />
 
           </IconMenu>
+
+          <FloatingActionButton>
+            {dayOfWeek}
+          </FloatingActionButton>
         </MuiThemeProvider>
 
         <h3>{dayOfWeek}</h3>
@@ -61,37 +66,6 @@ export default class Day extends Component {
       </li>
     );
   }
-  //
-  // renderTable() {
-  //   const { day, month, year } = this.state.day;
-  //   const { breakAfter, breakTime, hourly } = this.state.settingsObject;
-  //   const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
-  //   const { enterTime, exitTime } = this.state;
-  //   const wage = ((arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly).toFixed(2);
-  //   let dayOfWeek;
-  //   const today = new Date();
-  //   const todaysDate = `${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`;
-  //   if (`${month}/${day}/${year}`.localeCompare(`${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`) === 0)
-  //     dayOfWeek = 'today';
-  //   else
-  //     dayOfWeek = `${day}/${month}, ${getDayOfWeek(`${month}/${day}/${year}`)}`;
-  //
-  //   return(
-  //     <div>
-  //
-  //
-  //       <td>
-  //         <div className="circle">
-  //           <p>{dayOfWeek}</p>
-  //         </div>
-  //       </td>
-  //       <td>{enterTime} - {exitTime}</td>
-  //       <td>{arrayOfHours[0].toFixed(2)} Hours</td>
-  //       <td>Wage: {wage}</td>
-  //
-  //     </div>
-  //   );
-  // }
 
   render() {
     return (

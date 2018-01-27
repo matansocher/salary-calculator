@@ -146,10 +146,6 @@ class Settings extends Component {
           <img src={editIcon} className="icon pull-right" onClick={this.handleEditClick} alt="edit action icon" />
         </div>
 
-        <button className="btn btn-warning regular-button" onClick={this.handleEditClick}>
-          <i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
-        </button>
-
         <h3>Hourly Wage: {hourly}</h3>
         <h3>Break Time: {breakTime}</h3>
         <h3>Break After: {breakAfter}</h3>

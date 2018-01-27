@@ -112,7 +112,7 @@ class HoursList extends Component {
   renderList() {
     const { days, settingsObject } = this.state;
     if (days.length === 1)
-      return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+      return (<div className="container container-fluid"><h2>No Working Days On This Month!</h2></div>);
 
     return (
       days.map(day => {
@@ -126,49 +126,6 @@ class HoursList extends Component {
     );
   }
 
-  // renderListTwo() {
-  //   const { days, settingsObject } = this.state;
-  //   if (days.length === 1)
-  //     return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
-  //   else {
-  //     return (
-  //       days.map(day => {
-  //         const key = `${day.year}${day.month}${day.day}`;
-  //         if (day.day !== 0) {
-  //           return <DayAvatar />
-  //         }
-  //         return <span key={key}/>;
-  //       })
-  //     );
-  //   }
-  // }
-
-  // renderListTwo() {
-  //   const { days, settingsObject } = this.state;
-  //   if (days.length === 1)
-  //     return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
-  //   return (
-  //     <table className="table table-sm table-hover">
-  //       <thead>
-  //         <th scope="col">Day</th>
-  //         <th scope="col">Hours</th>
-  //         <th scope="col">Hours</th>
-  //         <th scope="col">Wage</th>
-  //       </thead>
-  //       <tbody>
-  //         {days.map(day => {
-  //           const key = `${day.year}${day.month}${day.day}`;
-  //           if (day.day !== 0) {
-  //             return (<Day key={key} day={day} settingsObject={settingsObject}
-  //                     deleteDay={this.deleteDay} />)
-  //           }
-  //           return;
-  //         })}
-  //       </tbody>
-  //     </table>
-  //   );
-  // }
-
   renderObjects() {
     const days = this.state.days;
     if(days.length === 1) // no days on this month
@@ -177,18 +134,20 @@ class HoursList extends Component {
     const { bruto, neto, tax, numberOfDays, numberOfHours, numberOfHours100,
       numberOfHours125, numberOfHours150, numberOfHoursNeto } = this.state;
     return (
-      <div>
-        <MainPageObject image={money} header="Bruto" value={bruto} />
-        <MainPageObject image={wallet} header="Neto" value={neto} />
-        <MainPageObject image={money2} header="Tax" value={tax} />
-        <MainPageObject image={money} header="Number Of Working Days" value={numberOfDays} />
-        <MainPageObject image={money2} header="Hours Bruto" value={numberOfHours} />
-        <MainPageObject image={money} header="Hours Neto" value={numberOfHoursNeto} />
-        <MainPageObject image={money2} header="BreaksTime" value={numberOfHours - numberOfHoursNeto} />
-        <MainPageObject image={money} header="100% Hours" value={numberOfHours100} />
-        <MainPageObject image={money2} header="125% Hours" value={numberOfHours125} />
-        <MainPageObject image={money} header="150% Hours" value={numberOfHours150} />
-      </div>
+      <table className="table">
+        <tbody>
+          <MainPageObject image={money} header="Bruto" value={bruto} />
+          <MainPageObject image={wallet} header="Neto" value={neto} />
+          <MainPageObject image={money2} header="Tax" value={tax} />
+          <MainPageObject image={money} header="Number Of Working Days" value={numberOfDays} />
+          <MainPageObject image={money2} header="Hours Bruto" value={numberOfHours} />
+          <MainPageObject image={money} header="Hours Neto" value={numberOfHoursNeto} />
+          <MainPageObject image={money2} header="BreaksTime" value={numberOfHours - numberOfHoursNeto} />
+          <MainPageObject image={money} header="100% Hours" value={numberOfHours100} />
+          <MainPageObject image={money2} header="125% Hours" value={numberOfHours125} />
+          <MainPageObject image={money} header="150% Hours" value={numberOfHours150} />
+        </tbody>
+      </table>
     )
   }
 

@@ -79,24 +79,24 @@ class MainPage extends Component {
 
   renderObjects() {
     const days = this.state.days;
-    // if(days.length === 0) { // no days on this month
-    //   return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
     if(days.length === 1) { // no days on this month
-      return (<div className="container container-fluid"><h1>No Working Days On This Month!</h1></div>);
+      return (<div className="container container-fluid"><h2>No Working Days On This Month!</h2></div>);
     } else { // there is data to show
       return (
-        <div>
-          <MainPageObject image={money} icon="fa fa-money" header="Bruto" value={this.state.bruto} />
-          <MainPageObject image={wallet} icon="fa fa-money" header="Neto" value={this.state.neto} />
-          <MainPageObject image={money2} icon="fa fa-money" header="Tax" value={this.state.tax} />
-          <MainPageObject image={money} icon="fa fa-money" header="Number Of Working Days" value={this.state.numberOfDays} />
-          <MainPageObject image={money2} icon="fa fa-money" header="Hours Bruto" value={this.state.numberOfHours} />
-          <MainPageObject image={money} icon="fa fa-money" header="Hours Neto" value={this.state.numberOfHoursNeto} />
-          <MainPageObject image={money2} icon="fa fa-money" header="BreaksTime" value={this.state.numberOfHours - this.state.numberOfHoursNeto} />
-          <MainPageObject image={money} icon="fa fa-money" header="100% Hours" value={this.state.numberOfHours100} />
-          <MainPageObject image={money2} icon="fa fa-money" header="125% Hours" value={this.state.numberOfHours125} />
-          <MainPageObject image={money} icon="fa fa-money" header="150% Hours" value={this.state.numberOfHours150} />
-        </div>
+        <table className="table">
+          <tbody>
+            <MainPageObject image={money} icon="fa fa-money" header="Bruto" value={this.state.bruto} />
+            <MainPageObject image={wallet} icon="fa fa-money" header="Neto" value={this.state.neto} />
+            <MainPageObject image={money2} icon="fa fa-money" header="Tax" value={this.state.tax} />
+            <MainPageObject image={money} icon="fa fa-money" header="Number Of Working Days" value={this.state.numberOfDays} />
+            <MainPageObject image={money2} icon="fa fa-money" header="Hours Bruto" value={this.state.numberOfHours} />
+            <MainPageObject image={money} icon="fa fa-money" header="Hours Neto" value={this.state.numberOfHoursNeto} />
+            <MainPageObject image={money2} icon="fa fa-money" header="BreaksTime" value={this.state.numberOfHours - this.state.numberOfHoursNeto} />
+            <MainPageObject image={money} icon="fa fa-money" header="100% Hours" value={this.state.numberOfHours100} />
+            <MainPageObject image={money2} icon="fa fa-money" header="125% Hours" value={this.state.numberOfHours125} />
+            <MainPageObject image={money} icon="fa fa-money" header="150% Hours" value={this.state.numberOfHours150} />
+          </tbody>
+        </table>
       )
     }
   }
