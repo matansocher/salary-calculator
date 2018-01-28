@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 // import fire from '../config';
 // import SignInOrSignUp from './SignInOrSignUp';
 import MDSpinner from 'react-md-spinner';
+import NavLink from './NavLink';
 
 export default class MenuBar extends Component {
   constructor(props) {
@@ -39,23 +40,12 @@ export default class MenuBar extends Component {
                 </div>
                 <div className="collapse navbar-collapse" id="myNavbar">
                   <ul className="nav navbar-nav">
-                    <li className="menu-bar-item">
-                      <Link to="/">
-                        <i className="fa fa-home" aria-hidden="true"></i> Home
-                      </Link>
-                    </li>
-                    <li className="menu-bar-item">
-                      <Link to="/HoursList">
-                        <i className="fa fa-list-ul" aria-hidden="true"></i> Hours List
-                      </Link>
-                    </li>
-                    <li className="menu-bar-item">
-                      <Link to="/Settings">
-                        <i className="fa fa-cog" aria-hidden="true"></i> Settings
-                      </Link>
-                    </li>
+                    <NavLink linkTo="/" logo="fa fa-home" title="Home" />
+                    <NavLink linkTo="/HoursList" logo="fa fa-list-ul" title="Hours List" />
+                    <NavLink linkTo="/Settings" logo="fa fa-cog" title="Settings" />
                   </ul>
                   <ul className="nav navbar-nav navbar-right">
+                    <NavLink linkTo="/SignInOrSignUp" logo="fa fa-user-circle-o" title="Sign In" />
                     <li className="menu-bar-item" onClick={this.logOut}>
                       <Link to="/SignInOrSignUp">
                         <i className="fa fa-user-circle-o" aria-hidden="true"></i> Sign In

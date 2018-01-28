@@ -25,7 +25,7 @@ class Settings extends Component {
       gesture: false,
       loading: true
     };
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
     this.saveSettings = this.saveSettings.bind(this);
   }
 
@@ -60,7 +60,6 @@ class Settings extends Component {
   }
 
   saveSettings() {
-    this.setState({ loading: true });
     this.setState({ loading: true }, () => {
       const { year, month } = this.props.time;
       const { hourly, breakTime, breakAfter, pension, drives, others } = this.state;
@@ -81,10 +80,17 @@ class Settings extends Component {
         }, 1000);
       });
     });
-    // this.setState({ editing: false, loading: false, gesture: true });
   }
 
-  handleChange(e) {
+  // handleChange(e) {
+  //   var change = {};
+  //   if (!isNaN(e.target.value)) {
+  //     change[e.target.name] = e.target.value;
+  //     this.setState(change);
+  //   }
+  // }
+
+  handleChange = (e) => {
     var change = {};
     if (!isNaN(e.target.value)) {
       change[e.target.name] = e.target.value;
@@ -107,6 +113,10 @@ class Settings extends Component {
   renderEdit() {
     return(
       <div className="container container-fluid">
+
+      <img src={saveIcon} className="icon pull-right" onClick={this.saveSettings} alt="save action icon" />
+      <img src={cancelIcon} className="icon pull-left" onClick={this.handleCancelClick} alt="cancel action icon" />
+
         <MuiThemeProvider>
           <div>
             <TextField floatingLabelText="Hourly Wage" name="hourly"
@@ -128,12 +138,6 @@ class Settings extends Component {
                 value={this.state.others} onChange={this.handleChange} />
           </div>
         </MuiThemeProvider>
-
-        <div>
-          <img src={saveIcon} className="icon pull-right" onClick={this.saveSettings} alt="save action icon" />
-          <img src={cancelIcon} className="icon pull-left" onClick={this.handleCancelClick} alt="cancel action icon" />
-        </div>
-
       </div>
     );
   }
@@ -142,9 +146,7 @@ class Settings extends Component {
     return(
       <div className="container container-fluid">
 
-        <div>
-          <img src={editIcon} className="icon pull-right" onClick={this.handleEditClick} alt="edit action icon" />
-        </div>
+        <img src={editIcon} className="icon pull-right" onClick={this.handleEditClick} alt="edit action icon" />
 
         <h3>Hourly Wage: {hourly}</h3>
         <h3>Break Time: {breakTime}</h3>

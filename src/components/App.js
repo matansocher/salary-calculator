@@ -21,20 +21,32 @@ class App extends Component {
       year: new Date().getFullYear(),
       month: (new Date().getMonth() + 1)
     }
-
-    this.changeYear = this.changeYear.bind(this);
-    this.changeMonth = this.changeMonth.bind(this);
+    // this.changeYear = this.changeYear.bind(this);
+    // this.changeMonth = this.changeMonth.bind(this);
   }
-  changeMonth(value) {
+
+  changeMonth = (value) => {
     this.setState({ month: value }, () => {
       this.props.saveTime(this.state.year, this.state.month);
     });
   }
-  changeYear(value) {
+
+  changeYear = (value) => {
     this.setState({ year: value }, () => {
       this.props.saveTime(this.state.year, this.state.month);
     });
   }
+
+  // changeMonth(value) {
+  //   this.setState({ month: value }, () => {
+  //     this.props.saveTime(this.state.year, this.state.month);
+  //   });
+  // }
+  // changeYear(value) {
+  //   this.setState({ year: value }, () => {
+  //     this.props.saveTime(this.state.year, this.state.month);
+  //   });
+  // }
   render() {
     return (
       <Router>

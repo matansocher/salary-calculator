@@ -58,9 +58,7 @@ class HoursList extends Component {
     if (this.props.days !== nextProps.days) { // check if days array has changed
       const days = nextProps.days;
       const settingsObject = days[days.length - 1];
-      // this.setState({ days, settingsObject, loading: false });
       this.setState({ days, settingsObject }, () => {
-        // this.mapOnDays();
         this.buildPage();
       });
     }
@@ -72,11 +70,12 @@ class HoursList extends Component {
       return;
     }
 
-    const { breakAfter, breakTime } = this.state.settingsObject;
+    const { settingsObject } = this.state;
+    const { breakAfter, breakTime } = settingsObject;
     const arrayOfTotalHours = mapOnDays(days, breakAfter, breakTime);// [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150]
-    const bruto = getBruto(arrayOfTotalHours, this.state.settingsObject);
+    const bruto = getBruto(arrayOfTotalHours, settingsObject);
     const tax = getTax(bruto);
-    const neto = getNeto(bruto, tax, this.state.settingsObject);
+    const neto = getNeto(bruto, tax, settingsObject);
     this.setState({
       bruto: bruto.toFixed(2),
       neto: neto.toFixed(2),

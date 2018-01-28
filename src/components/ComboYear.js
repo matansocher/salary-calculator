@@ -6,9 +6,15 @@ export default class ComboYear extends Component {
     this.state = {
       currentYear: new Date().getFullYear()
     }
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
   }
   handleChange(event) {
+    const value = event.target.value;
+    this.setState({ currentYear: value }, () => {
+      this.props.changeYear(value);
+    });
+  }
+  handleChange = (event) => {
     const value = event.target.value;
     this.setState({ currentYear: value }, () => {
       this.props.changeYear(value);

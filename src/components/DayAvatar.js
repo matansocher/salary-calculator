@@ -7,7 +7,7 @@ import Paper from 'material-ui/Paper';
 const DayAvatar = (props) => {
   return (
     <MuiThemeProvider>
-      <Paper style={style} zDepth={2} circle={true} />
+      <Paper style="circle-avatar" zDepth={2} circle={true} />
       <ListItem
         primaryText="Brendan Lim"
         leftAvatar={<Avatar src="../images/avatar.png" />}

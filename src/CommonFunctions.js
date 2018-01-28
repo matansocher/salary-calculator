@@ -164,9 +164,9 @@ export function getCorrectTime(day) {
 }
 
 export function isValidDayOfMonth(days, newDay) {
-  console.log(days);
-  console.log(newDay);
   for(var i=0;i<days.length;i++) {
+    console.log("current day: " + days[i].day);
+    console.log("newDay: " + newDay);
     if(days[i].day === newDay) {
       return false;
     }

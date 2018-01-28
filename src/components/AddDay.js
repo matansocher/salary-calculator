@@ -97,6 +97,9 @@ class AddDay extends Component {
         <h1>Add Day</h1>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
 
+        <img src={saveIcon} className="icon pull-right" onClick={this.addDay} alt="save icon" />
+        <img src={cancelIcon} className="icon pull-left" onClick={this.handleCancelClick} alt="cancel icon" />
+
         <MuiThemeProvider>
           <div>
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
@@ -110,12 +113,6 @@ class AddDay extends Component {
               value={this.state.exitTime} onChange={this.handleExitHourChange}/>
           </div>
         </MuiThemeProvider>
-
-        <div>
-          <img src={saveIcon} className="icon pull-right" onClick={this.addDay} alt="save icon" />
-          <img src={cancelIcon} className="icon pull-left" onClick={this.handleCancelClick} alt="cancel icon" />
-        </div>
-
       </div>
     );
   }

@@ -6,9 +6,15 @@ export default class ComboMonth extends Component {
     this.state = {
       currentMonth: (new Date().getMonth() + 1)
     }
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
   }
-  handleChange(event) {
+  // handleChange(event) {
+  //   const value = event.target.value;
+  //   this.setState({ currentMonth: value }, () => {
+  //     this.props.changeMonth(value);
+  //   });
+  // }
+  handleChange = (event) => {
     const value = event.target.value;
     this.setState({ currentMonth: value }, () => {
       this.props.changeMonth(value);

@@ -6,6 +6,8 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Avatar from 'material-ui/Avatar';
+import ListItem from 'material-ui/List/ListItem';
 
 export default class Day extends Component {
   constructor(props) {
@@ -42,16 +44,18 @@ export default class Day extends Component {
       <li className="col-sm-12 col-md-12 list-group-item">
 
         <MuiThemeProvider>
-          <IconMenu className="pull-xs-right"
+          <IconMenu
             iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}>
-
+            targetOrigin={{horizontal: 'right', vertical: 'top'}}
+            anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
             <MenuItem primaryText="Delete" onClick={this.handleDeleteClick} leftIcon={
               <i className="fa fa-trash" aria-hidden="true"></i>
             } />
-
           </IconMenu>
+
+          <ListItem leftAvatar={<Avatar>A</Avatar>}>
+            {dayOfWeek}
+          </ListItem>
 
           <FloatingActionButton>
             {dayOfWeek}
