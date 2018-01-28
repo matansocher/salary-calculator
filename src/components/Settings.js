@@ -25,7 +25,6 @@ class Settings extends Component {
       gesture: false,
       loading: true
     };
-    // this.handleChange = this.handleChange.bind(this);
     this.saveSettings = this.saveSettings.bind(this);
   }
 

@@ -21,8 +21,6 @@ class App extends Component {
       year: new Date().getFullYear(),
       month: (new Date().getMonth() + 1)
     }
-    // this.changeYear = this.changeYear.bind(this);
-    // this.changeMonth = this.changeMonth.bind(this);
   }
 
   changeMonth = (value) => {

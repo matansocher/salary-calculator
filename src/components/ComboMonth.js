@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 export default class ComboMonth extends Component {
   constructor(props) {
@@ -6,16 +9,8 @@ export default class ComboMonth extends Component {
     this.state = {
       currentMonth: (new Date().getMonth() + 1)
     }
-    // this.handleChange = this.handleChange.bind(this);
   }
-  // handleChange(event) {
-  //   const value = event.target.value;
-  //   this.setState({ currentMonth: value }, () => {
-  //     this.props.changeMonth(value);
-  //   });
-  // }
-  handleChange = (event) => {
-    const value = event.target.value;
+  handleChange = (event, index, value) => {
     this.setState({ currentMonth: value }, () => {
       this.props.changeMonth(value);
     });
@@ -23,14 +18,28 @@ export default class ComboMonth extends Component {
   render() {
     return (
       <div className="form-group col-sm-6">
-        <select className="form-control" onChange={this.handleChange} value={this.state.currentMonth}>
-          <option value="1">January</option><option value="2">February</option>
-          <option value="3">March</option><option value="4">April</option>
-          <option value="5">May</option><option value="6">June</option>
-          <option value="7">July</option><option value="8">August</option>
-          <option value="9">September</option><option value="10">October</option>
-          <option value="11">November</option><option value="12">December</option>
-        </select>
+        <MuiThemeProvider>
+          <DropDownMenu
+            className="combo"
+            value={this.state.currentMonth}
+            onChange={this.handleChange}
+            autoWidth={false}
+            className="combo"
+          >
+            <MenuItem value={1} primaryText="January" />
+            <MenuItem value={2} primaryText="February" />
+            <MenuItem value={3} primaryText="March" />
+            <MenuItem value={4} primaryText="April" />
+            <MenuItem value={5} primaryText="May" />
+            <MenuItem value={6} primaryText="June" />
+            <MenuItem value={7} primaryText="July" />
+            <MenuItem value={8} primaryText="August" />
+            <MenuItem value={9} primaryText="September" />
+            <MenuItem value={10} primaryText="October" />
+            <MenuItem value={11} primaryText="November" />
+            <MenuItem value={12} primaryText="December" />
+          </DropDownMenu>
+        </MuiThemeProvider>
       </div>
     );
   }

@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 export default class ComboYear extends Component {
   constructor(props) {
@@ -6,16 +9,8 @@ export default class ComboYear extends Component {
     this.state = {
       currentYear: new Date().getFullYear()
     }
-    // this.handleChange = this.handleChange.bind(this);
   }
-  handleChange(event) {
-    const value = event.target.value;
-    this.setState({ currentYear: value }, () => {
-      this.props.changeYear(value);
-    });
-  }
-  handleChange = (event) => {
-    const value = event.target.value;
+  handleChange = (event, index, value) => {
     this.setState({ currentYear: value }, () => {
       this.props.changeYear(value);
     });
@@ -23,12 +18,20 @@ export default class ComboYear extends Component {
   render() {
     return (
       <div className="form-group col-sm-6">
-        <select className="form-control" onChange={this.handleChange} value={this.state.currentYear}>
-          <option value="2018">2018</option>
-          <option value="2019">2019</option>
-          <option value="2020">2020</option>
-          <option value="2021">2021</option>
-        </select>
+        <MuiThemeProvider>
+          <DropDownMenu
+            className="combo"
+            value={this.state.currentYear}
+            onChange={this.handleChange}
+            autoWidth={false}
+          >
+            <MenuItem value={2018} primaryText="2018" />
+            <MenuItem value={2019} primaryText="2019" />
+            <MenuItem value={2020} primaryText="2020" />
+            <MenuItem value={2021} primaryText="2021" />
+          </DropDownMenu>
+        </MuiThemeProvider>
+
       </div>
     );
   }

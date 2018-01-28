@@ -6,8 +6,6 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Avatar from 'material-ui/Avatar';
-import ListItem from 'material-ui/List/ListItem';
 
 export default class Day extends Component {
   constructor(props) {
@@ -30,7 +28,7 @@ export default class Day extends Component {
     const { day, month, year } = this.state.day;
     const { breakAfter, breakTime, hourly } = this.state.settingsObject;
     const arrayOfHours = calculateHours(this.state.day, breakAfter, breakTime);
-    const { enterTime, exitTime } = this.state;
+    const { enterTime, exitTime } = this.state.day;
     const wage = ((arrayOfHours[1] + arrayOfHours[2]*1.25 + arrayOfHours[3]*1.5)*hourly).toFixed(2);
     let dayOfWeek;
     const today = new Date();
@@ -44,25 +42,21 @@ export default class Day extends Component {
       <li className="col-sm-12 col-md-12 list-group-item">
 
         <MuiThemeProvider>
-          <IconMenu
-            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
-            anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
-            <MenuItem primaryText="Delete" onClick={this.handleDeleteClick} leftIcon={
-              <i className="fa fa-trash" aria-hidden="true"></i>
-            } />
-          </IconMenu>
-
-          <ListItem leftAvatar={<Avatar>A</Avatar>}>
-            {dayOfWeek}
-          </ListItem>
-
-          <FloatingActionButton>
-            {dayOfWeek}
-          </FloatingActionButton>
+          <div>
+            <IconMenu
+              iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
+              <MenuItem primaryText="Delete" onClick={this.handleDeleteClick} leftIcon={
+                <i className="fa fa-trash" aria-hidden="true"></i>
+              } />
+            </IconMenu>
+            <FloatingActionButton secondary={true}>
+              {dayOfWeek}
+            </FloatingActionButton>
+          </div>
         </MuiThemeProvider>
 
-        <h3>{dayOfWeek}</h3>
         <p>{enterTime} - {exitTime}</p>
         <p>{arrayOfHours[0].toFixed(2)} Hours</p>
         <p>Wage: {wage}</p>
