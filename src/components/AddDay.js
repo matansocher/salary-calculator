@@ -53,7 +53,6 @@ class AddDay extends Component {
     this.setState({ loading: true }, () => {
       const { days, day, enterTime, exitTime } = this.state;
       if (!isValidDayOfMonth(days, day)) {
-        console.log("this really returned false");
         this.setState({ loading: false, gestureText: `Day ${day} already exists`, gesture: true })
         return;
       }

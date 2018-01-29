@@ -20,7 +20,6 @@ export default class ComboMonth extends Component {
       <div className="form-group col-sm-6">
         <MuiThemeProvider>
           <DropDownMenu
-            className="combo"
             value={this.state.currentMonth}
             onChange={this.handleChange}
             autoWidth={false}

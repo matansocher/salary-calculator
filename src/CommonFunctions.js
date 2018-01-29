@@ -53,21 +53,21 @@ export function populateOptionsForDayMonth(month) {
   else
     numOfDaysInMonth = 31;
 
-  return (
-    for (var i = 0; i < numOfDaysInMonth; i++) {
-      return <MenuItem key={i} value={i+1} primaryText={i+1} />;
-    }
-  );
-
-  // const array = new Array(numOfDaysInMonth);
-  // for (var i = 0; i < array.length; i++) {
-  //   array[i] = i;
-  // }
   // return (
-  //   array.map((i) => {
+  //   for (var i = 0; i < numOfDaysInMonth; i++) {
   //     return <MenuItem key={i} value={i+1} primaryText={i+1} />;
-  //   })
-  // )
+  //   }
+  // );
+
+  const array = new Array(numOfDaysInMonth);
+  for (var i = 0; i < array.length; i++) {
+    array[i] = i;
+  }
+  return (
+    array.map((i) => {
+      return <MenuItem key={i} value={i+1} primaryText={i+1} />;
+    })
+  )
 }
 
 export function getDayOfWeek(date) {
@@ -152,11 +152,7 @@ export function getNeto(bruto, tax, pension) {
 }
 
 export function getCorrectTime(day) {
-  const { enterTime, enterTime } = day;
-  // const enterTimeHour = (day.enterTime.getHours() < 10 ? `0${day.enterTime.getHours()}` : day.enterTime.getHours());
-  // const enterTimeMinute = (day.enterTime.getMinutes() < 10 ? `0${day.enterTime.getMinutes()}` : day.enterTime.getMinutes());
-  // const exitTimeHour = (day.exitTime.getHours() < 10 ? `0${day.exitTime.getHours()}` : day.exitTime.getHours());
-  // const exitTimeMinute = (day.exitTime.getMinutes() < 10 ? `0${day.exitTime.getMinutes()}` : day.exitTime.getMinutes());
+  const { enterTime, exitTime } = day;
 
   const enterTimeHour = addZeroIfNeeded(enterTime.getHours());
   const enterTimeMinute = addZeroIfNeeded(enterTime.getMinutes());
@@ -174,23 +170,9 @@ function addZeroIfNeeded(number) {
 }
 
 export function isValidDayOfMonth(days, newDay) {
-  // for(var i=0;i<days.length;i++) {
-  //   console.log("current day: " + days[i].day);
-  //   console.log("newDay: " + newDay);
-  //   if(days[i].day === newDay) {
-  //     console.log("trying to return false");
-  //     return false;
-  //   }
-  // }
-  // return true;
-
   let flag = 0;
-
   days.map(day => {
-    console.log("day.day: " + day.day);
-    console.log("newDay: " + newDay);
     if(day.day === newDay) {
-      console.log("trying to return false");
       flag = 1;
     }
     return day;
