@@ -71,11 +71,11 @@ class HoursList extends Component {
     }
 
     const { settingsObject } = this.state;
-    const { breakAfter, breakTime } = settingsObject;
+    const { breakAfter, breakTime, pension } = settingsObject;
     const arrayOfTotalHours = mapOnDays(days, breakAfter, breakTime);// [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150]
     const bruto = getBruto(arrayOfTotalHours, settingsObject);
     const tax = getTax(bruto);
-    const neto = getNeto(bruto, tax, settingsObject);
+    const neto = getNeto(bruto, tax, pension);
     this.setState({
       bruto: bruto.toFixed(2),
       neto: neto.toFixed(2),

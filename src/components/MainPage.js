@@ -58,11 +58,12 @@ class MainPage extends Component {
       return;
     }
 
-    const { breakAfter, breakTime } = this.state.settingsObject;
+    const { settingsObject } = this.state;
+    const { breakAfter, breakTime, pension } = settingsObject;
     const arrayOfTotalHours = mapOnDays(days, breakAfter, breakTime);// [numberOfDays, numberOfHours, numberOfHoursNeto, numberOfHours100, numberOfHours125, numberOfHours150]
-    const bruto = getBruto(arrayOfTotalHours, this.state.settingsObject);
+    const bruto = getBruto(arrayOfTotalHours, settingsObject);
     const tax = getTax(bruto);
-    const neto = getNeto(bruto, tax, this.state.settingsObject);
+    const neto = getNeto(bruto, tax, pension);
     this.setState({
       bruto: bruto.toFixed(2),
       neto: neto.toFixed(2),

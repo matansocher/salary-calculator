@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import fire from '../config';
+import { singIn, singUp } from '../CommonFunctions';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
@@ -8,7 +9,7 @@ import Checkbox from 'material-ui/Checkbox';
 class SignInOrSignUp extends Component {
   constructor(props) {
     super(props);
-    this.state= {
+    this.state = {
       SIusername: '',
       SIpassword: '',
       SICheck: false,
@@ -18,30 +19,29 @@ class SignInOrSignUp extends Component {
       loading: false
 
     }
-    this.singIn = this.singIn.bind(this);
-    this.singUp = this.singUp.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeCheckBox = this.handleChangeCheckBox.bind(this);
   }
 
-  singIn() {
-
-  }
-
-  singUp() {
-
-  }
-
-  handleChange(e) {
+  handleChange = (e) => {
     var change = {};
     change[e.target.name] = e.target.value;
     this.setState(change);
   }
 
-  handleChangeCheckBox() {
+  // handleChange(e) {
+  //   var change = {};
+  //   change[e.target.name] = e.target.value;
+  //   this.setState(change);
+  // }
+
+  handleChangeCheckBox = () => {
     const cb = !this.state.SICheck;
     this.setState({ SICheck: cb });
   }
+
+  // handleChangeCheckBox() {
+  //   const cb = !this.state.SICheck;
+  //   this.setState({ SICheck: cb });
+  // }
 
   render() {
     return (

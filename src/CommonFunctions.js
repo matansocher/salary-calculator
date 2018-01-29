@@ -53,22 +53,24 @@ export function populateOptionsForDayMonth(month) {
   else
     numOfDaysInMonth = 31;
 
-  const array = new Array(numOfDaysInMonth);
-  for (var i = 0; i < array.length; i++) {
-    array[i] = i;
-  }
   return (
-    array.map((i) => {
+    for (var i = 0; i < numOfDaysInMonth; i++) {
       return <MenuItem key={i} value={i+1} primaryText={i+1} />;
-    })
-  )
+    }
+  );
+
+  // const array = new Array(numOfDaysInMonth);
+  // for (var i = 0; i < array.length; i++) {
+  //   array[i] = i;
+  // }
+  // return (
+  //   array.map((i) => {
+  //     return <MenuItem key={i} value={i+1} primaryText={i+1} />;
+  //   })
+  // )
 }
 
 export function getDayOfWeek(date) {
-  // const date = `${day.month}/${day.day}/${day.year}`;
-
-  // const dateString = new Date(date);
-  // const dayNumber = dateString.getDay();
   const dayNumber = new Date(date).getDay();
   let dayString = '';
   switch(dayNumber) {
@@ -92,7 +94,6 @@ export function mapOnDays(days, breakAfter, breakTime) {
     if (day.day !== 0) {
       const arrayOfHours = calculateHours(day, breakAfter, breakTime); // [numberOfHours, numberOfHours100, numberOfHours125, numberOfHours150]
       numberOfDays += 1;
-      // maybe we dont need the parseFloat
       numberOfHours += arrayOfHours[0];
       numberOfHours100 += arrayOfHours[1];
       numberOfHours125 += arrayOfHours[2];
@@ -105,12 +106,12 @@ export function mapOnDays(days, breakAfter, breakTime) {
 }
 
 export function getBruto(arrayOfHours, settingsObject) {
-  let { hourly, drives, others } = settingsObject;
+  const { hourly, drives, others } = settingsObject;
   const wage100 = arrayOfHours[3] * hourly;
   const wage125 = arrayOfHours[4] * hourly * 1.25;
   const wage150 = arrayOfHours[5] * hourly * 1.5;
-  drives = arrayOfHours[0] * drives;
-  return wage100 + wage125 + wage150 + drives + others;
+  const drivesIncome = arrayOfHours[0] * drives;
+  return wage100 + wage125 + wage150 + drivesIncome + others;
 }
 
 export function getTax(bruto) {
@@ -145,41 +146,62 @@ export function getTax(bruto) {
   return tax;
 }
 
-export function getNeto(bruto, tax, settingsObject) {
-  const { pension } = settingsObject;
+export function getNeto(bruto, tax, pension) {
   const pensionReduction = bruto * pension / 100;
   return bruto - pensionReduction - tax;
 }
 
 export function getCorrectTime(day) {
-  const enterTimeHour = (day.enterTime.getHours() < 10 ? `0${day.enterTime.getHours()}` : day.enterTime.getHours());
-  const enterTimeMinute = (day.enterTime.getMinutes() < 10 ? `0${day.enterTime.getMinutes()}` : day.enterTime.getMinutes());
-  const exitTimeHour = (day.exitTime.getHours() < 10 ? `0${day.exitTime.getHours()}` : day.exitTime.getHours());
-  const exitTimeMinute = (day.exitTime.getMinutes() < 10 ? `0${day.exitTime.getMinutes()}` : day.exitTime.getMinutes());
+  const { enterTime, enterTime } = day;
+  // const enterTimeHour = (day.enterTime.getHours() < 10 ? `0${day.enterTime.getHours()}` : day.enterTime.getHours());
+  // const enterTimeMinute = (day.enterTime.getMinutes() < 10 ? `0${day.enterTime.getMinutes()}` : day.enterTime.getMinutes());
+  // const exitTimeHour = (day.exitTime.getHours() < 10 ? `0${day.exitTime.getHours()}` : day.exitTime.getHours());
+  // const exitTimeMinute = (day.exitTime.getMinutes() < 10 ? `0${day.exitTime.getMinutes()}` : day.exitTime.getMinutes());
 
-  const enterTime = `${enterTimeHour}:${enterTimeMinute}`;
-  const exitTime = `${exitTimeHour}:${exitTimeMinute}`;
+  const enterTimeHour = addZeroIfNeeded(enterTime.getHours());
+  const enterTimeMinute = addZeroIfNeeded(enterTime.getMinutes());
+  const exitTimeHour = addZeroIfNeeded(exitTime.getHours());
+  const exitTimeMinute = addZeroIfNeeded(exitTime.getMinutes());
 
-  return [enterTime, exitTime];
+  const fullEnterTime = `${enterTimeHour}:${enterTimeMinute}`;
+  const fullExitTime = `${exitTimeHour}:${exitTimeMinute}`;
+
+  return [fullEnterTime, fullExitTime];
+}
+
+function addZeroIfNeeded(number) {
+  return number < 10 ? `0${number}` : number;
 }
 
 export function isValidDayOfMonth(days, newDay) {
-  for(var i=0;i<days.length;i++) {
-    console.log("current day: " + days[i].day);
-    console.log("newDay: " + newDay);
-    if(days[i].day === newDay) {
-      return false;
-    }
-  }
-  return true;
-  // days.map(day => {
-  //   console.log("day.day: " + day.day);
+  // for(var i=0;i<days.length;i++) {
+  //   console.log("current day: " + days[i].day);
   //   console.log("newDay: " + newDay);
-  //   if(day.day === newDay) {
-  //     console.log("dasdasdfasdfasdfasdfasdfadsf");
+  //   if(days[i].day === newDay) {
+  //     console.log("trying to return false");
   //     return false;
   //   }
-  //   return day;
-  // });
+  // }
   // return true;
+
+  let flag = 0;
+
+  days.map(day => {
+    console.log("day.day: " + day.day);
+    console.log("newDay: " + newDay);
+    if(day.day === newDay) {
+      console.log("trying to return false");
+      flag = 1;
+    }
+    return day;
+  });
+  return flag === 1 ? false : true;
+}
+
+export function singIn() {
+
+}
+
+export function singUp() {
+
 }
