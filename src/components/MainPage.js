@@ -46,7 +46,6 @@ class MainPage extends Component {
       const days = nextProps.days;
       const settingsObject = days[days.length - 1];
       this.setState({ days, settingsObject }, () => {
-        // this.mapOnDays();
         this.buildPage();
       });
     }
@@ -68,7 +67,7 @@ class MainPage extends Component {
       bruto: bruto.toFixed(2),
       neto: neto.toFixed(2),
       tax: tax.toFixed(2),
-      numberOfDays: arrayOfTotalHours[0].toFixed(2),
+      numberOfDays: arrayOfTotalHours[0],
       numberOfHours: arrayOfTotalHours[1].toFixed(2),
       numberOfHours100: arrayOfTotalHours[3].toFixed(2),
       numberOfHours125: arrayOfTotalHours[4].toFixed(2),

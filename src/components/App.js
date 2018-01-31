@@ -66,9 +66,7 @@ class App extends Component {
             <Route path="*" component={NoMatch}/>
           </Switch>
 
-          <CustomBottomNavigation />
-
-          <Footer />
+          <CustomBottomNavigation className="bottom-menu" />
 
         </div>
       </Router>

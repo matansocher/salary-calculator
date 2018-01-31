@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
@@ -17,14 +15,17 @@ export default class CustomBottomNavigation extends Component {
     this.state = {
       selectedIndex: 0
     }
+    this.selectScreen = this.selectScreen.bind(this);
   }
 
-  select = (index) => {
+  selectScreen(index) {
+    console.log(this);
     this.setState({ selectedIndex: index }, () => {
       switch (index) {
         case 0:
           this.props.history.push('/'); return;
         case 1:
+        console.log('1');
           this.props.history.push('/HoursList'); return;
         case 2:
           this.props.history.push('/Settings'); return;
@@ -32,7 +33,6 @@ export default class CustomBottomNavigation extends Component {
           this.props.history.push('/');
       }
     });
-    this.props.history.push('/AddDay');
   }
 
   render() {
@@ -43,15 +43,15 @@ export default class CustomBottomNavigation extends Component {
             <BottomNavigationItem
               label="Main Page"
               icon={recentsIcon}
-              onClick={() => this.select(0)} />
+              onClick={() => this.selectScreen(0)} />
             <BottomNavigationItem
               label="Hours List"
               icon={favoritesIcon}
-              onClick={() => this.select(1)} />
+              onClick={() => this.selectScreen(1)} />
             <BottomNavigationItem
               label="Settings"
               icon={nearbyIcon}
-              onClick={() => this.select(2)} />
+              onClick={() => this.selectScreen(2)} />
           </BottomNavigation>
         </Paper>
       </MuiThemeProvider>

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+// import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 
 class SignInOrSignUp extends Component {
@@ -21,8 +21,8 @@ class SignInOrSignUp extends Component {
       SUpassword2: '',
       loading: false
     }
-    singIn = singIn.bind(this);
-    singUp = singUp.bind(this);
+    this.singIn = this.singIn.bind(this);
+    this.singUp = this.singUp.bind(this);
   }
 
   handleChange = (e) => {
@@ -38,6 +38,57 @@ class SignInOrSignUp extends Component {
       }
     });
   }
+
+  // export function singIn() {
+  //   this.setState({ loading: true }, () => {
+  //     // signInMessage: '',
+  //     const { SIusername, SIpassword } = this.refs;
+  //     const username = SIusername.value;
+  //     const password = SIpassword.value;
+  //     console.log(username, password);
+  //     firebase.auth().signInWithEmailAndPassword(username, password1)
+  //     .then(user => {
+  //       console.log(user);
+  //       const signInMessage = `Welcome ${user.username}`;
+  //       this.setState({ signInMessage });
+  //     }).error(e => {
+  //       const signInMessage = e.message;
+  //       this.setState({ signInMessage });
+  //     });
+  //   });
+  //
+  //
+  //
+  //
+  //   // SICheck: false, // deal with stay authenticated
+  //   loading: false
+  // }
+  //
+  // export function singUp(e) {
+  //   this.setState({ loading: true }, () => {
+  //     const { SUusername, SUpassword1, SUpassword2 } = this.refs;
+  //     const username = SUusername.value;
+  //     const password1 = SUpassword1.value;
+  //     const password2 = SUpassword2.value;
+  //     console.log(username, password1, password2);
+  //     // one of them is
+  //     if(password1.localeCompare(password2) === 0)
+  //       firebase.auth().createUserWithEmailAndPassword(username, password1)
+  //       .then(user => {
+  //         const signUpMessage = `Welcome ${user.username}`;
+  //         console.log(user);
+  //         this.setState({ signUpMessage });
+  //       }).error(e => {
+  //         const signUpMessage = e.message;
+  //         this.setState({ signUpMessage });
+  //       });
+  //     } else { // passwords does not match
+  //       const signUpMessage = "passwords does not match";
+  //       this.setState({ signUpMessage });
+  //     }
+  //
+  //   });
+  // }
 
   render() {
     return (
@@ -63,7 +114,7 @@ class SignInOrSignUp extends Component {
                 <br />
                 <p>{this.state.signInMessage}</p>
                 forgot my password
-                <RaisedButton label="Sign In" primary={true} onClick={singIn} />
+
 
                 <br />
 
@@ -80,7 +131,7 @@ class SignInOrSignUp extends Component {
                   value={this.state.SUpassword2} onChange={this.handleChange}
                 />
                 <p>{this.state.signUpMessage}</p>
-                <RaisedButton label="Sign Up" secondary={true} onClick={singUp} />
+
               </div>
             </MuiThemeProvider>
           </div>
@@ -91,3 +142,5 @@ class SignInOrSignUp extends Component {
 }
 
 export default SignInOrSignUp;
+// <RaisedButton label="Sign In" primary={true} onClick={singIn} />
+// <RaisedButton label="Sign Up" secondary={true} onClick={singUp} />

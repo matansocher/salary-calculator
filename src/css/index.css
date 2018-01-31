@@ -73,6 +73,13 @@ body {
 .combo {
   width: 100%;
 }
+.bottom-menu {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 /* .pull-right {
 
 } */

@@ -1,5 +1,4 @@
 import React from 'react';
-import fire from '../config';
 import MenuItem from 'material-ui/MenuItem';
 
 export function calculateHours(day, breakAfter, breakTime) {
@@ -179,55 +178,4 @@ export function isValidDayOfMonth(days, newDay) {
     return day;
   });
   return flag === 1 ? false : true;
-}
-
-// export function singIn() {
-//   this.setState({ loading: true }, () => {
-//     // signInMessage: '',
-//     const { SIusername, SIpassword } = this.refs;
-//     const username = SIusername.value;
-//     const password = SIpassword.value;
-//     console.log(username, password);
-//     firebase.auth().signInWithEmailAndPassword(username, password1)
-//     .then(user => {
-//       console.log(user);
-//       const signInMessage = `Welcome ${user.username}`;
-//       this.setState({ signInMessage });
-//     }).error(e => {
-//       const signInMessage = e.message;
-//       this.setState({ signInMessage });
-//     });
-//   });
-//
-//
-//
-//
-//   // SICheck: false, // deal with stay authenticated
-//   loading: false
-// }
-//
-// export function singUp(e) {
-//   this.setState({ loading: true }, () => {
-//     const { SUusername, SUpassword1, SUpassword2 } = this.refs;
-//     const username = SUusername.value;
-//     const password1 = SUpassword1.value;
-//     const password2 = SUpassword2.value;
-//     console.log(username, password1, password2);
-//     // one of them is
-//     if(password1.localeCompare(password2) === 0)
-//       firebase.auth().createUserWithEmailAndPassword(username, password1)
-//       .then(user => {
-//         const signUpMessage = `Welcome ${user.username}`;
-//         console.log(user);
-//         this.setState({ signUpMessage });
-//       }).error(e => {
-//         const signUpMessage = e.message;
-//         this.setState({ signUpMessage });
-//       });
-//     } else { // passwords does not match
-//       const signUpMessage = "passwords does not match";
-//       this.setState({ signUpMessage });
-//     }
-//
-//   });
 }
