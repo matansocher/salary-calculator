@@ -5,6 +5,7 @@ import { saveTime } from '../actions';
 import AddDay from './AddDay';
 import ComboYear from './ComboYear';
 import ComboMonth from './ComboMonth';
+import CustomBottomNavigation from './CustomBottomNavigation';
 import MenuBar from './MenuBar';
 import MainPage from './MainPage';
 import HoursList from './HoursList';
@@ -64,6 +65,8 @@ class App extends Component {
             <Route path="/" component={MainPage}/>
             <Route path="*" component={NoMatch}/>
           </Switch>
+
+          <CustomBottomNavigation />
 
           <Footer />
 

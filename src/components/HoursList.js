@@ -32,7 +32,6 @@ class HoursList extends Component {
       numberOfHours125: 0,
       numberOfHours150: 0,
       numberOfHoursNeto: 0,
-      add: false,
       gesture: false,
       gestureText: '',
       loading: true
@@ -105,7 +104,7 @@ class HoursList extends Component {
   }
 
   handleRequestClose = () => {
-    this.setState({ gesture: false, });
+    this.setState({ gesture: false });
   };
 
   renderList() {

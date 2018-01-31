@@ -120,21 +120,22 @@ class Settings extends Component {
           <div>
             <TextField floatingLabelText="Hourly Wage" name="hourly"
                 value={this.state.hourly} onChange={this.handleChange} />
-
+            <p>Insert your hourly wage</p>
             <TextField floatingLabelText="Break Time" name="breakTime"
                 value={this.state.breakTime} onChange={this.handleChange} />
-
+            <p>Insert the time of your break</p>
             <TextField floatingLabelText="Break After" name="breakAfter"
                 value={this.state.breakAfter} onChange={this.handleChange} />
-
+            <p>Insert the time that ends the regular hours caculations</p>
             <TextField floatingLabelText="Pension" name="pension"
                 value={this.state.pension} onChange={this.handleChange} />
-
+            <p>Insert your hourly wage</p>
             <TextField floatingLabelText="Drives" name="drives"
                 value={this.state.drives} onChange={this.handleChange} />
-
+            <p>Insert your drives amount you are recieving per day</p>
             <TextField floatingLabelText="Others" name="others"
                 value={this.state.others} onChange={this.handleChange} />
+            <p>Insert other incomes you have per month</p>
           </div>
         </MuiThemeProvider>
       </div>
@@ -148,11 +149,17 @@ class Settings extends Component {
         <img src={editIcon} className="icon pull-right" onClick={this.handleEditClick} alt="edit action icon" />
 
         <h3>Hourly Wage: {hourly}</h3>
+        <p>Insert your hourly wage</p>
         <h3>Break Time: {breakTime}</h3>
+        <p>Insert the time of your break</p>
         <h3>Break After: {breakAfter}</h3>
+        <p>Insert the time that ends the regular hours caculations</p>
         <h3>Pension Reduction %: {pension}</h3>
+        <p>Insert your hourly wage</p>
         <h3>Drives: {drives}</h3>
+        <p>Insert your drives amount you are recieving per day</p>
         <h3>Others: {others}</h3>
+        <p>Insert other incomes you have per month</p>
       </div>
     );
   }

@@ -4,12 +4,15 @@ import React, { Component } from 'react';
 import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 
 class SignInOrSignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      signInMessage: '',
+      signUpMessage: '',
       SIusername: '',
       SIpassword: '',
       SICheck: false,
@@ -18,6 +21,8 @@ class SignInOrSignUp extends Component {
       SUpassword2: '',
       loading: false
     }
+    singIn = singIn.bind(this);
+    singUp = singUp.bind(this);
   }
 
   handleChange = (e) => {
@@ -27,8 +32,11 @@ class SignInOrSignUp extends Component {
   }
 
   handleChangeCheckBox = () => {
-    const cb = !this.state.SICheck;
-    this.setState({ SICheck: cb });
+    this.setState((oldState) => {
+      return {
+        SICheck: !oldState.SICheck
+      }
+    });
   }
 
   render() {
@@ -53,7 +61,9 @@ class SignInOrSignUp extends Component {
                   checked={this.state.SICheck} onChange={this.handleChangeCheckBox}
                 />
                 <br />
+                <p>{this.state.signInMessage}</p>
                 forgot my password
+                <RaisedButton label="Sign In" primary={true} onClick={singIn} />
 
                 <br />
 
@@ -69,6 +79,8 @@ class SignInOrSignUp extends Component {
                 <TextField hintText="Password" name="SUpassword2" type="password"
                   value={this.state.SUpassword2} onChange={this.handleChange}
                 />
+                <p>{this.state.signUpMessage}</p>
+                <RaisedButton label="Sign Up" secondary={true} onClick={singUp} />
               </div>
             </MuiThemeProvider>
           </div>
