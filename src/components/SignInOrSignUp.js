@@ -21,8 +21,8 @@ class SignInOrSignUp extends Component {
       SUpassword2: '',
       loading: false
     }
-    this.singIn = this.singIn.bind(this);
-    this.singUp = this.singUp.bind(this);
+    // this.singIn = this.singIn.bind(this);
+    // this.singUp = this.singUp.bind(this);
   }
 
   handleChange = (e) => {

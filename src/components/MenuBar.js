@@ -40,8 +40,8 @@ export default class MenuBar extends Component {
                 </div>
                 <div className="collapse navbar-collapse" id="myNavbar">
                   <ul className="nav navbar-nav">
-                    <NavLink linkTo="/" logo="fa fa-home" title="Home" />
-                    <NavLink linkTo="/HoursList" logo="fa fa-list-ul" title="Hours List" />
+
+                    <NavLink linkTo="/" logo="fa fa-list-ul" title="Hours List" />
                     <NavLink linkTo="/Settings" logo="fa fa-cog" title="Settings" />
                   </ul>
                   <ul className="nav navbar-nav navbar-right">
@@ -62,3 +62,5 @@ export default class MenuBar extends Component {
     );
   }
 }
+
+// <NavLink linkTo="/" logo="fa fa-home" title="Home" />

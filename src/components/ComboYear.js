@@ -25,6 +25,8 @@ export default class ComboYear extends Component {
             onChange={this.handleChange}
             autoWidth={false}
           >
+            <MenuItem value={2016} primaryText="2016" />
+            <MenuItem value={2017} primaryText="2017" />
             <MenuItem value={2018} primaryText="2018" />
             <MenuItem value={2019} primaryText="2019" />
             <MenuItem value={2020} primaryText="2020" />

@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import FontIcon from 'material-ui/FontIcon';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 
-const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
-const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
 const nearbyIcon = <IconLocationOn />;
 
 export default class CustomBottomNavigation extends Component {
@@ -18,20 +15,37 @@ export default class CustomBottomNavigation extends Component {
     this.selectScreen = this.selectScreen.bind(this);
   }
 
-  selectScreen(index) {
-    console.log(this);
-    this.setState({ selectedIndex: index }, () => {
-      switch (index) {
-        case 0:
-          this.props.history.push('/'); return;
-        case 1:
-        console.log('1');
-          this.props.history.push('/HoursList'); return;
-        case 2:
-          this.props.history.push('/Settings'); return;
-        default:
-          this.props.history.push('/');
-      }
+  selectScreen(selectedIndex) {
+    this.setState({ selectedIndex }, () => {
+      this.props.history.push('/Settings');
+      // switch (index) {
+      //   case 0:
+      //     this.props.history.push('/'); return;
+      //   case 1:
+      //   console.log('1');
+      //     this.props.history.push('/'); return;
+      //   case 2:
+      //     this.props.history.push('/Settings'); return;
+      //   default:
+      //     this.props.history.push('/');
+      // }
+    });
+  }
+
+  select = (selectedIndex) => {
+    console.log(selectedIndex);
+    this.setState({ selectedIndex }, () => {
+      console.log(this.state.selectIndex);
+      // switch (index) {
+      //   case 0:
+      //     this.props.history.push('/'); return;
+      //   case 1:
+      //     this.props.history.push('/'); return;
+      //   case 2:
+      //     this.props.history.push('/Settings'); return;
+      //   default:
+      //     this.props.history.push('/');
+      // }
     });
   }
 
@@ -42,16 +56,16 @@ export default class CustomBottomNavigation extends Component {
           <BottomNavigation selectedIndex={this.state.selectedIndex}>
             <BottomNavigationItem
               label="Main Page"
-              icon={recentsIcon}
-              onClick={() => this.selectScreen(0)} />
+              icon={nearbyIcon}
+              onClick={() => this.select(0)} />
             <BottomNavigationItem
               label="Hours List"
-              icon={favoritesIcon}
-              onClick={() => this.selectScreen(1)} />
+              icon={nearbyIcon}
+              onClick={() => this.select(1)} />
             <BottomNavigationItem
               label="Settings"
               icon={nearbyIcon}
-              onClick={() => this.selectScreen(2)} />
+              onClick={() => this.select(2)} />
           </BottomNavigation>
         </Paper>
       </MuiThemeProvider>

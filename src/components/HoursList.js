@@ -6,13 +6,10 @@ import { fetchDays, addDay, deleteDay } from '../actions';
 import MDSpinner from 'react-md-spinner';
 import Day from './Day';
 import MainPageObject from './MainPageObject';
-// import DayAvatar from './DayAvatar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Snackbar from 'material-ui/Snackbar';
-// import MobileTearSheet from 'material-ui/MobileTearSheet';
-// import { List } from 'material-ui/List';
 import money from '../images/money.png';
 import money2 from '../images/money2.png';
 import wallet from '../images/wallet.png';
@@ -61,6 +58,7 @@ class HoursList extends Component {
         this.buildPage();
       });
     }
+    this.setState({ loading: false });
   }
 
   buildPage() {
@@ -132,20 +130,23 @@ class HoursList extends Component {
     const { bruto, neto, tax, numberOfDays, numberOfHours, numberOfHours100,
       numberOfHours125, numberOfHours150, numberOfHoursNeto } = this.state;
     return (
-      <table className="table">
-        <tbody>
-          <MainPageObject image={money} header="Bruto" value={bruto} />
-          <MainPageObject image={wallet} header="Neto" value={neto} />
-          <MainPageObject image={money2} header="Tax" value={tax} />
-          <MainPageObject image={money} header="Number Of Working Days" value={numberOfDays} />
-          <MainPageObject image={money2} header="Hours Bruto" value={numberOfHours} />
-          <MainPageObject image={money} header="Hours Neto" value={numberOfHoursNeto} />
-          <MainPageObject image={money2} header="BreaksTime" value={numberOfHours - numberOfHoursNeto} />
-          <MainPageObject image={money} header="100% Hours" value={numberOfHours100} />
-          <MainPageObject image={money2} header="125% Hours" value={numberOfHours125} />
-          <MainPageObject image={money} header="150% Hours" value={numberOfHours150} />
-        </tbody>
-      </table>
+      <div>
+        <h3>Monthly Analysis</h3>
+        <table className="table">
+          <tbody>
+            <MainPageObject image={money} header="Bruto" value={bruto} />
+            <MainPageObject image={wallet} header="Neto" value={neto} />
+            <MainPageObject image={money2} header="Tax" value={tax} />
+            <MainPageObject image={money} header="Number Of Working Days" value={numberOfDays} />
+            <MainPageObject image={money2} header="Hours Bruto" value={numberOfHours} />
+            <MainPageObject image={money} header="Hours Neto" value={numberOfHoursNeto} />
+            <MainPageObject image={money2} header="BreaksTime" value={numberOfHours - numberOfHoursNeto} />
+            <MainPageObject image={money} header="100% Hours" value={numberOfHours100} />
+            <MainPageObject image={money2} header="125% Hours" value={numberOfHours125} />
+            <MainPageObject image={money} header="150% Hours" value={numberOfHours150} />
+          </tbody>
+        </table>
+      </div>
     )
   }
 
@@ -155,7 +156,6 @@ class HoursList extends Component {
 
         <h1>Hours List</h1>
         {this.state.loading ? <MDSpinner className="spinner" size={100} /> : <span />}
-
         <MuiThemeProvider>
           <div>
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
@@ -164,15 +164,12 @@ class HoursList extends Component {
             <FloatingActionButton className="float" onClick={this.handleAddClick}>
               <ContentAdd />
             </FloatingActionButton>
+
+            {this.renderList()}
+            <br /><hr /><br />
+            {this.renderObjects()}
           </div>
         </MuiThemeProvider>
-
-        {this.renderList()}
-        <br />
-
-        <br />
-
-        {this.renderObjects()}
       </div>
     );
   }

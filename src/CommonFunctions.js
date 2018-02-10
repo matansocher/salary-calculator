@@ -1,4 +1,5 @@
 import React from 'react';
+// import fire from './config';
 import MenuItem from 'material-ui/MenuItem';
 
 export function calculateHours(day, breakAfter, breakTime) {

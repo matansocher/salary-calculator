@@ -6,6 +6,9 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Delete from 'material-ui/svg-icons/action/delete';
+import MoneyIcon from 'material-ui/svg-icons/editor/attach-money';
+import TimeIcon from 'material-ui/svg-icons/device/access-time';
 
 export default class Day extends Component {
   constructor(props) {
@@ -40,27 +43,23 @@ export default class Day extends Component {
 
     return(
       <li className="col-sm-12 col-md-12 list-group-item">
-
         <MuiThemeProvider>
           <div>
-            <IconMenu
+            <IconMenu className="pull-right"
               iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
-              <MenuItem primaryText="Delete" onClick={this.handleDeleteClick} leftIcon={
-                <i className="fa fa-trash" aria-hidden="true"></i>
-              } />
+              <MenuItem primaryText="Remove" leftIcon={<Delete />}
+                 onClick={this.handleDeleteClick} />
             </IconMenu>
             <FloatingActionButton secondary={true}>
               {dayOfWeek}
-            </FloatingActionButton>
+            </FloatingActionButton> <br />
+            <TimeIcon /> <span className="day-description">{enterTime} - {exitTime}</span> <br />
+            <TimeIcon /> <span className="day-description">{arrayOfHours[0].toFixed(2)} Hours</span> <br />
+            <MoneyIcon /> <span className="day-description">Wage: {wage}</span> <br />
           </div>
         </MuiThemeProvider>
-
-        <p>{enterTime} - {exitTime}</p>
-        <p>{arrayOfHours[0].toFixed(2)} Hours</p>
-        <p>Wage: {wage}</p>
-
       </li>
     );
   }

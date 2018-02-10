@@ -6,9 +6,15 @@ import MDSpinner from 'react-md-spinner';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
-import saveIcon from '../images/save.png';
-import cancelIcon from '../images/cancel.png';
-import editIcon from '../images/edit.png';
+import RaisedButton from 'material-ui/RaisedButton';
+import Slider from 'material-ui/Slider';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import ClearIcon from 'material-ui/svg-icons/content/clear';
+import SaveIcon from 'material-ui/svg-icons/action/pregnant-woman';
+// import saveIcon from '../images/save.png';
+// import cancelIcon from '../images/cancel.png';
+// import editIcon from '../images/edit.png';
+// import settingsIcon from '../images/settings.png';
 
 class Settings extends Component {
   constructor(props) {
@@ -56,6 +62,7 @@ class Settings extends Component {
         loading: false
       });
     }
+    this.setState({ loading: false });
   }
 
   saveSettings() {
@@ -97,6 +104,12 @@ class Settings extends Component {
     }
   }
 
+  handleChangeSlider = (name, e, val) => {
+    var change = {};
+    change[name] = val;
+    this.setState(change);
+  }
+
   handleCancelClick = () => {
     this.setState({ editing: false })
   }
@@ -112,10 +125,6 @@ class Settings extends Component {
   renderEdit() {
     return(
       <div className="container container-fluid">
-
-      <img src={saveIcon} className="icon pull-right" onClick={this.saveSettings} alt="save action icon" />
-      <img src={cancelIcon} className="icon pull-left" onClick={this.handleCancelClick} alt="cancel action icon" />
-
         <MuiThemeProvider>
           <div>
             <TextField floatingLabelText="Hourly Wage" name="hourly"
@@ -127,15 +136,33 @@ class Settings extends Component {
             <TextField floatingLabelText="Break After" name="breakAfter"
                 value={this.state.breakAfter} onChange={this.handleChange} />
             <p>Insert the time that ends the regular hours caculations</p>
+
+
             <TextField floatingLabelText="Pension" name="pension"
                 value={this.state.pension} onChange={this.handleChange} />
-            <p>Insert your hourly wage</p>
+
+            <Slider
+              min={0}
+              max={10}
+              step={0.5}
+              value={this.state.pension}
+              onChange={(e, val) => this.handleChangeSlider("pension", e, val)}
+            />
+
+            <p>Insert your pension % reduction</p>
             <TextField floatingLabelText="Drives" name="drives"
                 value={this.state.drives} onChange={this.handleChange} />
             <p>Insert your drives amount you are recieving per day</p>
             <TextField floatingLabelText="Others" name="others"
                 value={this.state.others} onChange={this.handleChange} />
             <p>Insert other incomes you have per month</p>
+
+            <br />
+
+            <RaisedButton onClick={this.handleCancelClick} className="pull-left"
+                label="Cancel" primary={true} icon={<ClearIcon />} />
+            <RaisedButton onClick={this.saveSettings} className="pull-right"
+                label="Save" primary={true} icon={<SaveIcon />} />
           </div>
         </MuiThemeProvider>
       </div>
@@ -146,7 +173,6 @@ class Settings extends Component {
     return(
       <div className="container container-fluid">
 
-        <img src={editIcon} className="icon pull-right" onClick={this.handleEditClick} alt="edit action icon" />
 
         <h3>Hourly Wage: {hourly}</h3>
         <p>Insert your hourly wage</p>
@@ -155,11 +181,19 @@ class Settings extends Component {
         <h3>Break After: {breakAfter}</h3>
         <p>Insert the time that ends the regular hours caculations</p>
         <h3>Pension Reduction %: {pension}</h3>
-        <p>Insert your hourly wage</p>
+        <p>Insert your pension % reduction</p>
         <h3>Drives: {drives}</h3>
         <p>Insert your drives amount you are recieving per day</p>
         <h3>Others: {others}</h3>
         <p>Insert other incomes you have per month</p>
+
+        <br />
+
+        <MuiThemeProvider>
+          <RaisedButton onClick={this.handleEditClick} label="Edit"
+          className="pull-right" primary={true} icon={<EditIcon />} />
+        </MuiThemeProvider>
+
       </div>
     );
   }
