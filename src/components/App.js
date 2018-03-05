@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { saveTime } from '../actions';
 import AddDay from './AddDay';
@@ -61,13 +61,6 @@ class App extends Component {
     this.setState({open: !this.state.open});
   }
 
-  changeRoute = (e) => {
-    console.log(e);
-    console.log('haha');
-    console.log(this.props);
-    // this.props.history.push('/Settings');
-  }
-
   render() {
     return (
       <Router>
@@ -83,11 +76,17 @@ class App extends Component {
                 <p className="app-bar">aaaaaaa</p>
                 <Paper>
                   <Menu>
-                    <MenuItem onClick={this.changeRoute} primaryText="Hours List" leftIcon={<ViewListIcon />} />
-                    <MenuItem onClick={this.changeRoute} primaryText="Settings" leftIcon={<SettingsIcon />} />
+                    <Link to="/">
+                      <MenuItem onClick={this.closeDrawer}
+                        primaryText="Hours List" leftIcon={<ViewListIcon />} />
+                    </Link>
+                    <Link to="/Settings">
+                      <MenuItem onClick={this.closeDrawer}
+                        primaryText="Settings" leftIcon={<SettingsIcon />} />
+                    </Link>
                     <Divider />
-                    <MenuItem primaryText="Contact Us" leftIcon={<ContentCopy />} />
-                    <MenuItem primaryText="About Us" leftIcon={<Download />} />
+                    <MenuItem onClick={this.closeDrawer} primaryText="Contact Us" leftIcon={<ContentCopy />} />
+                    <MenuItem onClick={this.closeDrawer} primaryText="About Us" leftIcon={<Download />} />
                   </Menu>
                 </Paper>
               </Drawer>
