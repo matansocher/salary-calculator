@@ -11,10 +11,6 @@ import Slider from 'material-ui/Slider';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 import SaveIcon from 'material-ui/svg-icons/action/pregnant-woman';
-// import saveIcon from '../images/save.png';
-// import cancelIcon from '../images/cancel.png';
-// import editIcon from '../images/edit.png';
-// import settingsIcon from '../images/settings.png';
 
 class Settings extends Component {
   constructor(props) {
@@ -31,7 +27,6 @@ class Settings extends Component {
       gesture: false,
       loading: true
     };
-    this.saveSettings = this.saveSettings.bind(this);
   }
 
   componentDidMount() {
@@ -65,7 +60,7 @@ class Settings extends Component {
     this.setState({ loading: false });
   }
 
-  saveSettings() {
+  saveSettings = () => {
     this.setState({ loading: true }, () => {
       const { year, month } = this.props.time;
       const { hourly, breakTime, breakAfter, pension, drives, others } = this.state;
@@ -87,14 +82,6 @@ class Settings extends Component {
       });
     });
   }
-
-  // handleChange(e) {
-  //   var change = {};
-  //   if (!isNaN(e.target.value)) {
-  //     change[e.target.name] = e.target.value;
-  //     this.setState(change);
-  //   }
-  // }
 
   handleChange = (e) => {
     var change = {};

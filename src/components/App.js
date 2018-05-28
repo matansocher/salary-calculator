@@ -5,13 +5,9 @@ import { saveTime } from '../actions';
 import AddDay from './AddDay';
 import ComboYear from './ComboYear';
 import ComboMonth from './ComboMonth';
-// import CustomBottomNavigation from './CustomBottomNavigation';
-// import MenuBar from './MenuBar';
-// import MainPage from './MainPage';
 import HoursList from './HoursList';
 import Settings from './Settings';
 import SignInOrSignUp from './SignInOrSignUp';
-// import Footer from './Footer';
 import NoMatch from './NoMatch';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -21,14 +17,9 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import ViewListIcon from 'material-ui/svg-icons/action/view-list';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
-// import ContentLink from 'material-ui/svg-icons/content/link';
 import Divider from 'material-ui/Divider';
 import ContentCopy from 'material-ui/svg-icons/content/low-priority';
 import Download from 'material-ui/svg-icons/file/file-download';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-// import Delete from 'material-ui/svg-icons/action/delete';
-// import FontIcon from 'material-ui/FontIcon';
 
 class App extends Component {
   constructor(props) {
@@ -107,7 +98,6 @@ class App extends Component {
               <Route path="*" component={NoMatch}/>
             </Switch>
 
-
           </div>
         </div>
       </Router>
@@ -116,5 +106,3 @@ class App extends Component {
 }
 
 export default connect(null, { saveTime })(App);
-// <Route path="/" component={MainPage}/>
-// <CustomBottomNavigation className="bottom-menu" />
